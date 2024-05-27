@@ -19,7 +19,21 @@ resource "aws_iam_role_policy_attachment" "eks_policies" {
   policy_arn = each.key
   role       = aws_iam_role.eks.name
 }
+resource "aws_iam_role" "fargate_pod_execution_role" {
+  name = "fargate-pod-execution-role"
 
-output "role_arn" {
-  value = aws_iam_role.eks.arn
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "eks-fargate-pods.amazonaws.com"
+        }
+      },
+    ]
+  })
 }
+
+
