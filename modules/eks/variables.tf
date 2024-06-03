@@ -30,12 +30,3 @@ variable "enabled_cluster_log_types" {
   type        = list(string)
   default     = ["api", "audit"]
 }
-
-variable "policies" {
-  description = "List of policy ARNs to attach to the EKS role"
-  type        = list(string)
-  default = [
-    "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy",
-    "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
-  ]
-}

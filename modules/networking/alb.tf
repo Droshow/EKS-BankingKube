@@ -1,0 +1,77 @@
+locals {
+  listeners = {
+    http = {
+      load_balancer_arn = aws_lb.eks_alb.arn
+      port              = 80
+      protocol          = "HTTP"
+      target_group_arn  = aws_lb_target_group.eks_tg.arn
+    },
+    https = {
+      load_balancer_arn = aws_lb.eks_alb.arn
+      port              = 443
+      protocol          = "HTTPS"
+      ssl_policy        = "ELBSecurityPolicy-2016-08"
+      certificate_arn   = aws_acm_certificate.cert.arn
+      target_group_arn  = aws_lb_target_group.eks_tg.arn
+    }
+  }
+}
+resource "aws_lb" "eks_alb" {
+  name               = "eks-alb"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = var.security_groups
+  subnets            = var.subnets
+
+  enable_deletion_protection = true
+
+  tags = {
+    Environment = "production"
+  }
+}
+
+resource "aws_lb_listener" "eks_listener" {
+  for_each = local.listeners
+
+  load_balancer_arn = each.value.load_balancer_arn
+  port              = each.value.port
+  protocol          = each.value.protocol
+
+  default_action {
+    type             = "forward"
+    target_group_arn = each.value.target_group_arn
+  }
+
+  dynamic "certificate" {
+    for_each = each.value.protocol == "HTTPS" ? [1] : []
+    content {
+      certificate_arn = each.value.certificate_arn
+    }
+  }
+
+  dynamic "ssl_policy" {
+    for_each = each.value.protocol == "HTTPS" ? [1] : []
+    content {
+      ssl_policy = each.value.ssl_policy
+    }
+  }
+}
+
+resource "aws_lb_target_group" "eks_tg" {
+  name     = "eks-tg"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = aws_vpc.eks_vpc.id
+
+  health_check {
+    enabled             = true
+    interval            = 30
+    path                = "/"
+    port                = "traffic-port"
+    timeout             = 3
+    healthy_threshold   = 3
+    unhealthy_threshold = 3
+    matcher             = "200-399"
+  }
+}
+

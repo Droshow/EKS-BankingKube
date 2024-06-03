@@ -17,3 +17,15 @@ variable "vpc_name" {
   description = "Name of the VPC"
   default     = "mother"
 }
+
+variable "security_groups" {
+  description = "Security groups for the ALB"
+}
+variable "acm_domain_validation_options" {
+  description = "Domain validation options of the ACM certificate"
+  type        = any
+}
+variable "route53_zone_id" {
+  description = "The ID of the Route53 hosted zone"
+  type        = string
+}
