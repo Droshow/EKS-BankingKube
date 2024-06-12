@@ -32,7 +32,7 @@ should now work.
 If you ever set or change modules or backend configuration for Terraform,
 rerun this command to reinitialize your working directory. If you forget, other
 commands will detect it and remind you to do so if necessary.
-
+```
 Error: Reference to undeclared resource
 
   on alb.tf line 64, in resource "aws_lb_target_group" "eks_tg":
@@ -40,7 +40,7 @@ Error: Reference to undeclared resource
 
 A managed resource "aws_vpc" "eks_vpc" has not been declared in the root
 module.
-
+```
 ### Checking Module: Security
 /Users/martin.drotar/Student/open_banking/EKS-BankingKube/modules/security
 
@@ -57,7 +57,7 @@ should now work.
 If you ever set or change modules or backend configuration for Terraform,
 rerun this command to reinitialize your working directory. If you forget, other
 commands will detect it and remind you to do so if necessary.
-
+```
 Error: Reference to undeclared resource
 
   on acm.tf line 14, in resource "aws_acm_certificate_validation" "cert":
@@ -73,7 +73,7 @@ Error: Reference to undeclared resource
 
 A managed resource "aws_vpc" "eks_vpc" has not been declared in the root
 module.
-
+```
 ### Checking Module: EKS
 /Users/martin.drotar/Student/open_banking/EKS-BankingKube/modules/eks
 
@@ -90,7 +90,7 @@ should now work.
 If you ever set or change modules or backend configuration for Terraform,
 rerun this command to reinitialize your working directory. If you forget, other
 commands will detect it and remind you to do so if necessary.
-
+```
 Error: Reference to undeclared module
 
   on main.tf line 3, in resource "aws_eks_cluster" "example":
@@ -105,6 +105,7 @@ Error: Reference to undeclared resource
 
 A managed resource "aws_iam_role" "fargate_pod_execution_role" has not been
 declared in the root module.
+```
 
 ### Checking Module: Node Groups
 /Users/martin.drotar/Student/open_banking/EKS-BankingKube/modules/node_groups
@@ -123,13 +124,16 @@ If you ever set or change modules or backend configuration for Terraform,
 rerun this command to reinitialize your working directory. If you forget, other
 commands will detect it and remind you to do so if necessary.
 
-Error: Reference to undeclared resource
+
+``` Error: Reference to undeclared resource
 
   on main.tf line 5, in resource "aws_eks_fargate_profile" "default":
    5:   pod_execution_role_arn = aws_iam_role.fargate_pod_execution_role.arn
 
 A managed resource "aws_iam_role" "fargate_pod_execution_role" has not been
 declared in the root module.
+
+```
 
 ### Checking Module: Storage
 /Users/martin.drotar/Student/open_banking/EKS-BankingKube/modules/storage
@@ -148,10 +152,10 @@ If you ever set or change modules or backend configuration for Terraform,
 rerun this command to reinitialize your working directory. If you forget, other
 commands will detect it and remind you to do so if necessary.
 
-Error: Reference to undeclared resource
+``` Error: Reference to undeclared resource
 
   on main.tf line 11, in resource "aws_efs_mount_target" "efs_mount_target":
   11:   security_groups = [aws_security_group.efs_sg.id]
 
 A managed resource "aws_security_group" "efs_sg" has not been declared in the
-root module.
+root module. ```
