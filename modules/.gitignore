@@ -1,0 +1,24 @@
+# .gitignore
+
+# Ignore Terraform .tfstate files
+*.tfstate
+*.tfstate.*
+
+# Ignore Terraform .tfvars files, which often contain sensitive information
+*.tfvars
+
+# Ignore Terraform plan files
+*.tfplan
+
+# Ignore Terraform crash log files
+crash.log
+
+# Ignore Terraform .terraform directories
+.terraform/
+.terraform.lock.hcl
+
+# Ignore all log files
+*.log
+
+# Ignore all .DS_Store files (for Mac users)
+.DS_Store
