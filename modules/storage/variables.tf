@@ -10,3 +10,7 @@ variable "tags" {
   description = "A map of tags to add to all resources"
   type        = map(string)
 }
+variable "efs_sg_id" {
+  description = "The security group for the EFS mount targets"
+  type        = string
+}

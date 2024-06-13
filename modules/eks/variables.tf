@@ -30,3 +30,8 @@ variable "enabled_cluster_log_types" {
   type        = list(string)
   default     = ["api", "audit"]
 }
+
+variable "cluster_role_iam_role_arn" {
+  description = "The ARN of the IAM role to use for the EKS cluster"
+  type        = string
+}

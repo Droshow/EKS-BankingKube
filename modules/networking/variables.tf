@@ -29,3 +29,11 @@ variable "route53_zone_id" {
   description = "The ID of the Route53 hosted zone"
   type        = string
 }
+variable "vpc_id" {
+  description = "The ID of the VPC"
+  type        = string
+}
+variable "acm_certificate_arn" {
+  description = "The ACM certificate"
+  type        = any
+}

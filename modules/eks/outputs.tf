@@ -11,6 +11,3 @@ output "cluster_name" {
   description = "The name of the EKS cluster"
   value       = var.cluster_name
 }
-output "fargate_pod_execution_role_arn" {
-  value = aws_iam_role.fargate_pod_execution_role.arn
-}

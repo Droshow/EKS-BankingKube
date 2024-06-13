@@ -41,7 +41,7 @@ resource "aws_security_group_rule" "worker_nodes_to_eks_cluster" {
 resource "aws_security_group" "eks_alb_sg" {
   name        = "eks-alb-sg"
   description = "Security group for EKS ALB"
-  vpc_id      = aws_vpc.eks_vpc.id
+  vpc_id      = var.eks_vpc_id
 
   ingress {
     from_port   = 80

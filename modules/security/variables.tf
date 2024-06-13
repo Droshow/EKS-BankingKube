@@ -28,3 +28,11 @@ variable "tags" {
     Environment = "production"
   }
 }
+variable "route_53cert_validation" {
+  description = "The Route 53 record for ACM certificate validation"
+  type        = any
+}
+variable "eks_vpc_id" {
+  description = "The ID of the VPC where the EKS cluster and its resources will be created"
+  type        = string
+}

@@ -11,7 +11,7 @@ locals {
       port              = 443
       protocol          = "HTTPS"
       ssl_policy        = "ELBSecurityPolicy-2016-08"
-      certificate_arn   = aws_acm_certificate.cert.arn
+      certificate_arn   = var.acm_certificate_arn
       target_group_arn  = aws_lb_target_group.eks_tg.arn
     }
   }
@@ -29,7 +29,6 @@ resource "aws_lb" "eks_alb" {
     Environment = "production"
   }
 }
-
 resource "aws_lb_listener" "eks_listener" {
   for_each = local.listeners
 
@@ -42,19 +41,8 @@ resource "aws_lb_listener" "eks_listener" {
     target_group_arn = each.value.target_group_arn
   }
 
-  dynamic "certificate" {
-    for_each = each.value.protocol == "HTTPS" ? [1] : []
-    content {
-      certificate_arn = each.value.certificate_arn
-    }
-  }
-
-  dynamic "ssl_policy" {
-    for_each = each.value.protocol == "HTTPS" ? [1] : []
-    content {
-      ssl_policy = each.value.ssl_policy
-    }
-  }
+  certificate_arn = each.value.protocol == "HTTPS" ? each.value.certificate_arn : null
+  ssl_policy      = each.value.protocol == "HTTPS" ? each.value.ssl_policy : null
 }
 
 resource "aws_lb_target_group" "eks_tg" {
