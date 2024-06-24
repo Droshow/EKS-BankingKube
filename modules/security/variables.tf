@@ -25,14 +25,16 @@ variable "tags" {
   description = "A map of tags to add to the resources"
   type        = map(string)
   default = {
-    Environment = "production"
+    Environment = "Banking-Kube"
   }
 }
+
 variable "route_53cert_validation" {
-  description = "The Route 53 record for ACM certificate validation"
-  type        = any
-}
-variable "eks_vpc_id" {
-  description = "The ID of the VPC where the EKS cluster and its resources will be created"
-  type        = string
+  description = "The Route 53 DNS validation records for the ACM certificate"
+  type        = list(object({
+    fqdn = string
+    record_name = string
+    record_type = string
+    record_value = string
+  }))
 }

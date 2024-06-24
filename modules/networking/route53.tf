@@ -9,7 +9,17 @@ resource "aws_route53_record" "cert_validation" {
 
   name    = each.value.name
   type    = each.value.type
-  zone_id = var.route53_zone_id
+  zone_id = aws_route53_zone.banking-kube.id
   records = [each.value.record]
   ttl     = 60
+}
+
+resource "aws_route53_zone" "banking-kube" {
+  name = "bankingkube.com"
+
+  comment = "Public DNS zone for Banking-Kube"
+  tags = {
+    Environment = "Banking-Kube"
+  }
+
 }

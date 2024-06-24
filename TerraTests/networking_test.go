@@ -3,17 +3,29 @@ package test
 import (
     "testing"
     "github.com/gruntwork-io/terratest/modules/terraform"
+    "github.com/stretchr/testify/assert"
 )
 
-func TestNetworking(t *testing.T) {
+func TestMainTerraform(t *testing.T) {
     terraformOptions := &terraform.Options{
-        // The path to where your Terraform code is located
-        TerraformDir: "../modules/networking",
+        // Set the path to the Terraform code that will be tested.
+        TerraformDir: "/Users/martin.drotar/Student/open_banking/EKS-BankingKube",
+
+        // Variables to pass to our Terraform code using -var options
+        Vars: map[string]interface{}{
+            "cluster_name": "example-cluster",
+            "domain_name":  "example.com",
+        },
     }
 
-    // This will run `terraform init` and `terraform apply` and fail the test if there are any errors
+    // Clean up resources with "terraform destroy" at the end of the test.
+    defer terraform.Destroy(t, terraformOptions)
+
+    // Initialize and apply the Terraform code.
     terraform.InitAndApply(t, terraformOptions)
 
-    // At the end of the test, run `terraform destroy` to clean up any resources that were created
-    defer terraform.Destroy(t, terraformOptions)
+    // Add assertions here to validate the behavior of the modules.
+    // For example, assert that the VPC ID is not empty.
+    vpcID := terraform.Output(t, terraformOptions, "vpc_id")
+    assert.NotEmpty(t, vpcID, "VPC ID should not be empty")
 }
