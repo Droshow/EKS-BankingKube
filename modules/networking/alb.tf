@@ -21,7 +21,7 @@ resource "aws_lb" "eks_alb" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = var.alb_security_group
-  subnets            = var.subnets
+  subnets            = [for _, subnet in aws_subnet.subnet : subnet.id if subnet.map_public_ip_on_launch]
 
   enable_deletion_protection = true
 

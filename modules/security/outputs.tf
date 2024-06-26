@@ -36,7 +36,12 @@ output "validation_arns" {
 }
 output "domain_validation_options" {
   description = "Domain validation options of the ACM certificate"
-  value       = aws_acm_certificate.cert.domain_validation_options
+  value = [for option in aws_acm_certificate.cert.domain_validation_options : {
+    domain_name           = option.domain_name
+    resource_record_name  = option.resource_record_name
+    resource_record_value = option.resource_record_value
+    resource_record_type  = option.resource_record_type
+  }]
 }
 output "efs_security_group_id" {
   description = "The ID of the security group for EFS"

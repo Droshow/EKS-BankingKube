@@ -1,14 +1,7 @@
 resource "aws_vpc" "eks_vpc" {
   cidr_block = var.vpc_cidr_block
-  tags = {
-    Name = var.vpc_name
-  }
+  enable_dns_support = true
 }
-
-resource "aws_internet_gateway" "gw" {
-  vpc_id = aws_vpc.eks_vpc.id
-}
-
 resource "aws_subnet" "subnet" {
   for_each = var.subnets
 
@@ -24,17 +17,28 @@ resource "aws_route_table" "public" {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.gw.id
   }
+
+  tags = {
+    Name = "public"
+  }
 }
 
+resource "aws_route_table" "private" {
+  vpc_id = aws_vpc.eks_vpc.id
+
+  tags = {
+    Name = "private"
+  }
+}
+
+resource "aws_internet_gateway" "gw" {
+  vpc_id = aws_vpc.eks_vpc.id
+}
 resource "aws_route_table_association" "public" {
   for_each = { for name, subnet in var.subnets : name => subnet if subnet.public }
 
   subnet_id      = aws_subnet.subnet[each.key].id
   route_table_id = aws_route_table.public.id
-}
-
-resource "aws_route_table" "private" {
-  vpc_id = aws_vpc.eks_vpc.id
 }
 
 resource "aws_route_table_association" "private" {
@@ -47,7 +51,7 @@ resource "aws_route_table_association" "private" {
 resource "aws_eip" "ipam" {
   for_each = { for name, subnet in var.subnets : name => subnet if subnet.public }
 }
-#change for NAT Instance or something else
+
 resource "aws_nat_gateway" "ipam" {
   for_each = { for name, subnet in var.subnets : name => subnet if subnet.public }
 

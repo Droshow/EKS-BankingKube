@@ -1,10 +1,14 @@
 variable "subnets" {
   description = "Subnet configuration"
+  type = map(object({
+    cidr   = string
+    public = bool
+  }))
   default = {
-    public1  = { cidr = "10.0.1.0/24", public = true }
-    public2  = { cidr = "10.0.2.0/24", public = true }
-    private1 = { cidr = "10.0.3.0/24", public = false }
-    private2 = { cidr = "10.0.4.0/24", public = false }
+    eks_public_subnet-001 = { cidr = "10.0.1.0/24", public = true },
+    eks_public_subnet-002 = { cidr = "10.0.2.0/24", public = true },
+    eks_private_subnet-003 = { cidr = "10.0.3.0/24", public = false },
+    eks_private_subnet-004 = { cidr = "10.0.4.0/24", public = false }
   }
 }
 
@@ -23,7 +27,12 @@ variable "alb_security_group" {
 }
 variable "acm_domain_validation_options" {
   description = "Domain validation options of the ACM certificate"
-  type        = any
+  type = list(object({
+    domain_name           = string
+    resource_record_name  = string
+    resource_record_value = string
+    resource_record_type  = string
+  }))
 }
 variable "acm_certificate_arn" {
   description = "The ACM certificate"
