@@ -9,3 +9,9 @@ variable "cluster_name" {
   type        = string
   default     = "Banking-Kube-Sloth"
 }
+
+variable "create_acm_certificate" {
+  description = "Whether to create the ACM certificate"
+  type        = bool
+  default     = true
+}

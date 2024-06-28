@@ -8,24 +8,23 @@ import (
 
 func TestMainTerraform(t *testing.T) {
     terraformOptions := &terraform.Options{
-        // Set the path to the Terraform code that will be tested.
         TerraformDir: "/Users/martin.drotar/Student/open_banking/EKS-BankingKube",
-
-        // Variables to pass to our Terraform code using -var options
         Vars: map[string]interface{}{
-            "cluster_name": "example-cluster",
-            "domain_name":  "example.com",
+            "cluster_name":           "example-cluster",
+            "domain_name":            "example.com",
+            "create_acm_certificate": false,
         },
     }
 
-    // Clean up resources with "terraform destroy" at the end of the test.
     defer terraform.Destroy(t, terraformOptions)
 
-    // Initialize and apply the Terraform code.
-    terraform.InitAndApply(t, terraformOptions)
+    // Initialize and apply the Terraform code, checking for errors.
+    initAndApplyOutput, err := terraform.InitAndApplyE(t, terraformOptions)
+    assert.NoError(t, err, "Terraform init and apply should not error out")
+    assert.Contains(t, initAndApplyOutput, "Apply complete", "Terraform apply should be successful")
 
-    // Add assertions here to validate the behavior of the modules.
-    // For example, assert that the VPC ID is not empty.
-    vpcID := terraform.Output(t, terraformOptions, "vpc_id")
+    // Validate the behavior of the modules.
+    vpcID, err := terraform.OutputE(t, terraformOptions, "vpc_id")
+    assert.NoError(t, err, "Fetching VPC ID should not error out")
     assert.NotEmpty(t, vpcID, "VPC ID should not be empty")
 }

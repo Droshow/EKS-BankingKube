@@ -6,14 +6,15 @@ locals {
       protocol          = "HTTP"
       target_group_arn  = aws_lb_target_group.eks_tg.arn
     },
-    https = {
-      load_balancer_arn = aws_lb.eks_alb.arn
-      port              = 443
-      protocol          = "HTTPS"
-      ssl_policy        = "ELBSecurityPolicy-2016-08"
-      certificate_arn   = var.acm_certificate_arn
-      target_group_arn  = aws_lb_target_group.eks_tg.arn
-    }
+#TODO: Uncomment when certificate is created
+    # https = {
+    #   load_balancer_arn = aws_lb.eks_alb.arn
+    #   port              = 443
+    #   protocol          = "HTTPS"
+    #   ssl_policy        = "ELBSecurityPolicy-2016-08"
+    #   certificate_arn   = var.acm_certificate_arn
+    #   target_group_arn  = aws_lb_target_group.eks_tg.arn
+    # }
   }
 }
 resource "aws_lb" "eks_alb" {
@@ -23,7 +24,8 @@ resource "aws_lb" "eks_alb" {
   security_groups    = var.alb_security_group
   subnets            = [for _, subnet in aws_subnet.subnet : subnet.id if subnet.map_public_ip_on_launch]
 
-  enable_deletion_protection = true
+  #TODO usually true in production areas for test false
+  enable_deletion_protection = false
 
   tags = {
     Environment = "production"
