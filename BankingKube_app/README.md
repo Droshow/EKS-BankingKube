@@ -1,66 +1,27 @@
 # BankingKube API Development Guide - App Development
 
-## Overview
-This guide outlines the steps for developing the BankingKube API, which facilitates open banking transactions. The API will support operations such as initiating payments, retrieving transaction status, and managing user consent.
 
-## Step 1: Define API Specifications
+## 1. Build API package (portal) on Top of GoCardless/Nordigen API
 
-### Objective
-Establish the functional requirements and endpoints of your API.
+### Register and Get API Credentials
+- Sign up on the Nordigen platform and obtain your API keys or credentials. These are necessary for authenticating your API requests.
 
-### Tasks
-- **Identify Key Operations**: Determine necessary operations like initiating payments, retrieving transaction status, and managing user consent.
-- **Design RESTful Endpoints**:
-  - `POST /payments` - Initiate a payment.
-  - `GET /payments/{id}` - Check payment status.
-  - `POST /consents` - Manage user consents.
+### Implement OAuth 2.0 Authentication
+- Use the OAuth 2.0 protocol to authenticate and obtain access tokens for making authorized API calls. This process often involves redirecting users to a consent page where they can log in with their bank credentials and grant your application permission to access their banking data.
 
-## Step 2: Set Up the Golang Environment
+### Make API Calls
+- Use the access token to make authorized API calls to retrieve account information, initiate payments, or access transaction data. This involves sending HTTP requests to the Nordigen API endpoints and handling responses.
 
-### Objective
-Prepare your development environment for Golang.
+### Handle Responses and Errors
+- Process the API responses to extract the needed data. Implement error handling to manage any issues that arise during the API interaction.
 
-### Tasks
-- **Install Go**: Ensure the latest version of Go is installed on your development machine.
-- **Choose an IDE**: Select an IDE or editor that supports Go, such as Visual Studio Code or GoLand.
-- **Set Up Version Control**: Initialize a Git repository to manage version control.
+### Secure Data Handling
+- Ensure that all data retrieved from the Nordigen API is handled securely, in compliance with data protection regulations and best practices.
 
-## Step 3: Create a Basic HTTP Server
 
-### Objective
-Build a foundational HTTP server in Golang to serve as the backbone for your API.
 
-### Tasks
-- **Use `net/http` Package**: Start by creating a simple server using Golang's built-in `net/http` package.
-- **Routing**: Implement basic routing to handle requests to your defined endpoints.
 
-## Step 4: Integrate with Open Banking APIs
 
-### Objective
-Develop functionality to communicate with bank APIs.
 
-### Tasks
-- **Authentication**: Implement the authentication mechanism required by the bank’s API (e.g., OAuth 2.0).
-- **API Calls**: Use `net/http` or `github.com/go-resty/resty/v2` for making HTTP calls to the bank APIs.
-- **Error Handling**: Handle API responses robustly, focusing on error responses from the bank APIs.
 
-## Step 5: Implement Logging and Error Handling
 
-### Objective
-Ensure robust logging and error handling for troubleshooting and compliance.
-
-### Tasks
-- **Logging**: Use a logging package such as `logrus` or `zap` for structured logging.
-- **Error Handling**: Implement comprehensive error handling across your API.
-
-## Step 6: Testing
-
-### Objective
-Write tests to ensure your API functions as expected.
-
-### Tasks
-- **Unit Tests**: Write unit tests for individual functions, particularly those interfacing with bank APIs.
-- **Integration Tests**: Develop integration tests that run against a test version of the bank APIs (if available).
-
-## Conclusion
-Begin with setting up a simple server and gradually integrate more complex functionalities like communicating with bank APIs, handling authentication, and robust error handling. Maintain a focus on writing clean, maintainable code and establishing a solid foundation with good testing practices from the start.
