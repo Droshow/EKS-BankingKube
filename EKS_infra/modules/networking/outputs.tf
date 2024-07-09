@@ -12,3 +12,8 @@ output "aws_route_53_cert_validation" {
     record_value = dvo.resource_record_value
   }]
 }
+
+output "private_subnets_ids" {
+  description = "The IDs of the private subnets"
+  value       = [for k in keys(locals.private_subnets) : aws_subnet.subnet[k].id]
+}

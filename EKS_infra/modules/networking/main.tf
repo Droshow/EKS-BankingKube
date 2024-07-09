@@ -1,3 +1,7 @@
+locals {
+  private_subnets = { for k, v in var.subnets : k => v if !v.public }
+}
+
 resource "aws_vpc" "eks_vpc" {
   cidr_block = var.vpc_cidr_block
   enable_dns_support = true

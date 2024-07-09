@@ -16,3 +16,22 @@ module "security" {
     Environment = "Banking-Kube"
   }
 }
+module "eks" {
+  source       = "./modules/eks"
+  cluster_name = var.cluster_name
+  subnet_ids   = module.networking.private_subnets_ids
+  security_group_ids = [
+    module.outputs.eks_cluster_sg_id,
+    module.outputs.worker_nodes_sg_id,
+    module.outputs.alb_sg_id
+  ]
+  cluster_role_iam_role_arn = module.security.eks_cluster_role_arn
+}
+
+module "node_groups" {
+  source                     = "./modules/node_groups"
+  cluster_name               = var.cluster_name
+  fargate_pod_execution_role = module.security.fargate_pod_execution_role_arn
+
+
+}

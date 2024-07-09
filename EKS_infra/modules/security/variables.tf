@@ -23,10 +23,10 @@ variable "policies" {
 }
 variable "route_53cert_validation" {
   description = "The Route 53 DNS validation records for the ACM certificate"
-  type        = list(object({
-    fqdn = string
-    record_name = string
-    record_type = string
+  type = list(object({
+    fqdn         = string
+    record_name  = string
+    record_type  = string
     record_value = string
   }))
 }

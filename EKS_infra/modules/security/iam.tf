@@ -31,7 +31,7 @@ resource "aws_iam_role_policy_attachment" "alb_ingress_controller" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
-resource "aws_iam_role" "eks" {
+resource "aws_iam_role" "eks_cluster_role" {
   name               = "${var.cluster_name}-eks-role"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
