@@ -12,4 +12,5 @@ variable "namespaces" {
 }
 variable "fargate_pod_execution_role" {
   description = "IAM role for Fargate pod execution"
+  type        = string
 }

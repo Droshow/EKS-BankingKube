@@ -21,9 +21,9 @@ module "eks" {
   cluster_name = var.cluster_name
   subnet_ids   = module.networking.private_subnets_ids
   security_group_ids = [
-    module.outputs.eks_cluster_sg_id,
-    module.outputs.worker_nodes_sg_id,
-    module.outputs.alb_sg_id
+    module.security.eks_cluster_sg_id,
+    module.security.worker_nodes_sg_id,
+    module.security.alb_sg_id
   ]
   cluster_role_iam_role_arn = module.security.eks_cluster_role_arn
 }
@@ -32,6 +32,22 @@ module "node_groups" {
   source                     = "./modules/node_groups"
   cluster_name               = var.cluster_name
   fargate_pod_execution_role = module.security.fargate_pod_execution_role_arn
+}
 
+module "db_instance" {
+  source         = "./modules/databases"
+  db_name        = "banking-kube-db"
+  username       = "Dro-admin"
+  password       = random_password.db_password.result
+  db_subnets     = module.networking.private_subnets_ids
+}
 
+module "storage" {
+  source     = "./modules/storage"
+  subnet_ids = module.networking.private_subnets_ids
+  vpc_id     = module.networking.vpc_id
+  tags = {
+    Environment = "Banking-Kube"
+  }
+  efs_sg_id = module.security.efs_security_group_id
 }

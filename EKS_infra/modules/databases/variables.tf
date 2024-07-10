@@ -54,3 +54,8 @@ variable "skip_final_snapshot" {
   type        = bool
   default     = true
 }
+
+variable "db_subnets" {
+  description = "A list of VPC subnet IDs."
+  type        = list(string)
+}

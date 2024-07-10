@@ -1,4 +1,4 @@
-resource "aws_eks_cluster" "example" {
+resource "aws_eks_cluster" "banking_kube_cluster" {
   name     = var.cluster_name
   role_arn = var.cluster_role_iam_role_arn
 

@@ -39,7 +39,7 @@ resource "aws_iam_role" "eks_cluster_role" {
 resource "aws_iam_role_policy_attachment" "eks_policies" {
   for_each   = toset(var.policies)
   policy_arn = each.key
-  role       = aws_iam_role.eks.name
+  role       = aws_iam_role.eks_cluster_role.name
 }
 resource "aws_iam_role" "fargate_pod_execution_role" {
   name = "fargate-pod-execution-role"

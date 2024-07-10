@@ -45,8 +45,6 @@ output "validation_arns" {
   value       = aws_acm_certificate_validation.cert.*.validation_record_fqdns
 }
 
-
-
 output "worker_nodes_sg_id" {
   description = "The ID of the security group for the EKS worker nodes"
   value       = aws_security_group.worker_nodes_sg.id

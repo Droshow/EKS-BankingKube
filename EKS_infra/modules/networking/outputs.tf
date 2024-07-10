@@ -15,5 +15,5 @@ output "aws_route_53_cert_validation" {
 
 output "private_subnets_ids" {
   description = "The IDs of the private subnets"
-  value       = [for k in keys(locals.private_subnets) : aws_subnet.subnet[k].id]
+  value       = [for k in keys(local.private_subnets) : aws_subnet.subnet[k].id]
 }
