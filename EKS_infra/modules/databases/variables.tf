@@ -19,13 +19,13 @@ variable "engine" {
 variable "engine_version" {
   description = "The version number of the database engine to use."
   type        = string
-  default     = "5.7"
+  default     = "8.0.35"
 }
 
 variable "instance_class" {
   description = "The compute and memory capacity of the DB instance."
   type        = string
-  default     = "db.t2.micro"
+  default     = "db.m5d.large"
 }
 
 variable "db_name" {
@@ -46,7 +46,7 @@ variable "password" {
 variable "parameter_group_name" {
   description = "The name of the DB parameter group to associate with this DB instance."
   type        = string
-  default     = "default.mysql5.7"
+  default     = "default.mysql8.0"
 }
 
 variable "skip_final_snapshot" {

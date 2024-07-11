@@ -37,7 +37,7 @@ module "node_groups" {
 module "db_instance" {
   source         = "./modules/databases"
   db_name        = "banking-kube-db"
-  username       = "Dro-admin"
+  username       = "Dro_admin"
   password       = random_password.db_password.result
   db_subnets     = module.networking.private_subnets_ids
 }

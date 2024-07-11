@@ -8,7 +8,7 @@ variable "cluster_name" {
 variable "namespaces" {
   description = "List of namespaces for Fargate profiles"
   type        = list(string)
-  default     = ["namespace1", "namespace2", "namespace3"]
+  default     = ["vaults", "ledger", "credit"]
 }
 variable "fargate_pod_execution_role" {
   description = "IAM role for Fargate pod execution"
