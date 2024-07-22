@@ -17,3 +17,8 @@ output "private_subnets_ids" {
   description = "The IDs of the private subnets"
   value       = [for k in keys(local.private_subnets) : aws_subnet.subnet[k].id]
 }
+
+output "public_subnets_ids" {
+  description = "The IDs of the public subnets"
+  value       = [for k in keys(local.public_subnets) : aws_subnet.subnet[k].id]
+}

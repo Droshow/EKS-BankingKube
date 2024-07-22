@@ -4,7 +4,7 @@ resource "random_password" "db_password" {
 }
 
 resource "aws_secretsmanager_secret" "db_credentials" {
-  name = "banking_kube/db_credentials"
+  name = "bk/db_credentials"
 }
 
 resource "aws_secretsmanager_secret_version" "db_credentials" {

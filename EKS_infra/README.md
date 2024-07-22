@@ -2,6 +2,11 @@
 EKS and other resources for Open Banking resources
 
 ## To-Do / DONE [11.7.2024]
+
+[22.6.2024]
+- Access EKS cluster - temporarily can be moved to public subnets for easier administration
+- Deploy Kafka on the servers using IaC hopefully.
+
 - [ ] **connection**:
 
 - [ ] **Ingress**: Set up an Ingress controller, such as NGINX or ALB Ingress Controller, to expose services to the outside world. ALB is set and IAM role by terraform, but Ingress needs to be provisioned via K8 Manifest
