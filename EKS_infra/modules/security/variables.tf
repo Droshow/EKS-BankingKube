@@ -42,3 +42,8 @@ variable "vpc_id" {
   description = "The ID of the VPC where the EKS cluster and its resources will be created"
   type        = string
 }
+
+variable "aws_account_id" {
+  description = "The AWS account ID"
+  type        = string
+}

@@ -12,6 +12,7 @@ module "security" {
   domain_name             = var.domain_name
   route_53cert_validation = module.networking.aws_route_53_cert_validation
   create_acm_certificate  = false
+  aws_account_id          = var.aws_account_id
   tags = {
     Environment = "Banking-Kube"
   }
@@ -35,11 +36,11 @@ module "node_groups" {
 }
 
 module "db_instance" {
-  source         = "./modules/databases"
-  db_name        = "banking-kube-db"
-  username       = "Dro_admin"
-  password       = random_password.db_password.result
-  db_subnets     = module.networking.private_subnets_ids
+  source     = "./modules/databases"
+  db_name    = "banking-kube-db"
+  username   = "Dro_admin"
+  password   = random_password.db_password.result
+  db_subnets = module.networking.private_subnets_ids
 }
 
 module "storage" {

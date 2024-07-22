@@ -15,3 +15,8 @@ variable "create_acm_certificate" {
   type        = bool
   default     = true
 }
+variable "aws_account_id" {
+  description = "The AWS account ID"
+  type        = string
+  default     = "961477247679"
+}
