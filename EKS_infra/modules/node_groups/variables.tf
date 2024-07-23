@@ -10,7 +10,14 @@ variable "namespaces" {
   type        = list(string)
   default     = ["vaults", "ledger", "credit"]
 }
+
 variable "fargate_pod_execution_role" {
   description = "IAM role for Fargate pod execution"
   type        = string
+}
+
+variable "cluster_arn" {
+  description = "The ARN of the EKS cluster"
+  type        = string
+
 }

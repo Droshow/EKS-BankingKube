@@ -6,7 +6,7 @@ locals {
       protocol          = "HTTP"
       target_group_arn  = aws_lb_target_group.eks_tg.arn
     },
-#TODO: Uncomment when certificate is created
+    #TODO: Uncomment when certificate is created
     # https = {
     #   load_balancer_arn = aws_lb.eks_alb.arn
     #   port              = 443
@@ -16,13 +16,14 @@ locals {
     #   target_group_arn  = aws_lb_target_group.eks_tg.arn
     # }
   }
+  subnets_per_az  = { for k, v in var.subnets : v.az => v if v.public }
 }
 resource "aws_lb" "eks_alb" {
   name               = "eks-alb"
   internal           = false
   load_balancer_type = "application"
   security_groups    = var.alb_security_group
-  subnets            = [for _, subnet in aws_subnet.subnet : subnet.id if subnet.map_public_ip_on_launch]
+  subnets            = values({for az, subnet in local.subnets_per_az : az => subnet.id})
 
   #TODO usually true in production areas for test false
   enable_deletion_protection = false

@@ -11,3 +11,8 @@ output "cluster_name" {
   description = "The name of the EKS cluster"
   value       = var.cluster_name
 }
+
+output "cluster_arn" {
+  description = "The ARN of the EKS cluster"
+  value       = aws_eks_cluster.banking_kube_cluster.arn
+}

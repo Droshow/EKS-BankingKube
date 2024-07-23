@@ -5,7 +5,7 @@ EKS and other resources for Open Banking resources
 
 [22.6.2024]
 - Access EKS cluster - temporarily can be moved to public subnets for easier administration
-- Deploy Kafka on the servers using IaC hopefully.
+- Deploy Kafka on the servers using HELM/Github actions hopefully.
 
 - [ ] **connection**:
 

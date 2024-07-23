@@ -21,7 +21,7 @@ module "eks" {
   source       = "./modules/eks"
   cluster_name = var.cluster_name
   # subnet_ids   = module.networking.private_subnets_ids
-  subnet_ids   = module.networking.public_subnets_ids
+  subnet_ids   = module.networking.private_subnets_ids
   security_group_ids = [
     module.security.eks_cluster_sg_id,
     module.security.worker_nodes_sg_id,
@@ -34,6 +34,8 @@ module "node_groups" {
   source                     = "./modules/node_groups"
   cluster_name               = var.cluster_name
   fargate_pod_execution_role = module.security.fargate_pod_execution_role_arn
+  cluster_arn                = module.eks.cluster_arn
+  depends_on                 = [module.eks]
 }
 
 module "db_instance" {

@@ -1,11 +1,12 @@
 locals {
   private_subnets = { for k, v in var.subnets : k => v if !v.public }
   public_subnets  = { for k, v in var.subnets : k => v if v.public }
+
 }
 
 
 resource "aws_vpc" "eks_vpc" {
-  cidr_block = var.vpc_cidr_block
+  cidr_block         = var.vpc_cidr_block
   enable_dns_support = true
 }
 resource "aws_subnet" "subnet" {
@@ -14,6 +15,11 @@ resource "aws_subnet" "subnet" {
   vpc_id                  = aws_vpc.eks_vpc.id
   cidr_block              = each.value.cidr
   map_public_ip_on_launch = each.value.public
+  tags = {
+    "Name" = "${each.value.name} (${each.value.public ? "Public" : "Private"})",
+    "AZ"   = each.value.az
+
+  }
 }
 
 resource "aws_route_table" "public" {

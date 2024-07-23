@@ -3,12 +3,14 @@ variable "subnets" {
   type = map(object({
     cidr   = string
     public = bool
+    name   = string
+    az     = string
   }))
   default = {
-    eks_public_subnet-001 = { cidr = "10.0.1.0/24", public = true },
-    eks_public_subnet-002 = { cidr = "10.0.2.0/24", public = true },
-    eks_private_subnet-003 = { cidr = "10.0.3.0/24", public = false },
-    eks_private_subnet-004 = { cidr = "10.0.4.0/24", public = false }
+    eks_public_subnet-001  = { cidr = "10.0.1.0/24", public = true, name = "eks_public_subnet-001", az = "us-east-1a" },
+    eks_public_subnet-002  = { cidr = "10.0.2.0/24", public = true, name = "eks_public_subnet-002", az = "us-east-1b" },
+    eks_private_subnet-003 = { cidr = "10.0.3.0/24", public = false, name = "eks_private_subnet-003", az = "us-east-1a" },
+    eks_private_subnet-004 = { cidr = "10.0.4.0/24", public = false, name = "eks_private_subnet-004", az = "us-east-1b" }
   }
 }
 
