@@ -11,7 +11,7 @@ module "security" {
   vpc_id                  = module.networking.vpc_id
   domain_name             = var.domain_name
   route_53cert_validation = module.networking.aws_route_53_cert_validation
-  create_acm_certificate  = false
+  create_acm_certificate  = true
   aws_account_id          = var.aws_account_id
   tags = {
     Environment = "Banking-Kube"
@@ -58,7 +58,7 @@ module "storage" {
 
 module "client_vpn" {
   source                      = "./modules/aws_client_vpn"
-  subnet_id                   = module.networking.private_subnets_ids
+  subnet_id                   = module.networking.private_subnets_ids[0]
   server_certificate_arn      = module.security.certificate_arn
   client_root_certificate_arn = module.security.client_root_certificate_arn
 }
