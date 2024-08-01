@@ -7,6 +7,12 @@ output "certificate_arn" {
   value       = length(aws_acm_certificate.cert) > 0 ? aws_acm_certificate.cert[0].arn : null
 }
 
+output "client_root_certificate_arn" {
+  description = "The ARN of the client root certificate"
+  value= length(aws_acm_certificate.cert) > 0 ? aws_acm_certificate.cert[1].arn : null
+
+}
+
 output "domain_validation_options" {
   description = "Domain validation options of the ACM certificate"
   value = length(aws_acm_certificate.cert) > 0 ? [for option in aws_acm_certificate.cert[0].domain_validation_options : {
