@@ -3,6 +3,33 @@ EKS and other resources for Open Banking resources
 
 ## To-Do / DONE [11.7.2024]
 
+[2.8.2024] Progress happening on side of cert & VPN
+╷
+<!-- │ Error: creating EC2 Client VPN Endpoint: operation error EC2: CreateClientVpnEndpoint, https response error StatusCode: 400, RequestID: 70d6a0e9-8356-43e3-9819-d730b57949e5, api error MissingParameter: Mutual authentication is required but is missing in the request
+│
+│   with module.client_vpn.aws_ec2_client_vpn_endpoint.aws_client_vpn_endpoint,
+│   on modules/aws_client_vpn/aws_client_vpn.tf line 1, in resource "aws_ec2_client_vpn_endpoint" "aws_client_vpn_endpoint":
+│    1: resource "aws_ec2_client_vpn_endpoint" "aws_client_vpn_endpoint" {
+│
+╵
+╷
+│ Error: creating ELBv2 application Load Balancer (eks-alb): InvalidConfigurationRequest: A load balancer cannot be attached to multiple subnets in the same Availability Zone
+│       status code: 400, request id: 8908f805-4b1f-413e-ab40-38084059d817
+│
+│   with module.networking.aws_lb.eks_alb,
+│   on modules/networking/alb.tf line 21, in resource "aws_lb" "eks_alb":
+│   21: resource "aws_lb" "eks_alb" {
+│
+╵
+╷
+│ Error: missing devsbridge.com DNS validation record: _7a54dd9293e8bbe334cc5666ac9ad75e.devsbridge.com
+│
+│   with module.security.aws_acm_certificate_validation.cert[0],
+│   on modules/security/acm.tf line 13, in resource "aws_acm_certificate_validation" "cert":
+│   13: resource "aws_acm_certificate_validation" "cert" {
+│
+╵ -->
+
 [22.6.2024]
 - Access EKS cluster - temporarily can be moved to public subnets for easier administration
 - Deploy Kafka on the servers using HELM/Github actions hopefully.

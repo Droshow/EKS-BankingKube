@@ -8,6 +8,11 @@ resource "aws_ec2_client_vpn_endpoint" "aws_client_vpn_endpoint" {
     root_certificate_chain_arn = var.client_root_certificate_arn
   }
 
+  #  authentication_options {
+  #   type                       = "mutual-authentication"
+  #   root_certificate_chain_arn = var.client_root_certificate_arn
+  # }
+
   connection_log_options {
     enabled               = true
     cloudwatch_log_group  = aws_cloudwatch_log_group.aws_client_vpn_logs.name

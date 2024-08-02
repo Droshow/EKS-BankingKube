@@ -16,14 +16,17 @@ locals {
       target_group_arn  = aws_lb_target_group.eks_tg.arn
     }
   }
-  subnets_per_az  = { for k, v in var.subnets : v.az => aws_subnet.subnet[k].id if v.public }
+  #   public_subnets_alb = [aws_subnet.subnet["eks_public_subnet_001"].id, aws_subnet.subnet["eks_public_subnet_002"].id
+  # ]
+  # public_subnet = var.subnets["eks_public_subnet-001"].public ? aws_subnet.subnet["eks_public_subnet-001"].id : aws_subnet.subnet["eks_public_subnet-002"].id
+  public_subnets_per_az = { for k, v in var.subnets : v.az => aws_subnet.subnet[k].id if v.public }
 }
 resource "aws_lb" "eks_alb" {
   name               = "eks-alb"
   internal           = false
   load_balancer_type = "application"
   security_groups    = var.alb_security_group
-  subnets            = values(local.subnets_per_az)
+  subnets            = values(local.public_subnets_per_az)
 
   #TODO usually true in production areas for test false
   enable_deletion_protection = false
