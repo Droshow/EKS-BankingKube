@@ -15,11 +15,11 @@ resource "aws_route53_record" "cert_validation" {
 }
 
 resource "aws_route53_zone" "banking-kube" {
-  name = "bankingkube.com"
+  name = "devsbridge.com"
 
   comment = "Public DNS zone for Banking-Kube"
   tags = {
-    Environment = "Banking-Kube"
+    Environment = "DevsBridge"
   }
 
 }

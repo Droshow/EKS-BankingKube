@@ -3,7 +3,7 @@ EKS and other resources for Open Banking resources
 
 ## To-Do / DONE [11.7.2024]
 
-[2.8.2024] Progress happening on side of cert & VPN
+[2.8.2024] Progress happening on side of cert & VPN ** First still pending as [26.8.2024] 
 ╷
 <!-- │ Error: creating EC2 Client VPN Endpoint: operation error EC2: CreateClientVpnEndpoint, https response error StatusCode: 400, RequestID: 70d6a0e9-8356-43e3-9819-d730b57949e5, api error MissingParameter: Mutual authentication is required but is missing in the request
 │

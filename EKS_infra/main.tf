@@ -11,7 +11,7 @@ module "security" {
   vpc_id                  = module.networking.vpc_id
   domain_name             = var.domain_name
   route_53cert_validation = module.networking.aws_route_53_cert_validation
-  create_acm_certificate  = true
+  create_acm_certificate  = false
   aws_account_id          = var.aws_account_id
   tags = {
     Environment = "Banking-Kube"
