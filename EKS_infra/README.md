@@ -5,14 +5,15 @@ EKS and other resources for Open Banking resources
 
 [2.8.2024] Progress happening on side of cert & VPN ** First still pending as [26.8.2024] 
 ╷
-<!-- │ Error: creating EC2 Client VPN Endpoint: operation error EC2: CreateClientVpnEndpoint, https response error StatusCode: 400, RequestID: 70d6a0e9-8356-43e3-9819-d730b57949e5, api error MissingParameter: Mutual authentication is required but is missing in the request
+
+<!-- │ ****STIL RELEVANT ****  Error: creating EC2 Client VPN Endpoint: operation error EC2: CreateClientVpnEndpoint, https response error StatusCode: 400, RequestID: 70d6a0e9-8356-43e3-9819-d730b57949e5, api error MissingParameter: Mutual authentication is required but is missing in the request
 │
 │   with module.client_vpn.aws_ec2_client_vpn_endpoint.aws_client_vpn_endpoint,
 │   on modules/aws_client_vpn/aws_client_vpn.tf line 1, in resource "aws_ec2_client_vpn_endpoint" "aws_client_vpn_endpoint":
 │    1: resource "aws_ec2_client_vpn_endpoint" "aws_client_vpn_endpoint" {
 │
 ╵
-╷
+╷   DONE
 │ Error: creating ELBv2 application Load Balancer (eks-alb): InvalidConfigurationRequest: A load balancer cannot be attached to multiple subnets in the same Availability Zone
 │       status code: 400, request id: 8908f805-4b1f-413e-ab40-38084059d817
 │
@@ -21,7 +22,7 @@ EKS and other resources for Open Banking resources
 │   21: resource "aws_lb" "eks_alb" {
 │
 ╵
-╷
+╷   DONE
 │ Error: missing devsbridge.com DNS validation record: _7a54dd9293e8bbe334cc5666ac9ad75e.devsbridge.com
 │
 │   with module.security.aws_acm_certificate_validation.cert[0],

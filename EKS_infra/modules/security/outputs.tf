@@ -4,7 +4,7 @@ output "alb_sg_id" {
 }
 output "certificate_arn" {
   description = "The ARN of the ACM certificate"
-  value       = length(aws_acm_certificate.cert) > 0 ? aws_acm_certificate.cert[0].arn : null
+  value       = var.create_acm_certificate ? aws_acm_certificate.cert[0].arn : data.aws_acm_certificate.existing_cert.arn
 }
 
 output "client_root_certificate_arn" {
