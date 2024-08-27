@@ -20,6 +20,9 @@ resource "aws_ec2_client_vpn_endpoint" "aws_client_vpn_endpoint" {
   }
 
   split_tunnel = true
+  
+  # Enable the self-service portal
+  self_service_portal = "enabled"
 }
 
 resource "aws_cloudwatch_log_group" "aws_client_vpn_logs" {

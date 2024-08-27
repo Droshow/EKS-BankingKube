@@ -1,7 +1,10 @@
-variable "create_acm_certificate" {
-  description = "Whether to create the ACM certificate"
-  type        = bool
-  default     = true
+variable "certificate_names" {
+  description = "Names for the ACM certificates to create"
+  type        = map(string)
+  default = {
+    "server_cert" = "vpn-server.devsbridge.com"
+    "client_cert" = "vpn-client.devsbridge.com"
+  }
 }
 variable "cluster_name" {
   description = "The name of the EKS cluster"
@@ -31,12 +34,20 @@ variable "route_53cert_validation" {
   }))
 }
 variable "tags" {
-  description = "A map of tags to add to the resources"
-  type        = map(string)
+  description = "A map of tags to add to the resources, with specific tags for each certificate"
+  type        = map(map(string))
   default = {
-    Environment = "Banking-Kube"
+    "server_cert" = {
+      Environment = "Banking-Kube"
+      Name        = "vpn-server-cert"
+    },
+    "client_cert" = {
+      Environment = "Banking-Kube"
+      Name        = "vpn-client-cert"
+    }
   }
 }
+
 
 variable "vpc_id" {
   description = "The ID of the VPC where the EKS cluster and its resources will be created"

@@ -2,7 +2,7 @@ module "networking" {
   source                        = "./modules/networking"
   alb_security_group            = [module.security.alb_sg_id]
   acm_domain_validation_options = module.security.domain_validation_options
-  acm_certificate_arn           = module.security.certificate_arn
+  acm_certificate_arn           = module.security.server_certificate_arn
 }
 
 module "security" {
@@ -11,7 +11,6 @@ module "security" {
   vpc_id                  = module.networking.vpc_id
   domain_name             = var.domain_name
   route_53cert_validation = module.networking.aws_route_53_cert_validation
-  create_acm_certificate  = false
   aws_account_id          = var.aws_account_id
   tags = {
     Environment = "Banking-Kube"
@@ -59,6 +58,16 @@ module "storage" {
 module "client_vpn" {
   source                      = "./modules/aws_client_vpn"
   subnet_id                   = module.networking.private_subnets_ids[0]
-  server_certificate_arn      = module.security.certificate_arn
+  server_certificate_arn      = module.security.server_certificate_arn
   client_root_certificate_arn = module.security.client_root_certificate_arn
 }
+
+
+####HELPERS####
+
+# ### if cert already exists, then use this
+# data "aws_acm_certificate" "existing_cert" {
+#   domain      = "devsbridge.com"
+#   most_recent = true
+#   statuses    = ["ISSUED"]
+# }

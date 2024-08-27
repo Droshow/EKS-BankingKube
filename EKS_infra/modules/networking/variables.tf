@@ -28,15 +28,16 @@ variable "alb_security_group" {
   description = "Security groups for the ALB"
 }
 variable "acm_domain_validation_options" {
-  description = "Domain validation options of the ACM certificate"
-  type = list(object({
+  description = "Domain validation options of the ACM certificates"
+  type = map(list(object({
     domain_name           = string
     resource_record_name  = string
     resource_record_value = string
     resource_record_type  = string
-  }))
+  })))
 }
+
 variable "acm_certificate_arn" {
-  description = "The ACM certificate"
-  type        = any
+  description = "The ARN of the server ACM certificate"
+  type        = string
 }

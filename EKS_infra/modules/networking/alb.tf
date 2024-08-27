@@ -6,7 +6,7 @@ locals {
       protocol          = "HTTP"
       target_group_arn  = aws_lb_target_group.eks_tg.arn
     },
-   # TODO: Uncomment when certificate is created
+    # TODO: Uncomment when certificate is created
     https = {
       load_balancer_arn = aws_lb.eks_alb.arn
       port              = 443
