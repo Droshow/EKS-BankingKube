@@ -56,7 +56,7 @@ module "client_vpn" {
   source                      = "./modules/aws_client_vpn"
   subnet_id                   = module.networking.private_subnets_ids[0]
   server_certificate_arn      = module.security.server_certificate_arn_existing
-  client_root_certificate_arn = module.security.client_root_certificate_arn_existing
+  client_root_certificate_arn = module.security.client_root_certificate_arn_existing # unfortunately, this is not working with acm certs
 }
 
 

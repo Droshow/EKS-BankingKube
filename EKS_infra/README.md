@@ -2,19 +2,20 @@
 EKS and other resources for Open Banking resources
 
 ## To-Do / DONE [11.7.2024]
+[2.9.2024] Provision EC2 in private where private subnets are and you hop there
 
 [2.8.2024] Progress happening on side of cert & VPN ** First still pending as [26.8.2024] 
 ╷
 
 
 ╷
-<!-- │***Newest Error *** Error: creating EC2 Client VPN Network Association: operation error EC2: AssociateClientVpnTargetNetwork, https response error StatusCode: 400, RequestID: 46af21db-40e7-4a9d-a21f-aa51eddb4dee, api error InvalidClientVpnSubnetId.OverlappingCidr: Overlap detected between 10.0.3.0/24 and 10.0.0.0/16
+<!-- │***DONE *** Error: creating EC2 Client VPN Network Association: operation error EC2: AssociateClientVpnTargetNetwork, https response error StatusCode: 400, RequestID: 46af21db-40e7-4a9d-a21f-aa51eddb4dee, api error InvalidClientVpnSubnetId.OverlappingCidr: Overlap detected between 10.0.3.0/24 and 10.0.0.0/16
 │ 
 │   with module.client_vpn.aws_ec2_client_vpn_network_association.aws_client_vpn_network_association,
 │   on modules/aws_client_vpn/aws_client_vpn.tf line 37, in resource "aws_ec2_client_vpn_network_association" "aws_client_vpn_network_association":
 │   37: resource "aws_ec2_client_vpn_network_association" "aws_client_vpn_network_association" {
 │  -->
-<!-- │ ****STIL RELEVANT ****  Error: creating EC2 Client VPN Endpoint: operation error EC2: CreateClientVpnEndpoint, https response error StatusCode: 400, RequestID: 70d6a0e9-8356-43e3-9819-d730b57949e5, api error MissingParameter: Mutual authentication is required but is missing in the request
+<!-- │ ****DONE ****  Error: creating EC2 Client VPN Endpoint: operation error EC2: CreateClientVpnEndpoint, https response error StatusCode: 400, RequestID: 70d6a0e9-8356-43e3-9819-d730b57949e5, api error MissingParameter: Mutual authentication is required but is missing in the request
 │
 │   with module.client_vpn.aws_ec2_client_vpn_endpoint.aws_client_vpn_endpoint,
 │   on modules/aws_client_vpn/aws_client_vpn.tf line 1, in resource "aws_ec2_client_vpn_endpoint" "aws_client_vpn_endpoint":
