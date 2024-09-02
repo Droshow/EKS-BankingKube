@@ -13,6 +13,16 @@ output "client_root_certificate_arn" {
   value       = aws_acm_certificate.cert["client_cert"].arn
 }
 
+output "server_certificate_arn_existing" {
+  description = "The ARN of the server ACM certificate"
+  value       = data.aws_acm_certificate.existing_cert["server_cert"].arn
+}
+
+output "client_root_certificate_arn_existing" {
+  description = "The ARN of the client root ACM certificate"
+  value       = data.aws_acm_certificate.existing_cert["client_cert"].arn
+}
+
 output "domain_validation_options" {
   description = "Domain validation options of the ACM certificates"
   value = {

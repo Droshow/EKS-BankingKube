@@ -11,17 +11,20 @@ resource "aws_acm_certificate" "cert" {
 
 #if this makes problems, then validation by hand in AWS is acceptable for now totally to simplify
 resource "aws_acm_certificate_validation" "cert" {
-  for_each                = aws_acm_certificate.cert
-  certificate_arn         = aws_acm_certificate.cert[each.key].arn
+  for_each = {
+    for key, cert in aws_acm_certificate.cert :
+    key => cert if data.aws_acm_certificate.existing_cert[key].status != "ISSUED"
+  }
+  certificate_arn         = each.value.arn
   validation_record_fqdns = [for record in var.route_53cert_validation : record.fqdn]
 }
-
 ### if cert already exists, then use this
 
-# data "aws_acm_certificate" "existing_cert" {
-#   for_each    = var.certificate_names
-#   domain      = each.value
-#   most_recent = true
-#   statuses    = ["ISSUED"]
-# }
+# Fetch the existing certificate details
+data "aws_acm_certificate" "existing_cert" {
+  for_each    = var.certificate_names
+  domain      = each.value
+  statuses    = ["ISSUED"]
+  most_recent = true
+}
 

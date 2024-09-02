@@ -1,7 +1,7 @@
 resource "aws_ec2_client_vpn_endpoint" "aws_client_vpn_endpoint" {
   description            = "AWS Client VPN Endpoint for secure access"
   server_certificate_arn = var.server_certificate_arn
-  client_cidr_block      = "10.0.0.0/16"
+  client_cidr_block      = "10.1.0.0/16"
 
   authentication_options {
     type                       = "certificate-authentication"
