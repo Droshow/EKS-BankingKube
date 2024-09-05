@@ -3,42 +3,60 @@ output "alb_sg_id" {
   value       = aws_security_group.alb_sg.id
 }
 
-output "server_certificate_arn" {
-  description = "The ARN of the server ACM certificate"
-  value       = aws_acm_certificate.cert["server_cert"].arn
+output "acm_certificate_arn" {
+  description = "The ARN of the ACM certificate"
+  value       = aws_acm_certificate.cert["acm_cert"].arn
 }
 
-output "client_root_certificate_arn" {
-  description = "The ARN of the client root ACM certificate"
-  value       = aws_acm_certificate.cert["client_cert"].arn
+output "acm_certificate_arn_existing" {
+  value = try(data.aws_acm_certificate.existing_cert["acm_cert"].arn, "")
 }
 
-output "server_certificate_arn_existing" {
-  description = "The ARN of the server ACM certificate"
-  value       = data.aws_acm_certificate.existing_cert["server_cert"].arn
-}
+#This was done when VPN was being used, but then found that VPN is not working with
+# ACM certificates, so therefore this is pretty much useless, but anyway that's how it can be used when acms needed
 
-output "client_root_certificate_arn_existing" {
-  description = "The ARN of the client root ACM certificate"
-  value       = data.aws_acm_certificate.existing_cert["client_cert"].arn
-}
+# output "server_certificate_arn" {
+#   description = "The ARN of the server ACM certificate"
+#   value       = aws_acm_certificate.cert["server_cert"].arn
+# }
+
+# output "client_root_certificate_arn" {
+#   description = "The ARN of the client root ACM certificate"
+#   value       = aws_acm_certificate.cert["client_cert"].arn
+# }
+
+# output "server_certificate_arn_existing" {
+#   value = try(data.aws_acm_certificate.existing_cert["server_cert"].arn, "")
+# }
+
+# output "client_root_certificate_arn_existing" {
+#   value = try(data.aws_acm_certificate.existing_cert["client_cert"].arn, "")
+# }
 
 output "domain_validation_options" {
   description = "Domain validation options of the ACM certificates"
   value = {
-    "server_cert" = [for option in aws_acm_certificate.cert["server_cert"].domain_validation_options : {
-      domain_name           = option.domain_name
-      resource_record_name  = option.resource_record_name
-      resource_record_value = option.resource_record_value
-      resource_record_type  = option.resource_record_type
-    }]
-    "client_cert" = [for option in aws_acm_certificate.cert["client_cert"].domain_validation_options : {
+    "acm_cert" = [for option in aws_acm_certificate.cert["acm_cert"].domain_validation_options : {
       domain_name           = option.domain_name
       resource_record_name  = option.resource_record_name
       resource_record_value = option.resource_record_value
       resource_record_type  = option.resource_record_type
     }]
   }
+  # value = {
+  #   "server_cert" = [for option in aws_acm_certificate.cert["server_cert"].domain_validation_options : {
+  #     domain_name           = option.domain_name
+  #     resource_record_name  = option.resource_record_name
+  #     resource_record_value = option.resource_record_value
+  #     resource_record_type  = option.resource_record_type
+  #   }]
+  #   "client_cert" = [for option in aws_acm_certificate.cert["client_cert"].domain_validation_options : {
+  #     domain_name           = option.domain_name
+  #     resource_record_name  = option.resource_record_name
+  #     resource_record_value = option.resource_record_value
+  #     resource_record_type  = option.resource_record_type
+  #   }]
+  # }
 }
 
 output "eks_cluster_sg_id" {

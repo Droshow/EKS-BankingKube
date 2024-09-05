@@ -2,8 +2,9 @@ variable "certificate_names" {
   description = "Names for the ACM certificates to create"
   type        = map(string)
   default = {
-    "server_cert" = "vpn-server.devsbridge.com"
-    "client_cert" = "vpn-client.devsbridge.com"
+    #put how many certs do you want to create but acm not usable for client vpn
+    "acm_cert" = "devsbridge.com"
+    # "client_cert" = "vpn-client.devsbridge.com"
   }
 }
 variable "cluster_name" {
@@ -15,6 +16,13 @@ variable "domain_name" {
   description = "The domain name to use for the ACM certificate"
   type        = string
 }
+
+variable "fetch_existing_certificates" {
+  description = "Boolean to decide whether to fetch existing ACM certificates"
+  type        = bool
+  default     = true
+}
+
 
 variable "policies" {
   description = "List of policy ARNs to attach to the EKS role"

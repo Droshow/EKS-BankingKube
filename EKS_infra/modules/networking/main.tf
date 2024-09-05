@@ -39,6 +39,11 @@ resource "aws_route_table" "public" {
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.eks_vpc.id
 
+   route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_nat_gateway.ipam[keys(local.public_subnets)[0]].id # Use the first NAT Gateway
+  }
+
   tags = {
     Name = "private"
   }
