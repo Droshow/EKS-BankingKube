@@ -59,11 +59,11 @@ resource "aws_instance" "ec2_cluster_access" {
 
               # Remove old AWS CLI version 1 if present
               sudo rm -rf /usr/local/aws
-              sudo rm /usr/local/bin/aws
+              sudo rm /usr/bin/aws
 
                Install AWS CLI version 2.x
-              curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-              unzip awscliv2.zip
+              sudo curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+              sudo unzip awscliv2.zip
               sudo ./aws/install
 
               # Create symlink for AWS CLI in /usr/local/bin

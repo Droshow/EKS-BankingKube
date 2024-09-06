@@ -2,6 +2,10 @@
 EKS and other resources for Open Banking resources
 
 ## To-Do / DONE [11.7.2024]
+
+[6.9.2024] Security groups need proper SOURCE, so the source comes from the SG of EC2 and then you need to ad EC2 Role to 
+Access tab in EKS AWS Console in order for it to aws-auth to be updated. And there will be bunch of policies to handle, which are not ideal in current setup in EC2 sadly even with AWS managed policies.
+
 [2.9.2024] Provision EC2 in private where private subnets are and you hop there
 
 [2.8.2024] Progress happening on side of cert & VPN ** First still pending as [26.8.2024] 
