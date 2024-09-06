@@ -43,6 +43,16 @@ resource "aws_security_group_rule" "worker_nodes_to_eks_cluster" {
   security_group_id        = aws_security_group.eks_cluster_sg.id
 }
 
+# Egress rule for worker nodes
+resource "aws_security_group_rule" "worker_node_egress" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.worker_nodes_sg.id
+}
+
 #ALB SG
 resource "aws_security_group" "eks_alb_sg" {
   name        = "eks-alb-sg"

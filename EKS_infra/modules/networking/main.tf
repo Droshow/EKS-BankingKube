@@ -3,12 +3,13 @@ locals {
   public_subnets  = { for k, v in var.subnets : k => v if v.public }
 
 }
-
-
+#Hello VPC
 resource "aws_vpc" "eks_vpc" {
-  cidr_block         = var.vpc_cidr_block
-  enable_dns_support = true
+  cidr_block           = var.vpc_cidr_block
+  enable_dns_support   = true
+  enable_dns_hostnames = true
 }
+
 resource "aws_subnet" "subnet" {
   for_each = var.subnets
 
