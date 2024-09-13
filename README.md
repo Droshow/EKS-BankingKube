@@ -1,6 +1,7 @@
-# Project Overview: Secure and Monitored Kubernetes Fintech Platform
+# BankingKube: Secure and Monitored Kubernetes Fintech Platform
 
-The project is a state-of-the-art in building Kubernetes microservices platform designed specifically for Fintech organizations. It provides a secure, monitored Kubernetes environment with built-in support for integrated payment gateways—whether card-based or cardless (open banking).
+# Project Overview
+The project is a state-of-the-art Kubernetes microservices platform designed specifically for Fintech organizations. It provides a secure, monitored Kubernetes environment with built-in support for integrated payment gateways—whether card-based or cardless (open banking).
 
 ## Key Features
 - **High-grade security** with comprehensive Kubernetes monitoring and runtime protection.
