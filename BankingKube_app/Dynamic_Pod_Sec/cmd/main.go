@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Droshow/EKS-BankingKube/dynamic-admission-webhook/pkg/admission"
-	"github.com/Droshow/EKS-BankingKube/dynamic-admission-webhook/pkg/server"
+	"github.com/Droshow/EKS-BankingKube/Dynamic_Pod_Sec/pkg/admission"
+	"github.com/Droshow/EKS-BankingKube/Dynamic_Pod_Sec/pkg/server"
 )
 
 func main() {
