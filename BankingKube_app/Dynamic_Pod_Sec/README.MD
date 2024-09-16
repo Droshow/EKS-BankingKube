@@ -1,3 +1,8 @@
+# Dynamic Admission Webhook
+
+## Directory Structure
+
+```plaintext
 dynamic-admission-webhook/
 │
 ├── cmd/                     # Entry point
