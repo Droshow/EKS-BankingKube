@@ -2,9 +2,9 @@ package admission
 
 import (
 	"encoding/json"
-	"net/http"
-
 	admissionv1 "k8s.io/api/admission/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"net/http"
 )
 
 // HandleAdmissionRequest handles incoming admission requests
@@ -16,14 +16,12 @@ func HandleAdmissionRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Delegate admission logic to the validation package
+	// Main validation logic that calls individual security checks
 	response := validatePod(admissionReview.Request)
 
-	// Populate AdmissionReview response
 	admissionReview.Response = response
 	admissionReview.Response.UID = admissionReview.Request.UID
 
-	// Serialize the response and write it back
 	resp, err := json.Marshal(admissionReview)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -32,4 +30,40 @@ func HandleAdmissionRequest(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(resp)
+}
+
+// validatePod is the main function that calls individual validation functions
+func validatePod(request *admissionv1.AdmissionRequest) *admissionv1.AdmissionResponse {
+	allowed := true
+	result := &metav1.Status{
+		Message: "Pod validation passed",
+	}
+
+	// Run individual validation checks
+	if !checkPrivilegedContainers(request) {
+		allowed = false
+		result = &metav1.Status{
+			Message: "Pod contains privileged containers, which is not allowed.",
+		}
+	}
+
+	if !checkHostPath(request) {
+		allowed = false
+		result = &metav1.Status{
+			Message: "Pod contains disallowed host paths.",
+		}
+	}
+
+	if !checkReadOnlyRootFilesystem(request) {
+		allowed = false
+		result = &metav1.Status{
+			Message: "Pod contains containers with writable root filesystems.",
+		}
+	}
+
+	// Return the response
+	return &admissionv1.AdmissionResponse{
+		Allowed: allowed,
+		Result:  result,
+	}
 }
