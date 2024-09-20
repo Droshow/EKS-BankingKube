@@ -1,4 +1,4 @@
-package admission
+package context_capabilities
 
 import (
 	"encoding/json"
@@ -8,7 +8,7 @@ import (
 )
 
 // checkPrivilegedContainers checks if the pod has any privileged containers or init containers
-func checkPrivilegedContainers(request *admissionv1.AdmissionRequest) bool {
+func CheckPrivilegedContainers(request *admissionv1.AdmissionRequest) bool {
 	// Parse the Pod object from the request
 	pod := &corev1.Pod{}
 	err := json.Unmarshal(request.Object.Raw, pod)

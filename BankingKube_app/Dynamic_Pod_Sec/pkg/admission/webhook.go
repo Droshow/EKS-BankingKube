@@ -2,10 +2,10 @@ package admission
 
 import (
 	"encoding/json"
+	"github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/pkg/admission/context_capabilities"
 	admissionv1 "k8s.io/api/admission/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"net/http"
-	"github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/pkg/admission/context_capabilities"
 )
 
 // HandleAdmissionRequest handles incoming admission requests
@@ -41,7 +41,7 @@ func validatePod(request *admissionv1.AdmissionRequest) *admissionv1.AdmissionRe
 	}
 
 	// Run individual validation checks
-	if !checkPrivilegedContainers(request) {
+	if !context_capabilities.CheckPrivilegedContainers(request) {
 		allowed = false
 		result = &metav1.Status{
 			Message: "Pod contains privileged containers, which is not allowed.",
