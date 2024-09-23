@@ -1,0 +1,39 @@
+policies:
+  podSecurityContext:
+    allowPrivilegeEscalation: false
+    runAsNonRoot: true
+    allowedCapabilities:
+      - "CAP_NET_BIND_SERVICE"
+    disallowedCapabilities:
+      - "CAP_SYS_ADMIN"
+      - "CAP_NET_ADMIN"
+
+  volumeSecurity:
+    disallowedHostPaths:
+      - "/var/run/docker.sock"
+      - "/root"
+    restrictedStorageClasses:
+      - "fast-storage"
+      - "shared-storage"
+
+  networkSecurity:
+    requiredNetworkPolicies:
+      - "default-deny-all"
+      - "internal-communication-only"
+
+  apiRestrictions:
+    restrictedServiceAccounts:
+      - "default"
+      - "admin"
+    restrictedAPIPaths:
+      - "/api/v1/namespaces/*/pods/exec"
+      - "/api/v1/nodes/*/proxy"
+
+  resourceLimits:
+    cpuLimits:
+      max: "1000m"
+      min: "200m"
+    memoryLimits:
+      max: "1Gi"
+      min: "256Mi"
+    enforceResourceLimits: true

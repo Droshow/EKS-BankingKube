@@ -1,0 +1,52 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: "dynamic-pod-sec-webhook"
+webhooks:
+  - name: "validate-pod-context.example.com"
+    rules:
+      - operations: ["CREATE", "UPDATE"]
+        apiGroups: [""]
+        apiVersions: ["v1"]
+        resources: ["pods"]
+    clientConfig:
+      service:
+        name: "admission-controller-service"
+        namespace: "default"
+        path: "/validate/context"
+      caBundle: <CA_BUNDLE>
+    admissionReviewVersions: ["v1"]
+    failurePolicy: Fail
+    timeoutSeconds: 5
+
+  - name: "validate-pod-volumes.example.com"
+    rules:
+      - operations: ["CREATE", "UPDATE"]
+        apiGroups: [""]
+        apiVersions: ["v1"]
+        resources: ["pods"]
+    clientConfig:
+      service:
+        name: "admission-controller-service"
+        namespace: "default"
+        path: "/validate/volumes"
+      caBundle: <CA_BUNDLE>
+    admissionReviewVersions: ["v1"]
+    failurePolicy: Fail
+    timeoutSeconds: 5
+
+  - name: "validate-pod-network.example.com"
+    rules:
+      - operations: ["CREATE", "UPDATE"]
+        apiGroups: [""]
+        apiVersions: ["v1"]
+        resources: ["pods"]
+    clientConfig:
+      service:
+        name: "admission-controller-service"
+        namespace: "default"
+        path: "/validate/network"
+      caBundle: <CA_BUNDLE>
+    admissionReviewVersions: ["v1"]
+    failurePolicy: Fail
+    timeoutSeconds: 5
