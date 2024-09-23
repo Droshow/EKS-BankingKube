@@ -1,4 +1,4 @@
-package admission
+package volume_security
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 )
 
 // checkHostPath checks if the pod has any hostPath volumes
-func checkHostPath(request *admissionv1.AdmissionRequest) bool {
+func CheckHostPath(request *admissionv1.AdmissionRequest) bool {
 	// Parse the Pod object from the request
 	pod := &corev1.Pod{}
 	err := json.Unmarshal(request.Object.Raw, pod)
