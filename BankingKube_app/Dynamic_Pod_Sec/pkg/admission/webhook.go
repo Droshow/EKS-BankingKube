@@ -6,6 +6,7 @@ import (
 
 	"github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/pkg/admission/context_capabilities"
 	"github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/pkg/admission/volume_security"
+	"github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/pkg/admission/network_security"
 	admissionv1 "k8s.io/api/admission/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -84,6 +85,13 @@ func validatePod(request *admissionv1.AdmissionRequest) *admissionv1.AdmissionRe
 			Message: "Pod contains disallowed host paths.",
 		}
 	}
+
+	if !network_security.CheckNetworkPolicy(request) { // Integrate CheckNetworkPolicy
+        allowed = false
+        result = &metav1.Status{
+            Message: "Pod does not comply with network policies.",
+        }
+    }
 
 	// Return the response
 	return &admissionv1.AdmissionResponse{
