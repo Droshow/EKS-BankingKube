@@ -6,8 +6,11 @@ import (
 
 	"github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/pkg/admission/api_restrictions"
 	"github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/pkg/admission/context_capabilities"
+	"github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/pkg/admission/image_security"
 	"github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/pkg/admission/network_security"
+	"github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/pkg/admission/resource_management"
 	"github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/pkg/admission/volume_security"
+
 	admissionv1 "k8s.io/api/admission/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -104,6 +107,40 @@ func validatePod(request *admissionv1.AdmissionRequest) *admissionv1.AdmissionRe
 		allowed = false
 		result = &metav1.Status{
 			Message: "Pod is using a restricted service account.",
+		}
+	}
+	if !image_security.CheckImageRegistry(request) {
+		allowed = false
+		result = &metav1.Status{
+			Message: "Pod is using an image from a disallowed registry.",
+		}
+	}
+
+	if !image_security.CheckImageSigning(request) {
+		allowed = false
+		result = &metav1.Status{
+			Message: "Pod is using an unsigned image.",
+		}
+	}
+
+	if !image_security.CheckImageTags(request) {
+		allowed = false
+		result = &metav1.Status{
+			Message: "Pod is using an image with a disallowed tag.",
+		}
+	}
+
+	if !resource_management.CheckResourceLimits(request) { // Integrate CheckResourceLimits
+		allowed = false
+		result = &metav1.Status{
+			Message: "Pod contains containers without resource limits.",
+		}
+	}
+
+	if !resource_management.CheckResourceRequests(request) { // Integrate CheckResourceRequests
+		allowed = false
+		result = &metav1.Status{
+			Message: "Pod contains containers without resource requests.",
 		}
 	}
 
