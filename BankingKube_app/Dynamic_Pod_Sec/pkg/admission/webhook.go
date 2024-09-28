@@ -8,7 +8,7 @@ import (
 	"github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/pkg/admission/context_capabilities"
 	"github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/pkg/admission/image_security"
 	"github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/pkg/admission/network_security"
-	"github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/pkg/admission/resource_management"
+	"github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/pkg/admission/resource_limits"
 	"github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/pkg/admission/volume_security"
 
 	admissionv1 "k8s.io/api/admission/v1"
@@ -130,14 +130,14 @@ func validatePod(request *admissionv1.AdmissionRequest) *admissionv1.AdmissionRe
 		}
 	}
 
-	if !resource_management.CheckResourceLimits(request) { // Integrate CheckResourceLimits
+	if !resource_limits.CheckResourceLimits(request) { // Integrate CheckResourceLimits
 		allowed = false
 		result = &metav1.Status{
 			Message: "Pod contains containers without resource limits.",
 		}
 	}
 
-	if !resource_management.CheckResourceRequests(request) { // Integrate CheckResourceRequests
+	if !resource_limits.CheckResourceRequests(request) { // Integrate CheckResourceRequests
 		allowed = false
 		result = &metav1.Status{
 			Message: "Pod contains containers without resource requests.",

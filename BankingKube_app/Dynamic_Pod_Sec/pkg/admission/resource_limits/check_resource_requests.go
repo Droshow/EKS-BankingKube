@@ -1,4 +1,4 @@
-package resource_management
+package resource_limits
 
 import (
 	"encoding/json"
