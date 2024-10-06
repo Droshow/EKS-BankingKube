@@ -2,8 +2,14 @@
 
 ## Directory Structure
 
+**KubePolicy** is a comprehensive security solution for Kubernetes environments. The tool will scan, audit, and provide automated remediation for admissions, RBAC configurations, and network policies, ensuring best practices and compliance with security frameworks such as PSD2, PCI-DSS, and more.
+
+By leveraging tools like **Kyverno** for policy enforcement, the system will not only detect misconfigurations and vulnerabilities but also apply corrective actions to ensure clusters remain secure and compliant.
+
+
+
 ```plaintext
-Dynamic_Pod_Sec/
+KubePolice/
 │
 ├── cmd/                     # Entry point
 │   ├── main.go              # Main application logic
