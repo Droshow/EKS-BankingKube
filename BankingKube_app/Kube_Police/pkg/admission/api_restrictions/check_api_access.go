@@ -3,11 +3,19 @@ package api_restrictions
 import (
 	"encoding/json"
 	"log"
+	"os"
 	"strings"
 
+	"gopkg.in/yaml.v2"
 	admissionv1 "k8s.io/api/admission/v1"
 	corev1 "k8s.io/api/core/v1"
 )
+
+// APIRestrictions defines a structure for restricted API paths and service accounts
+type APIRestrictions struct {
+	RestrictedServiceAccounts []string `yaml:"restrictedServiceAccounts"`
+	RestrictedAPIPaths        []string `yaml:"restrictedAPIPaths"`
+}
 
 // CheckAPIAccess validates if a pod is trying to access restricted Kubernetes API paths
 func CheckAPIAccess(request *admissionv1.AdmissionRequest) bool {
@@ -20,7 +28,11 @@ func CheckAPIAccess(request *admissionv1.AdmissionRequest) bool {
 	}
 
 	// Retrieve the security policies for API access
-	apiRestrictions := getAPIRestrictions()
+	apiRestrictions, err := getAPIRestrictions()
+	if err != nil {
+		log.Println("Failed to load API restrictions:", err)
+		return false
+	}
 
 	// Check if the pod's service account is allowed to access restricted API paths
 	for _, restrictedPath := range apiRestrictions.RestrictedAPIPaths {
@@ -34,18 +46,25 @@ func CheckAPIAccess(request *admissionv1.AdmissionRequest) bool {
 }
 
 // getAPIRestrictions loads the API restrictions from the configuration file
-func getAPIRestrictions() APIRestrictions {
-	// This function would typically load restrictions from a config file like security-policies.yaml
-	// Here we define them statically for demonstration purposes
-	return APIRestrictions{
-		RestrictedAPIPaths: []string{
-			"/api/v1/namespaces/*/pods/exec",
-			"/api/v1/nodes/*/proxy",
-		},
+func getAPIRestrictions() (*APIRestrictions, error) {
+	configPath := os.Getenv("SECURITY_POLICIES_PATH")
+	if configPath == "" {
+		configPath = "configs/security-policies.yaml" // Default path
 	}
-}
 
-// APIRestrictions defines a structure for restricted API paths
-type APIRestrictions struct {
-	RestrictedAPIPaths []string `yaml:"restrictedAPIPaths"`
+	data, err := os.ReadFile(configPath)
+	if err != nil {
+		return nil, err
+	}
+
+	var policies struct {
+		APIRestrictions APIRestrictions `yaml:"apiRestrictions"`
+	}
+
+	err = yaml.Unmarshal(data, &policies)
+	if err != nil {
+		return nil, err
+	}
+
+	return &policies.APIRestrictions, nil
 }

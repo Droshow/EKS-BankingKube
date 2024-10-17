@@ -83,3 +83,31 @@
 
 You're well-positioned to complete the webhook service and deploy it for runtime pod security enforcement in Kubernetes!
 
+Readups
+The webhook-config.yaml file itself does not directly reference the policies set in security-policies.yaml. Instead, the webhook-config.yaml defines the configuration for the admission webhooks, which will call the webhook server endpoints. The webhook server is responsible for reading and enforcing the policies defined in security-policies.yaml.
+
+How It Works
+Webhook Configuration (webhook-config.yaml):
+
+Defines the webhooks that intercept Kubernetes API requests for creating or updating resources.
+Specifies the endpoints (/validate/context, /validate/volumes, /validate/network) that the webhook server will call to validate the requests.
+Webhook Server:
+
+The webhook server is implemented in your Go code (e.g., webhook.go).
+When a request is intercepted by the webhook, the server reads the policies from security-policies.yaml.
+The server then validates the request against these policies and either allows or rejects the request based on the validation results.
+Example Flow
+Request Interception:
+
+A request to create or update a pod is intercepted by the webhook defined in webhook-config.yaml.
+Webhook Server Call:
+
+The webhook configuration specifies the endpoint to call (e.g., /validate/context).
+Policy Enforcement:
+
+The webhook server reads the policies from security-policies.yaml.
+The server validates the request against these policies.
+Response:
+
+The server responds to the webhook with either an allow or reject decision based on the validation.
+Example Code Integration

@@ -2,10 +2,18 @@ package api_restrictions
 
 import (
 	"encoding/json"
+	"log"
+	"os"
+
+	"gopkg.in/yaml.v2"
 	admissionv1 "k8s.io/api/admission/v1"
 	corev1 "k8s.io/api/core/v1"
-	"log"
 )
+
+// ServiceAccountRestrictions defines a structure for restricted service accounts
+type ServiceAccountRestrictions struct {
+	RestrictedServiceAccounts []string `yaml:"restrictedServiceAccounts"`
+}
 
 // CheckServiceAccount ensures that pods do not use restricted service accounts
 func CheckServiceAccount(request *admissionv1.AdmissionRequest) bool {
@@ -18,7 +26,11 @@ func CheckServiceAccount(request *admissionv1.AdmissionRequest) bool {
 	}
 
 	// Retrieve the security policies for service account usage
-	serviceAccountRestrictions := getServiceAccountRestrictions()
+	serviceAccountRestrictions, err := getServiceAccountRestrictions()
+	if err != nil {
+		log.Println("Failed to load service account restrictions:", err)
+		return false
+	}
 
 	// Check if the pod is using a restricted service account
 	for _, restrictedAccount := range serviceAccountRestrictions.RestrictedServiceAccounts {
@@ -32,18 +44,25 @@ func CheckServiceAccount(request *admissionv1.AdmissionRequest) bool {
 }
 
 // getServiceAccountRestrictions loads the service account restrictions from the configuration file
-func getServiceAccountRestrictions() ServiceAccountRestrictions {
-	// This function would typically load restrictions from a config file like security-policies.yaml
-	// Here we define them statically for demonstration purposes
-	return ServiceAccountRestrictions{
-		RestrictedServiceAccounts: []string{
-			"default",
-			"admin",
-		},
+func getServiceAccountRestrictions() (*ServiceAccountRestrictions, error) {
+	configPath := os.Getenv("SECURITY_POLICIES_PATH")
+	if configPath == "" {
+		configPath = "configs/security-policies.yaml" // Default path
 	}
-}
 
-// ServiceAccountRestrictions defines a structure for restricted service accounts
-type ServiceAccountRestrictions struct {
-	RestrictedServiceAccounts []string `yaml:"restrictedServiceAccounts"`
+	data, err := os.ReadFile(configPath)
+	if err != nil {
+		return nil, err
+	}
+
+	var policies struct {
+		ServiceAccountRestrictions ServiceAccountRestrictions `yaml:"serviceAccountRestrictions"`
+	}
+
+	err = yaml.Unmarshal(data, &policies)
+	if err != nil {
+		return nil, err
+	}
+
+	return &policies.ServiceAccountRestrictions, nil
 }

@@ -22,12 +22,14 @@ policies:
       - "internal-communication-only"
 
   apiRestrictions:
-    restrictedServiceAccounts:
-      - "default"
-      - "admin"
     restrictedAPIPaths:
       - "/api/v1/namespaces/*/pods/exec"
       - "/api/v1/nodes/*/proxy"
+  
+  serviceAccountRestrictions:
+  restrictedServiceAccounts:
+    - "default"
+    - "admin"
 
   resourceLimits:
     cpuLimits:
