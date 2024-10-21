@@ -2,8 +2,10 @@ policies:
   podSecurityContext:
     allowPrivilegeEscalation: false
     runAsNonRoot: true
-    allowedCapabilities:
-      - "CAP_NET_BIND_SERVICE"
+
+  capabilities:
+    # allowedCapabilities:
+    #   - "CAP_NET_BIND_SERVICE"
     disallowedCapabilities:
       - "CAP_SYS_ADMIN"
       - "CAP_NET_ADMIN"
@@ -27,9 +29,9 @@ policies:
       - "/api/v1/nodes/*/proxy"
   
   serviceAccountRestrictions:
-  restrictedServiceAccounts:
-    - "default"
-    - "admin"
+    restrictedServiceAccounts:
+      - "default"
+      - "admin"
 
   resourceLimits:
     cpuLimits:
