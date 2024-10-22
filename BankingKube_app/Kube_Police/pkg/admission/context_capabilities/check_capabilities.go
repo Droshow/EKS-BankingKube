@@ -14,6 +14,7 @@ import (
 type Capabilities struct {
 	AllowedCapabilities    []string `yaml:"allowedCapabilities"`
 	DisallowedCapabilities []string `yaml:"disallowedCapabilities"`
+	RequiredDrops          []string `yaml:"requiredDrops"`
 }
 
 // CheckCapabilities ensures that the pod does not use dangerous Linux capabilities
@@ -42,10 +43,14 @@ func CheckCapabilities(request *admissionv1.AdmissionRequest) bool {
 					return false // Return false if any disallowed capability is found
 				}
 			}
+			if !hasDroppedAllRequiredCapabilities(container.SecurityContext.Capabilities.Drop, capabilities.RequiredDrops) {
+				log.Println("Necessary capabilities not dropped in container:", container.Name)
+				return false // Return false if necessary capabilities are not dropped
+			}
 		}
 	}
 
-	// Passes the check if no disallowed capabilities are found
+	// Passes the check if no disallowed capabilities are found and all required capabilities are dropped
 	return true
 }
 
@@ -57,6 +62,20 @@ func isDisallowedCapability(cap string, disallowedCapabilities []string) bool {
 		}
 	}
 	return false
+}
+
+// hasDroppedAllRequiredCapabilities checks if all required capabilities are dropped
+func hasDroppedAllRequiredCapabilities(dropped []corev1.Capability, requiredDrops []string) bool {
+	requiredDropsMap := make(map[string]bool)
+	for _, cap := range requiredDrops {
+		requiredDropsMap[cap] = true
+	}
+
+	for _, cap := range dropped {
+		delete(requiredDropsMap, string(cap))
+	}
+
+	return len(requiredDropsMap) == 0
 }
 
 // getCapabilities loads the capabilities policies from the configuration file

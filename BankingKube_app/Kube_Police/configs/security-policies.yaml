@@ -2,11 +2,15 @@ policies:
   podSecurityContext:
     allowPrivilegeEscalation: false
     runAsNonRoot: true
+    readOnlyRootFilesystem: true
 
   capabilities:
     # allowedCapabilities:
     #   - "CAP_NET_BIND_SERVICE"
     disallowedCapabilities:
+      - "CAP_SYS_ADMIN"
+      - "CAP_NET_ADMIN"
+    requiredDrops:
       - "CAP_SYS_ADMIN"
       - "CAP_NET_ADMIN"
 

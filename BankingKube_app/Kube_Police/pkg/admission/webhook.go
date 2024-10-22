@@ -48,24 +48,10 @@ func validatePod(request *admissionv1.AdmissionRequest) *admissionv1.AdmissionRe
 	}
 
 	// Run individual validation checks
-	if !context_capabilities.CheckPrivilegedContainers(request) {
+	if !context_capabilities.CheckPodSecurityContext(request) {
 		allowed = false
 		result = &metav1.Status{
 			Message: "Pod contains privileged containers, which is not allowed.",
-		}
-	}
-
-	if !context_capabilities.CheckReadOnlyRoot(request) {
-		allowed = false
-		result = &metav1.Status{
-			Message: "Pod contains containers with writable root filesystems.",
-		}
-	}
-
-	if !context_capabilities.CheckRunAsUser(request) {
-		allowed = false
-		result = &metav1.Status{
-			Message: "Pod does not meet user/group security context requirements.",
 		}
 	}
 

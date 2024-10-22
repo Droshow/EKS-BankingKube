@@ -14,10 +14,11 @@ import (
 type PodSecurityContext struct {
 	AllowPrivilegeEscalation bool `yaml:"allowPrivilegeEscalation"`
 	RunAsNonRoot             bool `yaml:"runAsNonRoot"`
+	ReadOnlyRootFilesystem   bool `yaml:"readOnlyRootFilesystem"`
 }
 
-// CheckPrivilegedContainers checks if the pod has any privileged containers or init containers
-func CheckPrivilegedContainers(request *admissionv1.AdmissionRequest) bool {
+// CheckPodSecurityContext checks if the pod complies with the pod security context policies
+func CheckPodSecurityContext(request *admissionv1.AdmissionRequest) bool {
 	// Parse the Pod object from the request
 	pod := &corev1.Pod{}
 	err := json.Unmarshal(request.Object.Raw, pod)
@@ -50,6 +51,10 @@ func CheckPrivilegedContainers(request *admissionv1.AdmissionRequest) bool {
 			log.Println("Container", container.Name, "has RunAsNonRoot set to", *container.SecurityContext.RunAsNonRoot, "which does not match the policy")
 			return false // Return false if RunAsNonRoot does not match the policy
 		}
+		if container.SecurityContext.ReadOnlyRootFilesystem != nil && *container.SecurityContext.ReadOnlyRootFilesystem != podSecurityContext.ReadOnlyRootFilesystem {
+			log.Println("Container", container.Name, "has ReadOnlyRootFilesystem set to", *container.SecurityContext.ReadOnlyRootFilesystem, "which does not match the policy")
+			return false // Return false if ReadOnlyRootFilesystem does not match the policy
+		}
 	}
 
 	// Check for privileged init containers
@@ -68,6 +73,10 @@ func CheckPrivilegedContainers(request *admissionv1.AdmissionRequest) bool {
 		if initContainer.SecurityContext.RunAsNonRoot != nil && *initContainer.SecurityContext.RunAsNonRoot != podSecurityContext.RunAsNonRoot {
 			log.Println("Init container", initContainer.Name, "has RunAsNonRoot set to", *initContainer.SecurityContext.RunAsNonRoot, "which does not match the policy")
 			return false // Return false if RunAsNonRoot does not match the policy
+		}
+		if initContainer.SecurityContext.ReadOnlyRootFilesystem != nil && *initContainer.SecurityContext.ReadOnlyRootFilesystem != podSecurityContext.ReadOnlyRootFilesystem {
+			log.Println("Init container", initContainer.Name, "has ReadOnlyRootFilesystem set to", *initContainer.SecurityContext.ReadOnlyRootFilesystem, "which does not match the policy")
+			return false // Return false if ReadOnlyRootFilesystem does not match the policy
 		}
 	}
 

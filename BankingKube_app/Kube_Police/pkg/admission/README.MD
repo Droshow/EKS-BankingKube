@@ -137,3 +137,34 @@ Dynamic_Pod_Sec/
 ├── go.mod                   # Go module
 ├── go.sum                   # Go dependencies
 ├── README.md                # Project documentation
+
+```
+├── pkg/
+│   ├── admission/           # Core logic for admission control
+│   │   ├── api_restrictions/ # API access restrictions
+│   │   │   ├── README.md
+│   │   │   ├── check_api_access.go          # apiRestrictions: restrictedAPIPaths
+│   │   │   └── check_service_account.go     # serviceAccountRestrictions: restrictedServiceAccounts
+│   │   ├── context_capabilities/ # Context and capabilities checks
+│   │   │   ├── README.md
+│   │   │   ├── check_capabilities.go        # capabilities: disallowedCapabilities
+│   │   │   ├── check_privilege.go           # podSecurityContext: allowPrivilegeEscalation, runAsNonRoot
+│   │   │   ├── check_read_only_root.go      # podSecurityContext: readOnlyRootFilesystem
+│   │   │   ├── check_run_as_user.go         # (Potentially redundant, covered by check_privilege.go)
+│   │   │   └── validate_capability.go       # (Potentially redundant, covered by check_capabilities.go)
+│   │   ├── image_security/  # Image security checks
+│   │   │   ├── README.md
+│   │   │   ├── check_image_registry.go      # (Not directly mapped, but important for image security)
+│   │   │   ├── check_image_signing.go       # (Not directly mapped, but important for image security)
+│   │   │   └── check_image_tags.go          # (Not directly mapped, but important for image security)
+│   │   ├── network_security/ # Network security checks
+│   │   │   ├── README.md
+│   │   │   ├── check_host_network.go        # networkSecurity: requiredNetworkPolicies
+│   │   │   └── check_network_policy.go      # networkSecurity: requiredNetworkPolicies
+│   │   ├── resource_limits/ # Resource limits checks
+│   │   │   ├── README.md
+│   │   │   ├── check_resource_limits.go     # resourceLimits: cpuLimits, memoryLimits, enforceResourceLimits
+│   │   │   └── check_resource_requests.go   # (Potentially redundant, covered by check_resource_limits.go)
+│   │   ├── volume_security/ # Volume security checks
+│   │   │   ├── README.md
+│   │   │   └── check_hostpath.go            # volumeSecurity: disallowedHostPaths
