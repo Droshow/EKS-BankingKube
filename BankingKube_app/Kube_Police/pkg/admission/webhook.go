@@ -47,7 +47,7 @@ func validatePod(request *admissionv1.AdmissionRequest) *admissionv1.AdmissionRe
 		Message: "Pod validation passed",
 	}
 
-	// Run individual validation checks
+	// Check for Pod Context Security and Capabilities
 	if !context_capabilities.CheckPodSecurityContext(request) {
 		allowed = false
 		result = &metav1.Status{
@@ -61,14 +61,7 @@ func validatePod(request *admissionv1.AdmissionRequest) *admissionv1.AdmissionRe
 			Message: "Pod contains containers with disallowed capabilities.",
 		}
 	}
-
-	if !context_capabilities.ValidateCapability(request) {
-		allowed = false
-		result = &metav1.Status{
-			Message: "Pod contains containers with unvalidated capabilities.",
-		}
-	}
-
+	// Check for Pod Volume Security
 	if !volume_security.CheckHostPath(request) {
 		allowed = false
 		result = &metav1.Status{
@@ -82,6 +75,7 @@ func validatePod(request *admissionv1.AdmissionRequest) *admissionv1.AdmissionRe
 			Message: "Pod does not comply with network policies.",
 		}
 	}
+	// Check for API Restrictions & Service Accounts
 	if !api_restrictions.CheckAPIAccess(request) { // Integrate CheckAPIAccess
 		allowed = false
 		result = &metav1.Status{
