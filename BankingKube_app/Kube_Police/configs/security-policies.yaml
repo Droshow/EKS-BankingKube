@@ -34,14 +34,15 @@ policies:
       - "latest"
       - "unstable"
       - "dev"
-    
 
   # Network Security Policies
-  networkSecurity:
-    requiredNetworkPolicies:
-      - "default-deny-all"
-      - "internal-communication-only"
-  
+    hostNetworkPolicy:
+      allowHostNetwork: false
+    networkPolicy:
+      requiredNetworkPolicies:
+        - "default-deny-all"
+        - "internal-communication-only"
+
   # Resource Limits Policies
   resourceLimits:
     cpuLimits:

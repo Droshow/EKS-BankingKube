@@ -7,6 +7,10 @@
 By leveraging tools like **Kyverno** for policy enforcement, the system will not only detect misconfigurations and vulnerabilities but also apply corrective actions to ensure clusters remain secure and compliant.
 
 ## TODO
+28.10.2024 Admissions finished 
+-  EKS-BankingKube/BankingKube_app/Kube_Police/pkg/admission/image_security/check_image_signing.go - func isImageSigned()
+
+
 Run admissions in Kubernetes Cluster (preferrably customer one) and provide audit , remediation possilibity through guidance through Kyverno. 
 
 ## TASK
