@@ -11,11 +11,9 @@ import (
 	corev1 "k8s.io/api/core/v1"
 )
 
-// ImageSecurity defines a structure for image security policies
-type ImageSecurity struct {
-	AllowedRegistries   []string `yaml:"allowedRegistries"`
-	RequireImageSigning bool     `yaml:"requireImageSigning"`
-	DisallowedTags      []string `yaml:"disallowedTags"`
+// DisallowedTags defines a structure for disallowed image tags
+type DisallowedTags struct {
+	DisallowedTags []string `yaml:"disallowedTags"`
 }
 
 // CheckImageTags validates if a pod's images are using allowed tags
@@ -28,16 +26,16 @@ func CheckImageTags(request *admissionv1.AdmissionRequest) bool {
 		return false // Fails the validation if the pod can't be parsed
 	}
 
-	// Retrieve the image security policies
-	imageSecurity, err := getImageSecurity()
+	// Retrieve the disallowed tags policies
+	disallowedTags, err := getDisallowedTags()
 	if err != nil {
-		log.Println("Failed to load image security policies:", err)
+		log.Println("Failed to load disallowed tags policies:", err)
 		return false
 	}
 
 	// Check if the pod's containers are using allowed image tags
 	for _, container := range pod.Spec.Containers {
-		if !isImageTagAllowed(container.Image, imageSecurity.DisallowedTags) {
+		if !isImageTagAllowed(container.Image, disallowedTags.DisallowedTags) {
 			log.Printf("Pod %s in namespace %s is using an image with a disallowed tag: %s\n", pod.Name, pod.Namespace, container.Image)
 			return false
 		}
@@ -46,8 +44,8 @@ func CheckImageTags(request *admissionv1.AdmissionRequest) bool {
 	return true // Passes the check if all images have allowed tags
 }
 
-// getImageSecurity loads the image security policies from the configuration file
-func getImageSecurity() (*ImageSecurity, error) {
+// getDisallowedTags loads the disallowed tags policies from the configuration file
+func getDisallowedTags() (*DisallowedTags, error) {
 	configPath := os.Getenv("SECURITY_POLICIES_PATH")
 	if configPath == "" {
 		configPath = "configs/security-policies.yaml" // Default path
@@ -59,7 +57,7 @@ func getImageSecurity() (*ImageSecurity, error) {
 	}
 
 	var policies struct {
-		ImageSecurity ImageSecurity `yaml:"imageSecurity"`
+		DisallowedTags DisallowedTags `yaml:"disallowedTags"`
 	}
 
 	err = yaml.Unmarshal(data, &policies)
@@ -67,7 +65,7 @@ func getImageSecurity() (*ImageSecurity, error) {
 		return nil, err
 	}
 
-	return &policies.ImageSecurity, nil
+	return &policies.DisallowedTags, nil
 }
 
 // isImageTagAllowed checks if an image tag is allowed

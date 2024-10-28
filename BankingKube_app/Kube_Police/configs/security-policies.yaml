@@ -31,7 +31,10 @@ policies:
         - "trustedregistry.com"
     requireImageSigning: true
     disallowedTags:
-    - "latest"
+      - "latest"
+      - "unstable"
+      - "dev"
+    
 
   # Network Security Policies
   networkSecurity:
