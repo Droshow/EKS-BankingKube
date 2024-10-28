@@ -1,33 +1,5 @@
 policies:
-#Context & Capabilities Policies
-  podSecurityContext:
-    allowPrivilegeEscalation: false
-    runAsNonRoot: true
-    readOnlyRootFilesystem: true
-  capabilities:
-    # allowedCapabilities:
-    #   - "CAP_NET_BIND_SERVICE"
-    disallowedCapabilities:
-      - "CAP_SYS_ADMIN"
-      - "CAP_NET_ADMIN"
-    requiredDrops:
-      - "CAP_SYS_ADMIN"
-      - "CAP_NET_ADMIN"
-
-#Volume Security Policies
-  volumeSecurity:
-    disallowedHostPaths:
-      - "/var/run/docker.sock"
-      - "/root"
-    restrictedStorageClasses:
-      - "fast-storage"
-      - "shared-storage"
-# Network Security Policies
-  networkSecurity:
-    requiredNetworkPolicies:
-      - "default-deny-all"
-      - "internal-communication-only"
-# api & service account restrictions
+  # Api & service account restrictions
   apiRestrictions:
     restrictedAPIPaths:
       - "/api/v1/namespaces/*/pods/exec"
@@ -36,7 +8,38 @@ policies:
     restrictedServiceAccounts:
       - "default"
       - "admin"
-# Resource Limits Policies
+
+  # Context & Capabilities Policies
+    podSecurityContext:
+      allowPrivilegeEscalation: false
+      runAsNonRoot: true
+      readOnlyRootFilesystem: true
+    capabilities:
+      # allowedCapabilities:
+      #   - "CAP_NET_BIND_SERVICE"
+      disallowedCapabilities:
+        - "CAP_SYS_ADMIN"
+        - "CAP_NET_ADMIN"
+      requiredDrops:
+        - "CAP_SYS_ADMIN"
+        - "CAP_NET_ADMIN"
+
+  # Image Security Policies
+    imageSecurity:
+      allowedRegistries:
+        - "myregistry.com"
+        - "trustedregistry.com"
+    requireImageSigning: true
+    disallowedTags:
+    - "latest"
+
+  # Network Security Policies
+  networkSecurity:
+    requiredNetworkPolicies:
+      - "default-deny-all"
+      - "internal-communication-only"
+  
+  # Resource Limits Policies
   resourceLimits:
     cpuLimits:
       max: "1000m"
@@ -46,3 +49,12 @@ policies:
       min: "256Mi"
     enforceResourceLimits: true
   enforceResourceRequests: true
+
+  # Volume Security Policies
+  volumeSecurity:
+    disallowedHostPaths:
+      - "/var/run/docker.sock"
+      - "/root"
+    restrictedStorageClasses:
+      - "fast-storage"
+      - "shared-storage"
