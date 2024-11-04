@@ -36,10 +36,7 @@ KubePolice/
 │   │   ├── context_capabilities/ # Context and capabilities checks
 │   │   │   ├── README.md
 │   │   │   ├── check_capabilities.go
-│   │   │   ├── check_privilege.go
-│   │   │   ├── check_read_only_root.go
-│   │   │   ├── check_run_as_user.go
-│   │   │   └── validate_capability.go
+│   │   │   ├── check_pod_security_context.go
 │   │   ├── image_security/  # Image security checks
 │   │   │   ├── README.md
 │   │   │   ├── check_image_registry.go
