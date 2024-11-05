@@ -65,3 +65,66 @@ KubePolice/
 ├── go.mod                   # Go module
 ├── go.sum                   # Go dependencies
 ├── README.md                # Project documentation
+
+## 5.11.2024
+
+## Immediate Development Focus
+
+### Phase 1: Complete Admission Control Core
+
+#### Finish Key Admission Checks:
+- Ensure each category (RBAC, network security, context capabilities, etc.) has robust admission checks.
+- Standardize each check to include appropriate logging and error handling to capture critical security events.
+
+#### Implement Centralized Policy Configuration:
+- Finalize `security-policies.yaml` to house all necessary policy definitions (RBAC rules, network policies, capabilities, etc.).
+- Load policies dynamically from `security-policies.yaml` in each relevant admission check for consistency and ease of customization.
+
+#### Audit-Ready Logging Enhancement:
+- Refine logging mechanisms across all admission checks.
+- Include details like namespace, pod name, reason for check failure, and the user initiating the action.
+
+### Phase 2: Scanning and Reporting
+
+#### Develop a Scanning Module:
+- Implement a periodic scanning process to validate that pods and namespaces comply with configured security policies.
+- Ensure that each scan checks for non-compliant RBAC roles, missing or misconfigured network policies, and excessive permissions in context capabilities.
+
+#### Generate Compliance Reports:
+- Build basic reporting capabilities to summarize scan results, such as non-compliant resources and the types of violations found.
+- Include both a high-level summary and details to help administrators address specific issues.
+
+### Phase 3: Remediation Strategy
+
+#### Design Remediation Actions:
+- Start with basic remediation suggestions (e.g., “remove privileged container,” “apply network policy”) as part of the compliance report.
+- Define automated remediation logic for issues that can be handled safely, like enforcing `readOnlyRootFilesystem` or applying default-deny network policies.
+
+#### Integrate with Kyverno for Extended Policy Enforcement:
+- Integrate Kyverno as a remediation option, allowing it to enforce policies dynamically on detected violations.
+- Set up templates for Kyverno policies that users can apply as needed.
+
+#### Develop a Dashboard for Visibility:
+- Create a simple dashboard to view audit logs, compliance reports, and active policy violations.
+- Include filters for different namespaces, resource types, and violation types, making it easier to spot critical issues.
+
+## Development Milestones
+
+### Admission Control:
+- Finalize all key checks and ensure each can dynamically read from `security-policies.yaml`.
+- Test admission controls against various scenarios to confirm correct operation.
+
+### Scanning & Reporting:
+- Deploy a functional scanning module that runs in the background, periodically validating compliance.
+- Implement initial reporting capabilities to summarize scan findings and detail any policy violations.
+
+### Remediation:
+- Define remediation strategies and begin integrating Kyverno for automated enforcement options.
+- Test automated remediation actions in a controlled environment to avoid disruptions.
+
+## Immediate Deliverables
+- Completed admission checks and logging.
+- A functional scanner that generates a compliance report.
+- Basic dashboard layout and integration with logs and compliance report data.
+
+This plan gives a clear path to achieving a robust Kubernetes admission control and policy auditing solution, with a foundation for future remediation and advanced monitoring.

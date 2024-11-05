@@ -42,6 +42,10 @@ policies:
       requiredNetworkPolicies:
         - "default-deny-all"
         - "internal-communication-only"
+    egressPolicy:
+      allowedEgressCIDRs:
+        - "10.0.0.0/24"
+        - "192.168.1.0/24"
 
   # Resource Limits Policies
   resourceLimits:

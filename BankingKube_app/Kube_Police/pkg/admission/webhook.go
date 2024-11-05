@@ -68,13 +68,22 @@ func validatePod(request *admissionv1.AdmissionRequest) *admissionv1.AdmissionRe
 			Message: "Pod contains disallowed host paths.",
 		}
 	}
-
+	// Check for Pod Network Policy Security
 	if !network_security.CheckNetworkPolicy(request) { // Integrate CheckNetworkPolicy
 		allowed = false
 		result = &metav1.Status{
 			Message: "Pod does not comply with network policies.",
 		}
 	}
+
+	// Check for Host Network usage
+    if !network_security.CheckHostNetwork(request) {
+        allowed = false
+        result = &metav1.Status{
+            Message: "Pod is using the host network, which is disallowed.",
+        }
+    }
+
 	// Check for API Restrictions & Service Accounts
 	if !api_restrictions.CheckAPIAccess(request) { // Integrate CheckAPIAccess
 		allowed = false
