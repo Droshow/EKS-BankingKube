@@ -76,13 +76,12 @@ func validatePod(request *admissionv1.AdmissionRequest) *admissionv1.AdmissionRe
 		}
 	}
 
-	// Check for Host Network usage
-    if !network_security.CheckHostNetwork(request) {
-        allowed = false
-        result = &metav1.Status{
-            Message: "Pod is using the host network, which is disallowed.",
-        }
-    }
+	if !network_security.CheckHostNetwork(request) {
+		allowed = false
+		result = &metav1.Status{
+			Message: "Pod is using the host network, which is disallowed.",
+		}
+	}
 
 	// Check for API Restrictions & Service Accounts
 	if !api_restrictions.CheckAPIAccess(request) { // Integrate CheckAPIAccess
@@ -98,6 +97,7 @@ func validatePod(request *admissionv1.AdmissionRequest) *admissionv1.AdmissionRe
 			Message: "Pod is using a restricted service account.",
 		}
 	}
+	// Check for Pod Image Security
 	if !image_security.CheckImageRegistry(request) {
 		allowed = false
 		result = &metav1.Status{
@@ -118,7 +118,7 @@ func validatePod(request *admissionv1.AdmissionRequest) *admissionv1.AdmissionRe
 			Message: "Pod is using an image with a disallowed tag.",
 		}
 	}
-
+	// Check for Pod Resource Limits
 	if !resource_limits.CheckResourceLimits(request) { // Integrate CheckResourceLimits
 		allowed = false
 		result = &metav1.Status{
