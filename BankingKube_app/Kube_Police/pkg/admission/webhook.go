@@ -69,6 +69,13 @@ func validatePod(request *admissionv1.AdmissionRequest) *admissionv1.AdmissionRe
 		}
 	}
 	// Check for Pod Network Policy Security
+	if !network_security.CheckPolicyConsistency() {
+		allowed = false
+		result = &metav1.Status{
+			Message: "Security policies are inconsistent.",
+		}
+	}
+
 	if !network_security.CheckNetworkPolicy(request) { // Integrate CheckNetworkPolicy
 		allowed = false
 		result = &metav1.Status{
@@ -80,6 +87,18 @@ func validatePod(request *admissionv1.AdmissionRequest) *admissionv1.AdmissionRe
 		allowed = false
 		result = &metav1.Status{
 			Message: "Pod is using the host network, which is disallowed.",
+		}
+	}
+	if !network_security.CheckEgress(request) {
+		allowed = false
+		result = &metav1.Status{
+			Message: "Pod  has an egress route that violates policy.",
+		}
+	}
+	if !network_security.CheckIngress(request) {
+		allowed = false
+		result = &metav1.Status{
+			Message: "Pod  has an ingress route that violates policy.",
 		}
 	}
 

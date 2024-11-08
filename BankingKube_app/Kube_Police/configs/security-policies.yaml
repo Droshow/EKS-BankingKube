@@ -46,6 +46,28 @@ policies:
       allowedEgressCIDRs:
         - "10.0.0.0/24"
         - "192.168.1.0/24"
+    ingressPolicy:
+      allowedIngressCIDRs:
+        - "10.0.0.0/24"         # Internal network
+        - "192.168.1.0/24"      # Internal network
+        - "203.0.113.0/24"
+    consistencyPolicy:
+      accessEgressPolicy:
+        allowedEgressCIDRs:
+          - "10.0.0.0/24"
+          - "192.168.1.0/24"
+      accessIngressPolicy:
+        allowedIngressCIDRs:
+          - "10.0.0.0/24"         # Internal network
+          - "192.168.1.0/24"      # Internal network
+          - "203.0.113.0/24"
+        # Allowed Overlapping CIDRs
+      allowedOverlappingEgressCIDRs:
+      - "10.0.0.0/24"
+      - "192.168.1.0/24"
+      allowedOverlappingIngressCIDRs:
+        - "10.0.0.0/24"
+        - "192.168.1.0/24"
 
   # Resource Limits Policies
   resourceLimits:
