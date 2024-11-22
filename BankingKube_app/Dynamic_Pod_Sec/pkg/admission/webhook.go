@@ -8,9 +8,9 @@ import (
 	"github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/pkg/admission/context_capabilities"
 	"github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/pkg/admission/image_security"
 	"github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/pkg/admission/network_security"
+	"github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/pkg/admission/rbac_checks"
 	"github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/pkg/admission/resource_limits"
 	"github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/pkg/admission/volume_security"
-	"github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/pkg/admission/rbac_checks"
 
 	admissionv1 "k8s.io/api/admission/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -139,13 +139,27 @@ func validatePod(request *admissionv1.AdmissionRequest) *admissionv1.AdmissionRe
 		}
 	}
 	// Check for RBAC Policies
-	if !rbac_checks.CheckRBACBinding(request) { 
+	if !rbac_checks.CheckRBACBinding(request) {
 		allowed = false
 		result = &metav1.Status{
 			Message: "ClusterRoleBinding uses restricted ClusterRole.",
 		}
 	}
 
+	// Check for Permission Levels
+	if !rbac_checks.CheckPermissionLevels(request) {
+		allowed = false
+		result = &metav1.Status{
+			Message: "Role or ClusterRole has restricted permissions.",
+		}
+	}
+
+	if !rbac_checks.CheckRoleScope(request) {
+		allowed = false
+		result = &metav1.Status{
+			Message: "Role or ClusterRole has restricted scope.",
+		}
+	}
 
 	// Check for Pod Resource Limits
 	if !resource_limits.CheckResourceLimits(request) { // Integrate CheckResourceLimits

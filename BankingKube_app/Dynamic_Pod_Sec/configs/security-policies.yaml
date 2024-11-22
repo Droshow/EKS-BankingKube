@@ -77,7 +77,19 @@ policies:
     restrictedRoleBindings:
         - "edit"
         - "view"
-
+  permissionLevelsPolicy:
+    restrictedVerbs:
+      - "delete"
+      - "update"
+    restrictedResources:
+      - "secrets"
+      - "configmaps"
+  roleScopePolicy:
+    restrictedNamespaces:
+      - "kube-system"
+      - "default"
+  
+  
   # Resource Limits Policies
   resourceLimits:
     cpuLimits:
