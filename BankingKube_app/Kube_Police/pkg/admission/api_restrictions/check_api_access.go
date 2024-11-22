@@ -13,7 +13,6 @@ import (
 
 // APIRestrictions defines a structure for restricted API paths and service accounts
 type APIRestrictions struct {
-	RestrictedServiceAccounts []string `yaml:"restrictedServiceAccounts"`
 	RestrictedAPIPaths        []string `yaml:"restrictedAPIPaths"`
 }
 

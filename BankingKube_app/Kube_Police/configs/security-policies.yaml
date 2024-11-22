@@ -69,6 +69,15 @@ policies:
       - "10.0.0.0/24"
       - "192.168.1.0/24"
 
+  # RBAC Policies
+  checkRoleBindingsPolicy:
+    restrictedClusterRoles:
+        - "cluster-admin"
+        - "admin"
+    restrictedRoleBindings:
+        - "edit"
+        - "view"
+
   # Resource Limits Policies
   resourceLimits:
     cpuLimits:
