@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"os"
+	"os/exec"
 
 	"gopkg.in/yaml.v2"
 	admissionv1 "k8s.io/api/admission/v1"
@@ -74,15 +75,25 @@ func getRequireImageSigning() (*RequireImageSigning, error) {
 	return &policies.ImageSecurity.RequireImageSigning, nil
 }
 
-// isImageSigned checks if an image is signed
+// isImageSigned checks if the image is signed using cosign
 func isImageSigned(image string) bool {
-	// This function would typically check the image signature
-	// Here we assume all images are signed for demonstration purposes
-	// #TODO
-	// Public Key: The publicKeyPath variable should point to the public key used to verify the image signatures.
-	// Cosign Command: The exec.Command function constructs the Cosign verify command.
-	// Run Command: The cmd.CombinedOutput function runs the command and captures the output.
-	// Error Handling: If the command fails, the function logs the error and returns false.
-	// Success: If the command succeeds, the function logs the success and returns true.
+	// Get the public key path from the environment variable
+	publicKeyPath := os.Getenv("COSIGN_PUBLIC_KEY_PATH")
+	if publicKeyPath == "" {
+		log.Println("COSIGN_PUBLIC_KEY_PATH environment variable is not set")
+		return false
+	}
+
+	// Construct the cosign verify command
+	cmd := exec.Command("cosign", "verify", "--key", publicKeyPath, image)
+
+	// Run the command and capture the output
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		log.Printf("Failed to verify image signature for %s: %v\nOutput: %s", image, err, string(output))
+		return false
+	}
+
+	log.Printf("Successfully verified image signature for %s\n", image)
 	return true
 }
