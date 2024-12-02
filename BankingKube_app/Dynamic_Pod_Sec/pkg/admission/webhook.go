@@ -16,7 +16,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// HandleAdmissionRequest handles incoming admission requests
+// HandleAdmissionRequest handles incoming admission requests based on the URL path
 func HandleAdmissionRequest(w http.ResponseWriter, r *http.Request) {
 	var admissionReview admissionv1.AdmissionReview
 	err := json.NewDecoder(r.Body).Decode(&admissionReview)
@@ -25,8 +25,27 @@ func HandleAdmissionRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Main validation logic that calls individual security checks
-	response := validatePod(admissionReview.Request)
+	// Determine which validation to perform based on the request path
+	var response *admissionv1.AdmissionResponse
+	switch r.URL.Path {
+	case "/validate/context":
+		response = validateContext(admissionReview.Request)
+	case "/validate/volumes":
+		response = validateVolumes(admissionReview.Request)
+	case "/validate/network":
+		response = validateNetwork(admissionReview.Request)
+	case "/validate/api":
+		response = validateAPI(admissionReview.Request)
+	case "/validate/image":
+		response = validateImage(admissionReview.Request)
+	case "/validate/rbac":
+		response = validateRBAC(admissionReview.Request)
+	case "/validate/resources":
+		response = validateResources(admissionReview.Request)
+	default:
+		http.Error(w, "Invalid validation path", http.StatusNotFound)
+		return
+	}
 
 	admissionReview.Response = response
 	admissionReview.Response.UID = admissionReview.Request.UID
@@ -41,144 +60,137 @@ func HandleAdmissionRequest(w http.ResponseWriter, r *http.Request) {
 	w.Write(resp)
 }
 
-// validatePod is the main function that calls individual validation functions
-func validatePod(request *admissionv1.AdmissionRequest) *admissionv1.AdmissionResponse {
+// validateContext handles context and capabilities checks
+func validateContext(request *admissionv1.AdmissionRequest) *admissionv1.AdmissionResponse {
 	allowed := true
-	result := &metav1.Status{
-		Message: "Pod validation passed",
-	}
+	result := &metav1.Status{Message: "Pod context validation passed"}
 
-	// Check for Pod Context Security and Capabilities
 	if !context_capabilities.CheckPodSecurityContext(request) {
 		allowed = false
-		result = &metav1.Status{
-			Message: "Pod contains privileged containers, which is not allowed.",
-		}
+		result = &metav1.Status{Message: "Pod contains privileged containers, which is not allowed."}
 	}
-
 	if !context_capabilities.CheckCapabilities(request) {
 		allowed = false
-		result = &metav1.Status{
-			Message: "Pod contains containers with disallowed capabilities.",
-		}
+		result = &metav1.Status{Message: "Pod contains containers with disallowed capabilities."}
 	}
-	// Check for Pod Volume Security
+
+	return &admissionv1.AdmissionResponse{Allowed: allowed, Result: result}
+}
+
+// validateVolumes handles volume security checks
+func validateVolumes(request *admissionv1.AdmissionRequest) *admissionv1.AdmissionResponse {
+	allowed := true
+	result := &metav1.Status{Message: "Pod volume validation passed"}
+
 	if !volume_security.CheckHostPath(request) {
 		allowed = false
-		result = &metav1.Status{
-			Message: "Pod contains disallowed host paths.",
-		}
+		result = &metav1.Status{Message: "Pod contains disallowed host paths."}
 	}
-	// Check for Pod Network Policy Security
+
+	return &admissionv1.AdmissionResponse{Allowed: allowed, Result: result}
+}
+
+// validateNetwork handles network security checks
+func validateNetwork(request *admissionv1.AdmissionRequest) *admissionv1.AdmissionResponse {
+	allowed := true
+	result := &metav1.Status{Message: "Pod network validation passed"}
+
 	if !network_security.CheckPolicyConsistency() {
 		allowed = false
-		result = &metav1.Status{
-			Message: "Security policies are inconsistent.",
-		}
+		result = &metav1.Status{Message: "Security policies are inconsistent."}
 	}
-
-	if !network_security.CheckNetworkPolicy(request) { // Integrate CheckNetworkPolicy
+	if !network_security.CheckNetworkPolicy(request) {
 		allowed = false
-		result = &metav1.Status{
-			Message: "Pod does not comply with network policies.",
-		}
+		result = &metav1.Status{Message: "Pod does not comply with network policies."}
 	}
-
 	if !network_security.CheckHostNetwork(request) {
 		allowed = false
-		result = &metav1.Status{
-			Message: "Pod is using the host network, which is disallowed.",
-		}
+		result = &metav1.Status{Message: "Pod is using the host network, which is disallowed."}
 	}
 	if !network_security.CheckEgress(request) {
 		allowed = false
-		result = &metav1.Status{
-			Message: "Pod  has an egress route that violates policy.",
-		}
+		result = &metav1.Status{Message: "Pod has an egress route that violates policy."}
 	}
 	if !network_security.CheckIngress(request) {
 		allowed = false
-		result = &metav1.Status{
-			Message: "Pod  has an ingress route that violates policy.",
-		}
+		result = &metav1.Status{Message: "Pod has an ingress route that violates policy."}
 	}
 
-	// Check for API Restrictions & Service Accounts
-	if !api_restrictions.CheckAPIAccess(request) { // Integrate CheckAPIAccess
+	return &admissionv1.AdmissionResponse{Allowed: allowed, Result: result}
+}
+
+// validateAPI handles API access and service account checks
+func validateAPI(request *admissionv1.AdmissionRequest) *admissionv1.AdmissionResponse {
+	allowed := true
+	result := &metav1.Status{Message: "Pod API access validation passed"}
+
+	if !api_restrictions.CheckAPIAccess(request) {
 		allowed = false
-		result = &metav1.Status{
-			Message: "Pod is attempting to access restricted API paths.",
-		}
+		result = &metav1.Status{Message: "Pod is attempting to access restricted API paths."}
+	}
+	if !api_restrictions.CheckServiceAccount(request) {
+		allowed = false
+		result = &metav1.Status{Message: "Pod is using a restricted service account."}
 	}
 
-	if !api_restrictions.CheckServiceAccount(request) { // Integrate CheckServiceAccount
-		allowed = false
-		result = &metav1.Status{
-			Message: "Pod is using a restricted service account.",
-		}
-	}
-	// Check for Pod Image Security
+	return &admissionv1.AdmissionResponse{Allowed: allowed, Result: result}
+}
+
+// validateImage handles image security checks
+func validateImage(request *admissionv1.AdmissionRequest) *admissionv1.AdmissionResponse {
+	allowed := true
+	result := &metav1.Status{Message: "Pod image validation passed"}
+
 	if !image_security.CheckImageRegistry(request) {
 		allowed = false
-		result = &metav1.Status{
-			Message: "Pod is using an image from a disallowed registry.",
-		}
+		result = &metav1.Status{Message: "Pod is using an image from a disallowed registry."}
 	}
-
 	if !image_security.CheckImageSigning(request) {
 		allowed = false
-		result = &metav1.Status{
-			Message: "Pod is using an unsigned image.",
-		}
+		result = &metav1.Status{Message: "Pod is using an unsigned image."}
 	}
-
 	if !image_security.CheckImageTags(request) {
 		allowed = false
-		result = &metav1.Status{
-			Message: "Pod is using an image with a disallowed tag.",
-		}
+		result = &metav1.Status{Message: "Pod is using an image with a disallowed tag."}
 	}
-	// Check for RBAC Policies
+
+	return &admissionv1.AdmissionResponse{Allowed: allowed, Result: result}
+}
+
+// validateRBAC handles RBAC-related checks
+func validateRBAC(request *admissionv1.AdmissionRequest) *admissionv1.AdmissionResponse {
+	allowed := true
+	result := &metav1.Status{Message: "RBAC validation passed"}
+
 	if !rbac_checks.CheckRBACBinding(request) {
 		allowed = false
-		result = &metav1.Status{
-			Message: "ClusterRoleBinding uses restricted ClusterRole.",
-		}
+		result = &metav1.Status{Message: "ClusterRoleBinding uses a restricted ClusterRole."}
 	}
-
-	// Check for Permission Levels
 	if !rbac_checks.CheckPermissionLevels(request) {
 		allowed = false
-		result = &metav1.Status{
-			Message: "Role or ClusterRole has restricted permissions.",
-		}
+		result = &metav1.Status{Message: "Role or ClusterRole has restricted permissions."}
 	}
-
 	if !rbac_checks.CheckRoleScope(request) {
 		allowed = false
-		result = &metav1.Status{
-			Message: "Role or ClusterRole has restricted scope.",
-		}
+		result = &metav1.Status{Message: "Role or ClusterRole has restricted scope."}
 	}
 
-	// Check for Pod Resource Limits
-	if !resource_limits.CheckResourceLimits(request) { // Integrate CheckResourceLimits
+	return &admissionv1.AdmissionResponse{Allowed: allowed, Result: result}
+}
+
+// validateResources handles resource limit and request checks
+func validateResources(request *admissionv1.AdmissionRequest) *admissionv1.AdmissionResponse {
+	allowed := true
+	result := &metav1.Status{Message: "Pod resource validation passed"}
+
+	if !resource_limits.CheckResourceLimits(request) {
 		allowed = false
-		result = &metav1.Status{
-			Message: "Pod contains containers without resource limits.",
-		}
+		result = &metav1.Status{Message: "Pod contains containers without resource limits."}
 	}
-
-	if !resource_limits.CheckResourceRequests(request) { // Integrate CheckResourceRequests
+	if !resource_limits.CheckResourceRequests(request) {
 		allowed = false
-		result = &metav1.Status{
-			Message: "Pod contains containers without resource requests.",
-		}
+		result = &metav1.Status{Message: "Pod contains containers without resource requests."}
 	}
 
-	// Return the response
-	return &admissionv1.AdmissionResponse{
-		Allowed: allowed,
-		Result:  result,
-	}
+	return &admissionv1.AdmissionResponse{Allowed: allowed, Result: result}
 }

@@ -3,6 +3,7 @@ kind: ValidatingWebhookConfiguration
 metadata:
   name: "dynamic-pod-sec-webhook"
 webhooks:
+  # Context and Capabilities Validation
   - name: "validate-pod-context.example.com"
     rules:
       - operations: ["CREATE", "UPDATE"]
@@ -19,6 +20,7 @@ webhooks:
     failurePolicy: Fail
     timeoutSeconds: 5
 
+  # Volume Security Validation
   - name: "validate-pod-volumes.example.com"
     rules:
       - operations: ["CREATE", "UPDATE"]
@@ -35,6 +37,7 @@ webhooks:
     failurePolicy: Fail
     timeoutSeconds: 5
 
+  # Network Security Validation
   - name: "validate-pod-network.example.com"
     rules:
       - operations: ["CREATE", "UPDATE"]
@@ -46,6 +49,74 @@ webhooks:
         name: "admission-controller-service"
         namespace: "default"
         path: "/validate/network"
+      caBundle: <CA_BUNDLE>
+    admissionReviewVersions: ["v1"]
+    failurePolicy: Fail
+    timeoutSeconds: 5
+
+  # API Access and Service Account Restrictions
+  - name: "validate-api-restrictions.example.com"
+    rules:
+      - operations: ["CREATE", "UPDATE"]
+        apiGroups: [""]
+        apiVersions: ["v1"]
+        resources: ["pods"]
+    clientConfig:
+      service:
+        name: "admission-controller-service"
+        namespace: "default"
+        path: "/validate/api"
+      caBundle: <CA_BUNDLE>
+    admissionReviewVersions: ["v1"]
+    failurePolicy: Fail
+    timeoutSeconds: 5
+
+  # Image Security Validation
+  - name: "validate-image-security.example.com"
+    rules:
+      - operations: ["CREATE", "UPDATE"]
+        apiGroups: [""]
+        apiVersions: ["v1"]
+        resources: ["pods"]
+    clientConfig:
+      service:
+        name: "admission-controller-service"
+        namespace: "default"
+        path: "/validate/image"
+      caBundle: <CA_BUNDLE>
+    admissionReviewVersions: ["v1"]
+    failurePolicy: Fail
+    timeoutSeconds: 5
+
+  # RBAC Validation
+  - name: "validate-rbac.example.com"
+    rules:
+      - operations: ["CREATE", "UPDATE"]
+        apiGroups: ["rbac.authorization.k8s.io"]
+        apiVersions: ["v1"]
+        resources: ["clusterrolebindings", "rolebindings", "roles", "clusterroles"]
+    clientConfig:
+      service:
+        name: "admission-controller-service"
+        namespace: "default"
+        path: "/validate/rbac"
+      caBundle: <CA_BUNDLE>
+    admissionReviewVersions: ["v1"]
+    failurePolicy: Fail
+    timeoutSeconds: 5
+
+  # Resource Limits Validation
+  - name: "validate-resource-limits.example.com"
+    rules:
+      - operations: ["CREATE", "UPDATE"]
+        apiGroups: [""]
+        apiVersions: ["v1"]
+        resources: ["pods"]
+    clientConfig:
+      service:
+        name: "admission-controller-service"
+        namespace: "default"
+        path: "/validate/resources"
       caBundle: <CA_BUNDLE>
     admissionReviewVersions: ["v1"]
     failurePolicy: Fail
