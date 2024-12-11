@@ -1,0 +1,20 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: "dynamic-pod-sec-mutate-webhook"
+webhooks:
+  - name: "mutate-pod-security.example.com"
+    rules:
+      - operations: ["CREATE", "UPDATE"]
+        apiGroups: [""]
+        apiVersions: ["v1"]
+        resources: ["pods"]
+    clientConfig:
+      service:
+        name: "admission-controller-service"
+        namespace: "default"
+        path: "/mutate/pod"
+      caBundle: <CA_BUNDLE>
+    admissionReviewVersions: ["v1"]
+    failurePolicy: Fail
+    timeoutSeconds: 5

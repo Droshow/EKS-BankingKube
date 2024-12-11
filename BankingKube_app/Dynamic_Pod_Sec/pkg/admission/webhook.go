@@ -13,6 +13,7 @@ import (
 	"github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/pkg/admission/volume_security"
 
 	admissionv1 "k8s.io/api/admission/v1"
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -42,6 +43,8 @@ func HandleAdmissionRequest(w http.ResponseWriter, r *http.Request) {
 		response = validateRBAC(admissionReview.Request)
 	case "/validate/resources":
 		response = validateResources(admissionReview.Request)
+	case "/mutate/pod":
+		response = mutatePod(admissionReview.Request)
 	default:
 		http.Error(w, "Invalid validation path", http.StatusNotFound)
 		return
@@ -54,6 +57,7 @@ func HandleAdmissionRequest(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
+
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -193,4 +197,58 @@ func validateResources(request *admissionv1.AdmissionRequest) *admissionv1.Admis
 	}
 
 	return &admissionv1.AdmissionResponse{Allowed: allowed, Result: result}
+}
+
+// mutatePod applies baseline security configurations
+func mutatePod(request *admissionv1.AdmissionRequest) *admissionv1.AdmissionResponse {
+	pod := &corev1.Pod{}
+	if err := json.Unmarshal(request.Object.Raw, pod); err != nil {
+		return &admissionv1.AdmissionResponse{
+			Allowed: false,
+			Result:  &metav1.Status{Message: "Failed to parse Pod object"},
+		}
+	}
+
+	applyBaselineSecurity(pod)
+
+	patchBytes, err := json.Marshal(pod)
+	if err != nil {
+		return &admissionv1.AdmissionResponse{
+			Allowed: false,
+			Result:  &metav1.Status{Message: "Failed to generate patch"},
+		}
+	}
+
+	return &admissionv1.AdmissionResponse{
+		Allowed: true,
+		Patch:   patchBytes,
+		PatchType: func() *admissionv1.PatchType {
+			pt := admissionv1.PatchTypeJSONPatch
+			return &pt
+		}(),
+	}
+}
+
+// applyBaselineSecurity applies essential security defaults
+func applyBaselineSecurity(pod *corev1.Pod) {
+	for i := range pod.Spec.Containers {
+		if pod.Spec.Containers[i].SecurityContext == nil {
+			pod.Spec.Containers[i].SecurityContext = &corev1.SecurityContext{}
+		}
+
+		// Apply essential security defaults
+		pod.Spec.Containers[i].SecurityContext.RunAsNonRoot = boolPtr(true)
+		pod.Spec.Containers[i].SecurityContext.ReadOnlyRootFilesystem = boolPtr(true)
+		pod.Spec.Containers[i].SecurityContext.AllowPrivilegeEscalation = boolPtr(false)
+
+		// Drop disallowed capabilities
+		pod.Spec.Containers[i].SecurityContext.Capabilities = &corev1.Capabilities{
+			Drop: []corev1.Capability{"CAP_SYS_ADMIN", "CAP_NET_ADMIN"},
+		}
+	}
+}
+
+// Helper function to create boolean pointers
+func boolPtr(b bool) *bool {
+	return &b
 }
