@@ -187,3 +187,12 @@ Using Kubernetes for containerized applications offers great flexibility and sca
 7. **Enhance Logging and Observability**
    - Add detailed logs for each validation step.
    - Integrate with tools like Prometheus or Datadog for monitoring webhook performance.
+
+## 11.2.2024 Development Update
+
+### Proposed Development Order
+
+1. **Certificate Service**: Secure your webhook service with TLS.
+2. **Deploy Dynamic_Pod_Sec Service**: Get your webhook running in the cluster.
+3. **Enhanced Logging with OTEL**: Add observability for real-time monitoring.
+4. **Kyverno Integration**: Implement automated remediation for long-term compliance.
