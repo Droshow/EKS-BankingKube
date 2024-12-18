@@ -196,3 +196,47 @@ Using Kubernetes for containerized applications offers great flexibility and sca
 2. **Deploy Dynamic_Pod_Sec Service**: Get your webhook running in the cluster.
 3. **Enhanced Logging with OTEL**: Add observability for real-time monitoring.
 4. **Kyverno Integration**: Implement automated remediation for long-term compliance.
+
+
+## 18.12.2024
+Proposed structure: 
+
+
+Dynamic_Pod_Sec/
+│
+├── cmd/
+│   └── main.go                       # Entry point for the webhook server
+│
+├── configs/                          # Application-specific configurations
+│   └── security-policies.yaml        # Tracked security policies
+│
+├── k8s/                              # Kubernetes manifests
+│   ├── webhook-config.yaml           # ValidatingWebhookConfiguration
+│   ├── mutation-webhook-config.yaml  # MutatingWebhookConfiguration
+│   ├── webhook-service.yaml          # Service to expose the webhook
+│   ├── webhook-deployment.yaml       # Deployment for the webhook
+│   └── rbac.yaml                     # RBAC permissions for the webhook
+│
+├── pkg/
+│   ├── admission/                    # Admission handlers
+│   │   ├── api_restrictions/
+│   │   ├── context_capabilities/
+│   │   ├── image_security/
+│   │   ├── network_security/
+│   │   ├── rbac_checks/
+│   │   ├── resource_limits/
+│   │   ├── volume_security/
+│   │   └── webhook.go                # Main admission logic
+│   │
+│   ├── server/                       # Webhook server code
+│   │   └── server.go
+│   │
+│   └── utils/                        # Utility functions
+│       └── utils.go
+│
+├── scripts/
+│   └── generate-certs.sh             # Script to generate TLS certificates and update configs
+│
+├── Dockerfile                        # Docker build file for the webhook service
+├── go.mod                            # Go dependencies
+└── README.md                         # Project overview and setup instructions

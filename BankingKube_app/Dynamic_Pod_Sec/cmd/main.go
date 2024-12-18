@@ -11,17 +11,20 @@ import (
 func main() {
 	log.Println("Starting Webhook Server...")
 
-	certFile := getSecret("WEBHOOK_CERT_SECRET_NAME", "eu-central-1")
-	keyFile := getSecret("WEBHOOK_KEY_SECRET_NAME", "eu-central-1")
+	certFile := "/tls/tls.crt"
+	keyFile := "/tls/tls.key"
 
-	if certFile == "" || keyFile == "" {
-		log.Fatal("Failed to retrieve certificate or key file from Secrets Manager")
-	}
+	// Register the admission handlers
+	http.HandleFunc("/validate/context", admission.HandleAdmissionRequest)
+	http.HandleFunc("/validate/volumes", admission.HandleAdmissionRequest)
+	http.HandleFunc("/validate/network", admission.HandleAdmissionRequest)
+	http.HandleFunc("/validate/api", admission.HandleAdmissionRequest)
+	http.HandleFunc("/validate/image", admission.HandleAdmissionRequest)
+	http.HandleFunc("/validate/rbac", admission.HandleAdmissionRequest)
+	http.HandleFunc("/validate/resources", admission.HandleAdmissionRequest)
+	http.HandleFunc("/mutate/pod", admission.HandleAdmissionRequest)
 
-	// Register the admission handler
-	http.HandleFunc("/validate", admission.HandleAdmissionRequest)
-
-	// Create and start server
+	// Create and start the server
 	srv := server.NewServer(certFile, keyFile)
 	server.StartServer(srv)
 }
