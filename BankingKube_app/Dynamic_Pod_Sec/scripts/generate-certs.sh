@@ -5,7 +5,7 @@ set -e
 NAMESPACE="default"
 SERVICE="admission-controller-service"
 SECRET="webhook-tls-secret"
-CONFIG_DIR="../configs"
+CONFIG_DIR="../k8s"
 
 # Generate the certificate
 openssl req -x509 -newkey rsa:4096 -keyout tls.key -out tls.crt -days 365 -nodes -subj "/CN=${SERVICE}.${NAMESPACE}.svc"
