@@ -62,7 +62,7 @@ resource "aws_iam_role" "fargate_pod_execution_role" {
   })
 }
 ########################
-#EKS management
+#EKS management role
 ########################
 data "aws_iam_policy_document" "eks_management_policy_doc" {
   statement {

@@ -73,6 +73,11 @@ module "ec2_cluster_access" {
   }
 }
 
+module "ecr" {
+  source        = "./modules/ecr"
+  ecr_repo_name = "banking-kube-repo"
+}
+
 # ### if cert already exists, then use this
 # data "aws_acm_certificate" "existing_cert" {
 #   domain      = "devsbridge.com"

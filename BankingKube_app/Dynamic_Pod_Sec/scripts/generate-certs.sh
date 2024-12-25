@@ -17,7 +17,7 @@ kubectl create secret tls ${SECRET} --cert=tls.crt --key=tls.key -n ${NAMESPACE}
 CA_BUNDLE=$(cat tls.crt | base64 | tr -d '\n')
 
 # Update webhook configuration files
-sed -i.bak "s|<CA_BUNDLE>|${CA_BUNDLE}|g" ${CONFIG_DIR}/webhook-config.yaml
+sed -i.bak "s|<CA_BUNDLE>|${CA_BUNDLE}|g" ${CONFIG_DIR}/validation-webhook-config.yaml
 sed -i.bak "s|<CA_BUNDLE>|${CA_BUNDLE}|g" ${CONFIG_DIR}/mutation-webhook-config.yaml
 
 echo "Certificates generated, secret created, and webhook configurations updated."

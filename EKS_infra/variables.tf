@@ -20,3 +20,13 @@ variable "aws_account_id" {
   type        = string
   default     = "961477247679"
 }
+
+variable "github_repository" {
+  description = "The GitHub repository in the format owner/repo"
+  type        = string
+}
+
+variable "github_ref_name" {
+  description = "The GitHub branch or tag name"
+  type        = string
+}
