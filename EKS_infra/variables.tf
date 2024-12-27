@@ -30,3 +30,7 @@ variable "github_ref_name" {
   description = "The GitHub branch or tag name"
   type        = string
 }
+variable "github_oidc_thumbprint" {
+  description = "The GitHub OIDC thumbprint"
+  type        = string
+}

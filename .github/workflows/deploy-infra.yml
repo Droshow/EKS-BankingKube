@@ -24,13 +24,13 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-          terraform_version: 1.4.0
+          terraform_version: 1.5.7
 
       - name: Initialize Terraform
         run: terraform init
 
       - name: Plan Terraform
-        run: terraform plan
+        run: terraform plan -var-file="EKS-BankingKube/EKS_infra/envs/terraform_dev.tfvars"
 
       - name: Apply Terraform
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -var-file="EKS-BankingKube/EKS_infra/envs/terraform_dev.tfvars"
