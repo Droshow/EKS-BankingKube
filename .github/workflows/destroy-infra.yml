@@ -1,10 +1,10 @@
-name: Deploy Infrastructure
+name: Destroy Infrastructure
 
 on:
   workflow_dispatch:
 
 jobs:
-  deploy-infra:
+  destroy-infra:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -30,8 +30,5 @@ jobs:
       - name: Initialize Terraform
         run: terraform init
 
-      - name: Plan Terraform
-        run: terraform plan -var-file="EKS-BankingKube/EKS_infra/envs/terraform_dev.tfvars"
-
-      - name: Apply Terraform
-        run: terraform apply -auto-approve -var-file="EKS-BankingKube/EKS_infra/envs/terraform_dev.tfvars"
+      - name: Destroy Terraform
+        run: terraform destroy -auto-approve -var-file="EKS-BankingKube/EKS_infra/envs/terraform_dev.tfvars"
