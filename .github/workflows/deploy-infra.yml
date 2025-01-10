@@ -15,6 +15,16 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
+           # Step 2: Debug OIDC Setup
+      - name: Debug OIDC Setup
+        run: |
+          echo "Debugging OIDC setup..."
+          echo "GitHub Repository: ${{ github.repository }}"
+          echo "GitHub Ref: ${{ github.ref }}"
+          echo "GitHub Workflow: ${{ github.workflow }}"
+          echo "GitHub Run ID: ${{ github.run_id }}"
+          echo "OIDC permissions are enabled with id-token: write."
+
       - name: Configure AWS Credentials
         id: configure-aws-credentials
         uses: aws-actions/configure-aws-credentials@v1
