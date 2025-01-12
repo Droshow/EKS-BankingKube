@@ -25,11 +25,11 @@ variable "github_repository" {
   description = "The GitHub repository in the format owner/repo"
   type        = string
 }
-
-variable "github_ref_name" {
-  description = "The GitHub branch or tag name"
-  type        = string
-}
+#Use when you set OIDC reference in IAM Role for specific head or branch
+# variable "github_ref_name" {
+#   description = "The GitHub branch or tag name"
+#   type        = string
+# }
 variable "github_oidc_thumbprint" {
   description = "The GitHub OIDC thumbprint"
   type        = string

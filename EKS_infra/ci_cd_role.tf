@@ -11,8 +11,9 @@ resource "aws_iam_role" "ci_cd_role" {
         }
         Action = "sts:AssumeRoleWithWebIdentity"
         Condition = {
-          StringEquals = {
-            "token.actions.githubusercontent.com:sub" = "repo:${var.github_repository}:ref:refs/heads/${var.github_ref_name}"
+          StringLike = {
+            "token.actions.githubusercontent.com:sub" = "repo:Droshow/EKS-BankingKube:*",
+            "token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
           }
         }
       },
