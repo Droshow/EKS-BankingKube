@@ -37,11 +37,14 @@ jobs:
         with:
           terraform_version: 1.5.7
 
+      - name: Print working directory
+        run: pwd
+
       - name: Initialize Terraform
         run: terraform init
 
       - name: Plan Terraform
-        run: terraform plan -var-file="EKS-BankingKube/EKS_infra/envs/terraform_dev.tfvars"
+        run: terraform plan -var-file="./EKS_infra/envs/terraform_dev.tfvars"
 
-      - name: Apply Terraform
-        run: terraform apply -auto-approve -var-file="EKS-BankingKube/EKS_infra/envs/terraform_dev.tfvars"
+      # - name: Apply Terraform
+      #   run: terraform apply -auto-approve -var-file="EKS-BankingKube/EKS_infra/envs/terraform_dev.tfvars"
