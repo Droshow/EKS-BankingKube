@@ -12,7 +12,7 @@ module "security" {
   domain_name                 = var.domain_name
   route_53cert_validation     = module.networking.aws_route_53_cert_validation
   aws_account_id              = var.aws_account_id
-  fetch_existing_certificates = true
+  fetch_existing_certificates = false
 }
 module "eks" {
   source       = "./modules/eks"

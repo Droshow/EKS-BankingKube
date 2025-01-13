@@ -2,21 +2,40 @@ resource "aws_iam_role" "ci_cd_role" {
   name = "ci-cd-role"
 
   assume_role_policy = jsonencode({
-    Version = "2012-10-17"
+    Version = "2012-10-17",
     Statement = [
       {
-        Effect = "Allow"
+        Effect = "Allow",
         Principal = {
           Federated = "arn:aws:iam::${var.aws_account_id}:oidc-provider/token.actions.githubusercontent.com"
-        }
-        Action = "sts:AssumeRoleWithWebIdentity"
+        },
+        Action = "sts:AssumeRoleWithWebIdentity",
         Condition = {
           StringLike = {
             "token.actions.githubusercontent.com:sub" = "repo:Droshow/EKS-BankingKube:*",
-            "token.actions.githubusercontent.com:aud" : "sts.amazonaws.com"
+            "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
           }
         }
       },
+    ]
+  })
+}
+
+# Custom policy for additional permissions
+resource "aws_iam_policy" "ci_cd_custom_policy" {
+  name        = "ci-cd-custom-policy"
+  description = "Custom policy for additional permissions required by CI/CD role"
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "ec2:DescribeImages",
+          "acm:ListCertificates"
+        ],
+        Resource = "*"
+      }
     ]
   })
 }
@@ -31,7 +50,8 @@ resource "aws_iam_role_policy_attachment" "ci_cd_role_policies" {
     "arn:aws:iam::aws:policy/IAMFullAccess",
     "arn:aws:iam::aws:policy/AmazonVPCFullAccess",
     "arn:aws:iam::aws:policy/AmazonEC2FullAccess",
-    "arn:aws:iam::aws:policy/AWSCertificateManagerFullAccess"
+    "arn:aws:iam::aws:policy/AWSCertificateManagerFullAccess",
+    aws_iam_policy.ci_cd_custom_policy.arn # Attach custom policy
   ])
   role       = aws_iam_role.ci_cd_role.name
   policy_arn = each.value
