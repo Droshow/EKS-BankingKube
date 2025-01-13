@@ -1,1 +1,1 @@
-github_oidc_thumbprint = "6938fd4d98bab03faadb97b34396831e3780aea1"
+github_oidc_thumbprint = "01a5c2bc818c8597ceb29c1db35d2f02c4c1fcf8"
