@@ -12,7 +12,7 @@ module "security" {
   domain_name                 = var.domain_name
   route_53cert_validation     = module.networking.aws_route_53_cert_validation
   aws_account_id              = var.aws_account_id
-  fetch_existing_certificates = false
+  fetch_existing_certificates = false # If the cert exists, set this to true
 }
 module "eks" {
   source       = "./modules/eks"
@@ -63,15 +63,15 @@ module "storage" {
 
 ####HELPERS####
 
-module "ec2_cluster_access" {
-  source            = "./modules/ec2_cluster_access"
-  instance_type     = "t3.medium"
-  subnet_id         = module.networking.private_subnets_ids[0]
-  security_group_id = module.security.eks_cluster_sg_id
-  tags = {
-    Name = "ec2-cluster-access"
-  }
-}
+# module "ec2_cluster_access" {
+#   source            = "./modules/ec2_cluster_access"
+#   instance_type     = "t3.medium"
+#   subnet_id         = module.networking.private_subnets_ids[0]
+#   security_group_id = module.security.eks_cluster_sg_id
+#   tags = {
+#     Name = "ec2-cluster-access"
+#   }
+# }
 
 module "ecr" {
   source        = "./modules/ecr"

@@ -1,6 +1,8 @@
+################################
+# Create the CI/CD Role
+################################
 resource "aws_iam_role" "ci_cd_role" {
   name = "ci-cd-role"
-
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -21,7 +23,9 @@ resource "aws_iam_role" "ci_cd_role" {
   })
 }
 
-# Custom policy for additional permissions
+################################
+# Create the Custom Policy
+################################
 resource "aws_iam_policy" "ci_cd_custom_policy" {
   name        = "ci-cd-custom-policy"
   description = "Custom policy for additional permissions required by CI/CD role"
@@ -31,8 +35,8 @@ resource "aws_iam_policy" "ci_cd_custom_policy" {
       {
         Effect = "Allow",
         Action = [
-          "ec2:DescribeImages",
-          "acm:ListCertificates"
+          "ec2:*",
+          "acm:*",
         ],
         Resource = "*"
       }
@@ -40,9 +44,12 @@ resource "aws_iam_policy" "ci_cd_custom_policy" {
   })
 }
 
-# Attach Policies to CI/CD Role
-resource "aws_iam_role_policy_attachment" "ci_cd_role_policies" {
-  for_each = toset([
+################################
+# Attach Known AWS-Managed Policies
+################################
+# 1) Put your known ARNs in a local variable
+locals {
+  ci_cd_known_arns = [
     "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy",
     "arn:aws:iam::aws:policy/AmazonEKSServicePolicy",
     "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess",
@@ -50,9 +57,21 @@ resource "aws_iam_role_policy_attachment" "ci_cd_role_policies" {
     "arn:aws:iam::aws:policy/IAMFullAccess",
     "arn:aws:iam::aws:policy/AmazonVPCFullAccess",
     "arn:aws:iam::aws:policy/AmazonEC2FullAccess",
-    "arn:aws:iam::aws:policy/AWSCertificateManagerFullAccess",
-    aws_iam_policy.ci_cd_custom_policy.arn # Attach custom policy
-  ])
+    "arn:aws:iam::aws:policy/AWSCertificateManagerFullAccess"
+  ]
+}
+
+resource "aws_iam_role_policy_attachment" "known_policies_attach" {
+  for_each   = toset(local.ci_cd_known_arns)
   role       = aws_iam_role.ci_cd_role.name
   policy_arn = each.value
+}
+
+################################
+# Attach the Custom Policy ARN
+################################
+# 2) Separate resource for the custom policy since it's unknown until apply
+resource "aws_iam_role_policy_attachment" "custom_policy_attach" {
+  role       = aws_iam_role.ci_cd_role.name
+  policy_arn = aws_iam_policy.ci_cd_custom_policy.arn
 }
