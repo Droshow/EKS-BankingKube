@@ -13,7 +13,7 @@ resource "aws_iam_role" "ci_cd_role" {
         Condition = {
           StringLike = {
             "token.actions.githubusercontent.com:sub" = "repo:Droshow/EKS-BankingKube:*",
-            "token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
+            "token.actions.githubusercontent.com:aud" : "sts.amazonaws.com"
           }
         }
       },
@@ -30,8 +30,8 @@ resource "aws_iam_role_policy_attachment" "ci_cd_role_policies" {
     "arn:aws:iam::aws:policy/AmazonS3FullAccess",
     "arn:aws:iam::aws:policy/IAMFullAccess",
     "arn:aws:iam::aws:policy/AmazonVPCFullAccess",
-    "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess",
-    "arn:aws:iam::aws:policy/AWSCertificateManagerReadOnly"
+    "arn:aws:iam::aws:policy/AmazonEC2FullAccess",
+    "arn:aws:iam::aws:policy/AWSCertificateManagerFullAccess"
   ])
   role       = aws_iam_role.ci_cd_role.name
   policy_arn = each.value
