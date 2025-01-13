@@ -29,7 +29,9 @@ resource "aws_iam_role_policy_attachment" "ci_cd_role_policies" {
     "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess",
     "arn:aws:iam::aws:policy/AmazonS3FullAccess",
     "arn:aws:iam::aws:policy/IAMFullAccess",
-    "arn:aws:iam::aws:policy/AmazonVPCFullAccess"
+    "arn:aws:iam::aws:policy/AmazonVPCFullAccess",
+    "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess",
+    "arn:aws:iam::aws:policy/AWSCertificateManagerReadOnly"
   ])
   role       = aws_iam_role.ci_cd_role.name
   policy_arn = each.value
