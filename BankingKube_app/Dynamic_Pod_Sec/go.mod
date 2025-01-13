@@ -1,6 +1,6 @@
 module github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec
 
-go 1.22.5
+go 1.23
 
 require (
 	github.com/aws/aws-sdk-go v1.55.5
