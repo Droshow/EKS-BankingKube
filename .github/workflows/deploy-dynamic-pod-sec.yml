@@ -30,6 +30,7 @@ jobs:
         run: pwd
 
       - name: Build and Push Docker Image
+        working-directory: BankingKube_app/Dynamic_Pod_Sec
         run: |
           IMAGE_NAME=dynamic_pod_sec
           TAG=$(date +%Y%m%d%H%M%S)
@@ -39,7 +40,7 @@ jobs:
         env:
           AWS_ACCOUNT_ID: ${{ env.AWS_ACCOUNT_ID }}
           AWS_REGION: eu-central-1
-          working-directory: BankingKube_app/Dynamic_Pod_Sec
+        
 
       - name: Setup kubectl
         uses: azure/setup-kubectl@v3
