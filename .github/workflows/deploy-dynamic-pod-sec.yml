@@ -36,7 +36,7 @@ jobs:
         env:
           AWS_ACCOUNT_ID: ${{ env.AWS_ACCOUNT_ID }}
           AWS_REGION: eu-central-1
-          working-directory: BankingKube_app/Dynamic_Pod_Security
+          working-directory: BankingKube_app/Dynamic_Pod_Sec
 
       - name: Setup kubectl
         uses: azure/setup-kubectl@v3
