@@ -15,6 +15,9 @@ COPY . .
 # Set the working directory for the Go module
 WORKDIR /app/BankingKube_app/Dynamic_Pod_Sec
 
+# Debugging step: List the contents of the directory
+RUN ls -la /app/BankingKube_app/Dynamic_Pod_Sec/cmd
+
 # Build the binary
 RUN go build -o webhook ./cmd/main.go
 
