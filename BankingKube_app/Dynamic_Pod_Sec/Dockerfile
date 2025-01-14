@@ -12,11 +12,20 @@ RUN go mod download
 # Copy the rest of the source code
 COPY . .
 
+# Debugging step: List the contents of the /app directory
+RUN ls -la /app
+
+# Debugging step: List the contents of the /app/BankingKube_app directory
+RUN ls -la /app/BankingKube_app
+
+# Debugging step: List the contents of the /app/BankingKube_app/Dynamic_Pod_Sec directory
+RUN ls -la /app/BankingKube_app/Dynamic_Pod_Sec
+
+# Debugging step: List the contents of the /app/BankingKube_app/Dynamic_Pod_Sec/cmd directory
+RUN ls -la /app/BankingKube_app/Dynamic_Pod_Sec/cmd
+
 # Set the working directory for the Go module
 WORKDIR /app/BankingKube_app/Dynamic_Pod_Sec
-
-# Debugging step: List the contents of the directory
-RUN ls -la /app/BankingKube_app/Dynamic_Pod_Sec/cmd
 
 # Build the binary
 RUN go build -o webhook ./cmd/main.go
