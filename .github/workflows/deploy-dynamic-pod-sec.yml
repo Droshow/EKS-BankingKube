@@ -49,8 +49,8 @@ jobs:
 
       - name: Generate TLS Certificates
         working-directory: BankingKube_app/Dynamic_Pod_Sec/scripts
-        run: bash scripts/generate-certs.sh
+        run: bash generate-certs.sh
 
       - name: Deploy Webhook
         working-directory: BankingKube_app/Dynamic_Pod_Sec/scripts
-        run: bash scripts/deploy-webhook.sh
+        run: bash deploy-webhook.sh
