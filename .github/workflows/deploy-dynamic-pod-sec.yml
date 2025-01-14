@@ -1,56 +1,69 @@
 name: Deploy Dynamic Pod Sec
 
 on:
+  # You can also trigger on push or PR if you like
   workflow_dispatch:
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
-      id-token: write
+      id-token: write  # Required for OIDC to assume your ci-cd-role
       contents: read
     env:
       AWS_ACCOUNT_ID: 961477247679
+      AWS_REGION: eu-central-1
+      EKS_CLUSTER_NAME: Banking-Kube-Sloth   # <-- Name of your EKS cluster
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
       - name: Configure AWS Credentials
         id: configure-aws-credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/ci-cd-role
-          aws-region: eu-central-1
+          aws-region: ${{ env.AWS_REGION }}
 
+      # 1) Login to Amazon ECR
       - name: Login to ECR
-        run: echo "simulating just"
-        # uses: aws-actions/amazon-ecr-login@v1
-      
-      - name: Print working directory
-        run: pwd
+        uses: aws-actions/amazon-ecr-login@v1
 
+      # 2) Build & Push Docker Image
       - name: Build and Push Docker Image
         working-directory: BankingKube_app/Dynamic_Pod_Sec
         run: |
-          IMAGE_NAME=dynamic_pod_sec
+          IMAGE_NAME="dynamic_pod_sec"
           TAG=$(date +%Y%m%d%H%M%S)
+          
+          # Build the image locally
           docker build -t $IMAGE_NAME:$TAG .
-          # docker tag $IMAGE_NAME:$TAG ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/$IMAGE_NAME:$TAG
-          # docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/$IMAGE_NAME:$TAG
-        env:
-          AWS_ACCOUNT_ID: ${{ env.AWS_ACCOUNT_ID }}
-          AWS_REGION: eu-central-1
-        
+          
+          # Tag the image for ECR
+          docker tag $IMAGE_NAME:$TAG ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME:$TAG
+          
+          # Push to ECR
+          docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME:$TAG
 
+      # 3) Setup kubectl (version optional; pick your cluster’s version or a stable one)
       - name: Setup kubectl
         uses: azure/setup-kubectl@v3
         with:
           version: "v1.26.0"
 
+      # 4) Update kubeconfig so kubectl can talk to your EKS cluster
+      - name: Update Kubeconfig for EKS
+        run: |
+          aws eks update-kubeconfig \
+            --name ${{ env.EKS_CLUSTER_NAME }} \
+            --region ${{ env.AWS_REGION }}
+
+      # 5) Generate TLS Certificates & create the Secret in EKS
       - name: Generate TLS Certificates
         working-directory: BankingKube_app/Dynamic_Pod_Sec/scripts
         run: bash generate-certs.sh
 
+      # 6) Deploy Webhook Manifests
       - name: Deploy Webhook
         working-directory: BankingKube_app/Dynamic_Pod_Sec/scripts
         run: bash deploy-webhook.sh
