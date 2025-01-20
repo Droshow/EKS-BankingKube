@@ -43,7 +43,7 @@ jobs:
           docker tag $IMAGE_NAME:$TAG ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME:$TAG
           
           # Push to ECR
-          docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME:$TAG
+          docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/$IMAGE_NAME:$TAG
 
       # 3) Setup kubectl (version optional; pick your cluster’s version or a stable one)
       - name: Setup kubectl
