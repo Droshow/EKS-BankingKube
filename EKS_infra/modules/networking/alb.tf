@@ -69,3 +69,20 @@ resource "aws_lb_target_group" "eks_tg" {
   }
 }
 
+resource "aws_lb_target_group" "eks_tg_https" {
+  name     = "eks-tg-https"
+  port     = 443
+  protocol = "HTTPS"
+  vpc_id   = aws_vpc.eks_vpc.id
+
+  health_check {
+    enabled             = true
+    interval            = 30
+    path                = "/"
+    port                = "traffic-port"
+    timeout             = 3
+    healthy_threshold   = 3
+    unhealthy_threshold = 3
+    matcher             = "200-399"
+  }
+}
