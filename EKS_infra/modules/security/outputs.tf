@@ -12,27 +12,6 @@ output "acm_certificate_arn_existing" {
   value = try(data.aws_acm_certificate.existing_cert["acm_cert"].arn, "")
 }
 
-#This was done when VPN was being used, but then found that VPN is not working with
-# ACM certificates, so therefore this is pretty much useless, but anyway that's how it can be used when acms needed
-
-# output "server_certificate_arn" {
-#   description = "The ARN of the server ACM certificate"
-#   value       = aws_acm_certificate.cert["server_cert"].arn
-# }
-
-# output "client_root_certificate_arn" {
-#   description = "The ARN of the client root ACM certificate"
-#   value       = aws_acm_certificate.cert["client_cert"].arn
-# }
-
-# output "server_certificate_arn_existing" {
-#   value = try(data.aws_acm_certificate.existing_cert["server_cert"].arn, "")
-# }
-
-# output "client_root_certificate_arn_existing" {
-#   value = try(data.aws_acm_certificate.existing_cert["client_cert"].arn, "")
-# }
-
 output "domain_validation_options" {
   description = "Domain validation options of the ACM certificates"
   value = {
@@ -71,10 +50,7 @@ output "efs_security_group_id" {
   description = "The ID of the security group for EFS"
   value       = aws_security_group.efs_sg.id
 }
-output "eks_alb_sg_id" {
-  description = "The ID of the security group"
-  value       = aws_security_group.eks_alb_sg.id
-}
+
 output "eks_alb_sg_arn" {
   description = "The ARN of the security group"
   value       = aws_security_group.eks_alb_sg.arn
