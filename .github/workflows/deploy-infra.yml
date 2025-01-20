@@ -46,7 +46,7 @@ jobs:
       
       - name: Import IAM Policy
         working-directory: EKS_infra
-        run: terraform import aws_iam_policy.ci_cd_custom_policy arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:policy/ci-cd-custom-policy
+        run: terraform import -var-file="envs/terraform_dev.tfvars aws_iam_policy.ci_cd_custom_policy arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:policy/ci-cd-custom-policy
 
       - name: Plan Terraform
         working-directory: EKS_infra
