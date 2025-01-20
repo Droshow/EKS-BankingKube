@@ -21,6 +21,27 @@ resource "aws_security_group" "alb_sg" {
   name        = "${var.cluster_name}-alb-sg"
   description = "Security group for the ALB"
   vpc_id      = var.vpc_id
+
+  # ingress {
+  #   from_port   = 80
+  #   to_port     = 80
+  #   protocol    = "tcp"
+  #   cidr_blocks = ["0.0.0.0/0"]
+  # }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
 
 # Allow the ALB to communicate with the worker nodes
@@ -53,45 +74,17 @@ resource "aws_security_group_rule" "worker_node_egress" {
   security_group_id = aws_security_group.worker_nodes_sg.id
 }
 
-#ALB SG
-resource "aws_security_group" "eks_alb_sg" {
-  name        = "eks-alb-sg"
-  description = "Security group for EKS ALB"
-  vpc_id      = var.vpc_id
-
-  #security vulnerability, just for Test purpose
-  # ingress {
-  #   from_port   = 80
-  #   to_port     = 80
-  #   protocol    = "tcp"
-  #   cidr_blocks = ["0.0.0.0/0"]
-  # }
-
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-#EFS SG
+# EFS SG
 resource "aws_security_group" "efs_sg" {
   name        = "efs_sg"
   description = "Allow NFS traffic for EFS"
   vpc_id      = var.vpc_id
 
   ingress {
-    from_port       = 2049
-    to_port         = 2049
-    protocol        = "tcp"
-    security_groups = [aws_security_group.worker_nodes_sg.id]
+    from_port        = 2049
+    to_port          = 2049
+    protocol         = "tcp"
+    security_groups  = [aws_security_group.worker_nodes_sg.id]
   }
 
   egress {
