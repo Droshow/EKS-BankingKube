@@ -43,10 +43,10 @@ jobs:
       - name: Initialize Terraform
         working-directory: EKS_infra
         run: terraform init
-# #temporary measure
-#       - name: Remove IAM Policy from State
-#         working-directory: EKS_infra
-#         run: terraform state rm aws_iam_policy.ci_cd_custom_policy  
+#temporary measure
+      - name: Remove IAM Policy from State
+        working-directory: EKS_infra
+        run: terraform state rm aws_iam_policy.ci_cd_custom_policy  
         
 #       - name: Import IAM Policy
 #         working-directory: EKS_infra
