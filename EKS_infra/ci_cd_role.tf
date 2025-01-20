@@ -37,6 +37,12 @@ resource "aws_iam_policy" "ci_cd_custom_policy" {
         Action = [
           "ec2:*",
           "acm:*",
+          "secretsmanager:*",
+          "rds:*",
+          "eks:*",
+          "elasticloadbalancing:*",
+          "route53:*",
+          "elasticfilesystem:*"
         ],
         Resource = "*"
       }
