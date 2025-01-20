@@ -28,7 +28,9 @@ jobs:
           terraform_version: 1.5.7
 
       - name: Initialize Terraform
+        working-directory: EKS_infra
         run: terraform init
 
       - name: Destroy Terraform
-        run: terraform destroy -auto-approve -var-file="EKS-BankingKube/EKS_infra/envs/terraform_dev.tfvars"
+        working-directory: EKS_infra
+        run: terraform destroy -auto-approve -var-file="envs/terraform_dev.tfvars"

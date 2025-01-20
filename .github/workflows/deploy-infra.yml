@@ -48,7 +48,7 @@ jobs:
         working-directory: EKS_infra
         run: terraform plan -var-file="envs/terraform_dev.tfvars"
 
-      # - name: Apply Terraform
-      # working-directory: EKS_infra
-      #   run: terraform apply -auto-approve -var-file="envs/terraform_dev.tfvars"
+      - name: Apply Terraform
+        working-directory: EKS_infra
+        run: terraform apply -auto-approve -var-file="envs/terraform_dev.tfvars"
       
