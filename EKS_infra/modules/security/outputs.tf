@@ -51,9 +51,9 @@ output "efs_security_group_id" {
   value       = aws_security_group.efs_sg.id
 }
 
-output "eks_alb_sg_arn" {
+output "alb_sg_arn" {
   description = "The ARN of the security group"
-  value       = aws_security_group.eks_alb_sg.arn
+  value       = aws_security_group.alb_sg.arn
 }
 output "fargate_pod_execution_role_arn" {
   description = "The ARN of the IAM role for Fargate pod execution"

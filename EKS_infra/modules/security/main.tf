@@ -81,10 +81,10 @@ resource "aws_security_group" "efs_sg" {
   vpc_id      = var.vpc_id
 
   ingress {
-    from_port        = 2049
-    to_port          = 2049
-    protocol         = "tcp"
-    security_groups  = [aws_security_group.worker_nodes_sg.id]
+    from_port       = 2049
+    to_port         = 2049
+    protocol        = "tcp"
+    security_groups = [aws_security_group.worker_nodes_sg.id]
   }
 
   egress {
