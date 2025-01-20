@@ -33,14 +33,14 @@ jobs:
       - name: Build and Push Docker Image
         working-directory: BankingKube_app/Dynamic_Pod_Sec
         run: |
-          IMAGE_NAME="dynamic_pod_sec"
+          IMAGE_NAME="banking-kube-repo"
           TAG=$(date +%Y%m%d%H%M%S)
           
           # Build the image locally
           docker build -t $IMAGE_NAME:$TAG .
           
           # Tag the image for ECR
-          docker tag $IMAGE_NAME:$TAG ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME:$TAG
+          docker tag $IMAGE_NAME:$TAG ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/$IMAGE_NAME:$TAG
           
           # Push to ECR
           docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/$IMAGE_NAME:$TAG
