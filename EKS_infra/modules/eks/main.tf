@@ -18,43 +18,43 @@ resource "aws_eks_cluster" "banking_kube_cluster" {
 
 #########
 #config map
-data "kubernetes_config_map" "aws_auth" {
-  metadata {
-    name      = "aws-auth"
-    namespace = "kube-system"
-  }
-}
+# data "kubernetes_config_map" "aws_auth" {
+#   metadata {
+#     name      = "aws-auth"
+#     namespace = "kube-system"
+#   }
+# }
 
-resource "kubernetes_config_map" "aws_auth" {
-  metadata {
-    name      = "aws-auth"
-    namespace = "kube-system"
-  }
+# resource "kubernetes_config_map" "aws_auth" {
+#   metadata {
+#     name      = "aws-auth"
+#     namespace = "kube-system"
+#   }
 
-  data = {
-    mapRoles = yamlencode([
-      for role in concat(
-        [
-          {
-            rolearn  = "arn:aws:iam::${var.aws_account_id}:role/ci-cd-role"
-            username = "admin"
-            groups   = ["system:masters"]
-          },
-          {
-            rolearn  = "arn:aws:iam::${var.aws_account_id}:role/fargate-pod-execution-role"
-            username = "fargate-pod-execution-role"
-            groups   = ["system:node:{{SessionName}}", "system:nodes", "system:node-proxier"]
-          },
-          {
-            rolearn  = "arn:aws:iam::${var.aws_account_id}:role/ec2-eks-role"
-            username = "ec2-eks-role"
-            groups   = ["system:masters"]
-          }
-        ],
-        [
-          for role in yamldecode(data.kubernetes_config_map.aws_auth.data["mapRoles"]) : role
-        ]
-      ) : role
-    ])
-  }
-}
+#   data = {
+#     mapRoles = yamlencode([
+#       for role in concat(
+#         [
+#           {
+#             rolearn  = "arn:aws:iam::${var.aws_account_id}:role/ci-cd-role"
+#             username = "admin"
+#             groups   = ["system:masters"]
+#           },
+#           {
+#             rolearn  = "arn:aws:iam::${var.aws_account_id}:role/fargate-pod-execution-role"
+#             username = "fargate-pod-execution-role"
+#             groups   = ["system:node:{{SessionName}}", "system:nodes", "system:node-proxier"]
+#           },
+#           {
+#             rolearn  = "arn:aws:iam::${var.aws_account_id}:role/ec2-eks-role"
+#             username = "ec2-eks-role"
+#             groups   = ["system:masters"]
+#           }
+#         ],
+#         [
+#           for role in yamldecode(data.kubernetes_config_map.aws_auth.data["mapRoles"]) : role
+#         ]
+#       ) : role
+#     ])
+#   }
+# }
