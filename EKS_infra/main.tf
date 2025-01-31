@@ -67,7 +67,7 @@ module "ec2_cluster_access" {
   source            = "./modules/ec2_cluster_access"
   instance_type     = "t3.medium"
   subnet_id         = module.networking.private_subnets_ids[0]
-  security_group_id = module.security.eks_cluster_sg_id
+  security_group_id = module.security.ec2_access_aws_security_group
   tags = {
     Name = "ec2-cluster-access"
   }

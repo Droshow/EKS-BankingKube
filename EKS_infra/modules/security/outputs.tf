@@ -63,3 +63,7 @@ output "worker_nodes_sg_id" {
   description = "The ID of the security group for the EKS worker nodes"
   value       = aws_security_group.worker_nodes_sg.id
 }
+output "ec2_access_aws_security_group" {
+  description = "The ID of the security group for the EC2 instances"
+  value       = aws_security_group.ec2_cluster_access_sg.id
+}

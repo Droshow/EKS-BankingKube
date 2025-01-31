@@ -3,6 +3,12 @@ resource "aws_security_group" "eks_cluster_sg" {
   description = "Security group for the EKS cluster"
   vpc_id      = var.vpc_id
 
+  ingress {
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    security_groups = [aws_security_group.ec2_cluster_access_sg.id]
+  }
   egress {
     from_port   = 0
     to_port     = 0
@@ -85,6 +91,27 @@ resource "aws_security_group" "efs_sg" {
     to_port         = 2049
     protocol        = "tcp"
     security_groups = [aws_security_group.worker_nodes_sg.id]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+##EC2 Security Group
+resource "aws_security_group" "ec2_cluster_access_sg" {
+  name        = "ec2-cluster-access-sg"
+  description = "Security group for EC2 instance accessing the EKS cluster"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
