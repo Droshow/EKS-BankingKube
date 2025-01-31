@@ -11,6 +11,8 @@ jobs:
       contents: read
     env:
       AWS_ACCOUNT_ID: 961477247679
+      AWS_REGION: eu-central-1
+      EKS_CLUSTER_NAME: Banking-Kube-Sloth
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -32,6 +34,11 @@ jobs:
           role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/ci-cd-role
           aws-region: eu-central-1
 
+      - name: Update Kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
+
       - name: Set Up Terraform
         uses: hashicorp/setup-terraform@v2
         with:
@@ -43,14 +50,6 @@ jobs:
       - name: Initialize Terraform
         working-directory: EKS_infra
         run: terraform init
-#temporary measure
-      # - name: Remove IAM Policy from State
-      #   working-directory: EKS_infra
-      #   run: terraform state rm aws_iam_policy.ci_cd_custom_policy  
-        
-#       - name: Import IAM Policy
-#         working-directory: EKS_infra
-#         run: terraform import -var-file="envs/terraform_dev.tfvars" aws_iam_policy.ci_cd_custom_policy arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:policy/ci-cd-custom-policy
 
       - name: Plan Terraform
         working-directory: EKS_infra
