@@ -12,7 +12,7 @@ module "security" {
   domain_name                 = var.domain_name
   route_53cert_validation     = module.networking.aws_route_53_cert_validation
   aws_account_id              = var.aws_account_id
-  fetch_existing_certificates = false # If the cert exists, set this to true
+  fetch_existing_certificates = true # If the cert exists, set this to true
 }
 module "eks" {
   source       = "./modules/eks"
@@ -35,13 +35,13 @@ module "node_groups" {
   depends_on                 = [module.eks]
 }
 
-module "db_instance" {
-  source     = "./modules/databases"
-  db_name    = "banking-kube-db"
-  username   = "Dro_admin"
-  password   = random_password.db_password.result
-  db_subnets = module.networking.private_subnets_ids
-}
+# module "db_instance" {
+#   source     = "./modules/databases"
+#   db_name    = "banking-kube-db"
+#   username   = "Dro_admin"
+#   password   = random_password.db_password.result
+#   db_subnets = module.networking.private_subnets_ids
+# }
 
 module "storage" {
   source     = "./modules/storage"
