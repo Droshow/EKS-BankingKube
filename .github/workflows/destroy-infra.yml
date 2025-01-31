@@ -30,14 +30,15 @@ jobs:
       - name: Initialize Terraform
         working-directory: EKS_infra
         run: terraform init
-
-      # - name: Remove CI/CD Role and Policies from State
-      #   working-directory: EKS_infra
-      #   run: |
-      #     terraform state rm aws_iam_role.ci_cd_role
-      #     terraform state rm aws_iam_policy.ci_cd_custom_policy
-      #     terraform state rm aws_iam_role_policy_attachment.known_policies_attach
-      #     terraform state rm aws_iam_role_policy_attachment.custom_policy_attach
+#these resources I wish not to destroy but they will have to be added to the state file
+      - name: Remove CI/CD Role and Policies from State
+        working-directory: EKS_infra
+        run: |
+          terraform state rm aws_iam_role.ci_cd_role
+          terraform state rm aws_iam_policy.ci_cd_custom_policy
+          terraform state rm aws_iam_role_policy_attachment.known_policies_attach
+          terraform state rm aws_iam_role_policy_attachment.custom_policy_attach
+          terraform state rm aws_iam_openid_connect_provider.github_oidc_provider
 
       - name: Destroy Terraform
         working-directory: EKS_infra
