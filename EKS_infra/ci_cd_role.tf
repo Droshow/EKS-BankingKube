@@ -21,6 +21,9 @@ resource "aws_iam_role" "ci_cd_role" {
       },
     ]
   })
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 ################################

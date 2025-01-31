@@ -1,13 +1,10 @@
-## CICD Runner or different access for EKS in private subnet to be able to run kubectl
+sasafa## CICD Runner or different access for EKS in private subnet to be able to run kubectl
 ## CICD Runner or Different Access for EKS in Private Subnet to be Able to Run kubectl
 
 ### Tasks to be Done
 
 1. **Update Kubeconfig:**
    - Run the `aws eks update-kubeconfig` command to generate the kubeconfig file that allows `kubectl` to interact with your EKS cluster.
-
-2. **Update the aws-auth ConfigMap:**
-   - Add the IAM role of the EC2 instance (or any other entity) to the `aws-auth` ConfigMap to map it to a Kubernetes user/group.
 
 3. **Automate aws-auth ConfigMap Update:**
    - Automate the update of the `aws-auth` ConfigMap through the CI/CD workflow to ensure any new IAM roles or changes to existing roles are automatically reflected.
