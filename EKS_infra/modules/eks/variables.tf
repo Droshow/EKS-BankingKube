@@ -35,3 +35,8 @@ variable "cluster_role_iam_role_arn" {
   description = "The ARN of the IAM role to use for the EKS cluster"
   type        = string
 }
+
+variable "aws_account_id" {
+  description = "The AWS account ID"
+  type        = string
+}

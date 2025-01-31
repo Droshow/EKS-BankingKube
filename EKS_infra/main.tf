@@ -24,6 +24,7 @@ module "eks" {
     module.security.worker_nodes_sg_id,
     # module.security.alb_sg_id
   ]
+  aws_account_id            = var.aws_account_id
   cluster_role_iam_role_arn = module.security.eks_cluster_role_arn
 }
 
