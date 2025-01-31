@@ -34,10 +34,10 @@ jobs:
       - name: Remove CI/CD Role and Policies from State
         working-directory: EKS_infra
         run: |
-          terraform state rm aws_iam_role.ci_cd_role
-          terraform state rm aws_iam_policy.ci_cd_custom_policy
-          terraform state rm aws_iam_role_policy_attachment.known_policies_attach
-          terraform state rm aws_iam_role_policy_attachment.custom_policy_attach
+          # terraform state rm aws_iam_role.ci_cd_role
+          # terraform state rm aws_iam_policy.ci_cd_custom_policy
+          # terraform state rm aws_iam_role_policy_attachment.known_policies_attach
+          # terraform state rm aws_iam_role_policy_attachment.custom_policy_attach
           terraform state rm aws_iam_openid_connect_provider.github
 
       - name: Destroy Terraform
