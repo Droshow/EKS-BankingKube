@@ -10,6 +10,12 @@ locals {
   ]
 }
 
+data "aws_secretsmanager_secret" "github_runner" {
+  name = "github_runner"
+}
+data "aws_secretsmanager_secret_version" "github_runner" {
+  secret_id = data.aws_secretsmanager_secret.github_runner.id
+}
 data "aws_ami" "latest_amazon_linux" {
   most_recent = true
   owners      = ["amazon"] # Amazon's official AMIs
@@ -81,7 +87,7 @@ resource "aws_instance" "ec2_cluster_access" {
               tar xzf ./actions-runner-linux-x64-2.321.0.tar.gz
 
               # Configure the GitHub Actions Runner
-              ./config.sh --url https://github.com/Droshow/EKS-BankingKube --token ${var.github_runner_token} --unattended --replace
+              ./config.sh --url https://github.com/Droshow/EKS-BankingKube --token ${data.aws_secretsmanager_secret_version.github_runner.secret_string} --unattended --replace
               # Start the GitHub Actions Runner as a service
               ./svc.sh install
               ./svc.sh start

@@ -17,9 +17,3 @@ variable "tags" {
   description = "A map of tags to assign to the resource"
   type        = map(string)
 }
-
-variable "github_runner_token" {
-  description = "The GitHub runner token"
-  type        = string
-  sensitive   = true
-}
