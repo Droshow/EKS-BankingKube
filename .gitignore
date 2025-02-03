@@ -4,3 +4,4 @@ terraform.tfstate
 .terraform.lock.hcl
 .gitignore
 .envs
+EKS_infra/envs/terraform_dev.tfvars
