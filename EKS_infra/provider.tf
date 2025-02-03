@@ -9,5 +9,7 @@ provider "aws" {
   }
 }
 provider "kubernetes" {
-  config_path = "~/.kube/config"
+  host                   = module.eks.cluster_endpoint
+  cluster_ca_certificate = module.eks.cluster_certificate_authority_decoded
+  token                  = data.aws_eks_cluster_auth.auth.token
 }
