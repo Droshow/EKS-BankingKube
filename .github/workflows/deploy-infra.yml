@@ -34,11 +34,6 @@ jobs:
           role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/ci-cd-role
           aws-region: eu-central-1
 
-      - name: Update Kubeconfig
-        run: |
-          mkdir -p ~/.kube
-          aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
-
       - name: Set Up Terraform
         uses: hashicorp/setup-terraform@v2
         with:
@@ -51,11 +46,11 @@ jobs:
         working-directory: EKS_infra
         run: terraform init
       
-      - name: state import
-        working-directory: EKS_infra
-        run: |
-          terraform import -var-file="envs/terraform_dev.tfvars" aws_iam_role.ci_cd_role ci-cd-role
-          terraform import -var-file="envs/terraform_dev.tfvars" aws_iam_policy.ci_cd_custom_policy arn:aws:iam::961477247679:policy/ci-cd-custom-policy
+      # - name: state import
+      #   working-directory: EKS_infra
+      #   run: |
+      #     terraform import -var-file="envs/terraform_dev.tfvars" aws_iam_role.ci_cd_role ci-cd-role
+      #     terraform import -var-file="envs/terraform_dev.tfvars" aws_iam_policy.ci_cd_custom_policy arn:aws:iam::961477247679:policy/ci-cd-custom-policy
       
       - name: Plan Terraform
         working-directory: EKS_infra
@@ -64,4 +59,12 @@ jobs:
       - name: Apply Terraform
         working-directory: EKS_infra
         run: terraform apply -auto-approve -var-file="envs/terraform_dev.tfvars"
+      
+      - name: Update Kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
+      - name: Verify kubectl Access
+        run: |
+          kubectl get nodes
       

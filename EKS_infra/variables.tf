@@ -38,3 +38,8 @@ variable "github_oidc_thumbprint" {
   description = "The GitHub OIDC thumbprint"
   type        = string
 }
+variable "github_runner_token" {
+  description = "The GitHub runner token"
+  type        = string
+  sensitive   = true
+}

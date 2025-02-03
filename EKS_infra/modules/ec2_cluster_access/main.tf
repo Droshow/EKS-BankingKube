@@ -73,6 +73,19 @@ resource "aws_instance" "ec2_cluster_access" {
               aws --version
               kubectl version --client
               aws-iam-authenticator version
+
+              # Install GitHub Actions Runner
+              mkdir /home/ec2-user/actions-runner && cd /home/ec2-user/actions-runner
+              curl -o actions-runner-linux-x64-2.321.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.321.0/actions-runner-linux-x64-2.321.0.tar.gz
+              echo "ba46ba7ce3a4d7236b16fbe44419fb453bc08f866b24f04d549ec89f1722a29e  actions-runner-linux-x64-2.321.0.tar.gz" | shasum -a 256 -c
+              tar xzf ./actions-runner-linux-x64-2.321.0.tar.gz
+
+              # Configure the GitHub Actions Runner
+              ./config.sh --url https://github.com/Droshow/EKS-BankingKube --token ${var.github_runner_token} --unattended --replace
+              # Start the GitHub Actions Runner as a service
+              ./svc.sh install
+              ./svc.sh start
+
               
               EOF
 }
