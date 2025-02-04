@@ -2,7 +2,15 @@ sasafa## CICD Runner or different access for EKS in private subnet to be able to
 ## CICD Runner or Different Access for EKS in Private Subnet to be Able to Run kubectl
 <!-- K8s resources in path: /Users/martin.drotar/Devsbridge/EKS-BankingKube/EKS_infra/modules/eks/main.tf -->
 <!-- uncomment provider kubernetes in providers.tf -->
-<!-- !!! You need a runner in K8 cluster private subnet or modify, upload code and run terraform from EC2 instance  -->
+<!-- !!! You need a runner in K8 cluster private subnet-->
+
+
+## Deployment knowledge
+
+<!-- Run the EKS AWS Provider Terraform 
+Uncomment Kubernetes Provider Terraform
+Watch for certificate if exists in AWS or not -->
+
 ### Tasks to be Done
 
 1. **Update Kubeconfig:**
