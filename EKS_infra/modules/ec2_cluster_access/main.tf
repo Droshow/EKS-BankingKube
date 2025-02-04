@@ -6,7 +6,8 @@ locals {
     "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
     "arn:aws:iam::aws:policy/AmazonEC2FullAccess",
     "arn:aws:iam::aws:policy/AmazonVPCFullAccess",
-    "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+    "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+    "arn:aws:iam::aws:policy/IAMFullAccess"
   ]
 }
 
@@ -53,6 +54,13 @@ resource "aws_instance" "ec2_cluster_access" {
               systemctl enable amazon-ssm-agent
               systemctl start amazon-ssm-agent
 
+              #install necessary library & helpers
+              sudo dnf install -y icu
+              sudo yum install unzip -y
+              
+              #Install Node.js
+              sudo dnf install -y nodejs
+
               # Install kubectl
               curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.30.2/2024-07-12/bin/linux/amd64/kubectl
               chmod +x ./kubectl
@@ -90,7 +98,7 @@ resource "aws_instance" "ec2_cluster_access" {
               curl -o actions-runner-linux-x64-2.322.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.322.0/actions-runner-linux-x64-2.322.0.tar.gz
               echo "b13b784808359f31bc79b08a191f5f83757852957dd8fe3dbfcc38202ccf5768  actions-runner-linux-x64-2.322.0.tar.gz" | shasum -a 256 -c
               tar xzf ./actions-runner-linux-x64-2.322.0.tar.gz
-              sudo dnf install -y icu
+              
 
               # Configure the GitHub Actions Runner use both commands with Terraform OR AWS Fetch to be sure 
               ./config.sh --url https://github.com/Droshow/EKS-BankingKube --token ${data.aws_secretsmanager_secret_version.github_runner.secret_string} || ./config.sh --url https://github.com/Droshow/EKS-BankingKube --token $GITHUB_RUNNER_TOKEN --unattended --replace
@@ -150,7 +158,8 @@ resource "aws_iam_policy" "secrets_manager_read_policy" {
           "eks:*",
           "elasticloadbalancing:*",
           "route53:*",
-          "elasticfilesystem:*"
+          "elasticfilesystem:*",
+          "iam:*"
         ],
         Resource = "*"
       }
