@@ -42,4 +42,13 @@ jobs:
 
       - name: Destroy Terraform
         working-directory: EKS_infra
-        run: terraform destroy -auto-approve -var-file="envs/terraform_dev.tfvars"
+        # run: terraform destroy -auto-approve -var-file="envs/terraform_dev.tfvars"
+        #partial destroy
+        run: | 
+         terraform destroy -auto-approve -var-file="envs/terraform_dev.tfvars" \
+          --target=module.ec2_cluster_access \
+          --target=module.ecr \
+          --target=module.eks \
+          --target=module.networking \
+          --target=module.node_groups \
+          --target=module.storage
