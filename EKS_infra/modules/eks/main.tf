@@ -9,8 +9,8 @@ resource "aws_eks_cluster" "banking_kube_cluster" {
     security_group_ids      = var.security_group_ids
   }
   access_config {
-    authentication_mode                         = "API_AND_CONFIG_MAP"
-    bootstrap_cluster_creator_admin_permissions = true # false in later chapters
+    authentication_mode                         = "API"
+    bootstrap_cluster_creator_admin_permissions = false # false in later chapters
   }
 
   enabled_cluster_log_types = var.enabled_cluster_log_types
@@ -34,7 +34,6 @@ resource "kubernetes_config_map" "aws_auth" {
 
   data = {
     mapRoles = yamlencode([
-      [
         {
           rolearn  = "arn:aws:iam::${var.aws_account_id}:role/ci-cd-role"
           username = "admin"
@@ -49,8 +48,7 @@ resource "kubernetes_config_map" "aws_auth" {
           rolearn  = "arn:aws:iam::${var.aws_account_id}:role/ec2-eks-role"
           username = "ec2-eks-role"
           groups   = ["system:masters"]
-        }
-      ]
+        }    
     ])
 
   }
