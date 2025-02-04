@@ -9,7 +9,9 @@ sasafa## CICD Runner or different access for EKS in private subnet to be able to
 
 <!-- Run the EKS AWS Provider Terraform 
 Uncomment Kubernetes Provider Terraform
+hanle the DB secret in EKS_infra/secrets.tf
 Watch for certificate if exists in AWS or not -->
+
 
 ### Tasks to be Done
 
