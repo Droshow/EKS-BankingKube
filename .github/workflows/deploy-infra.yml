@@ -5,7 +5,7 @@ on:
 
 jobs:
   deploy-infra:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest #change to self-hosted when using runner
     permissions:
       id-token: write
       contents: read

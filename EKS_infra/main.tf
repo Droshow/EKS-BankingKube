@@ -72,6 +72,8 @@ module "ec2_cluster_access" {
   tags = {
     Name = "ec2-cluster-access"
   }
+  aws_account_id = var.aws_account_id
+  aws_region     = var.aws_region
 }
 
 module "ecr" {

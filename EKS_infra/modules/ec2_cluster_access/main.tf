@@ -85,9 +85,10 @@ resource "aws_instance" "ec2_cluster_access" {
               echo "GitHub Runner Token: $GITHUB_RUNNER_TOKEN"
 
               # Install GitHub Actions Runner
-              mkdir /home/ec2-user/actions-runner && cd /home/ec2-user/actions-runner
+              mkdir -p /home/ssm-user/actions-runner && cd /home/ssm-user/actions-runner
+
               curl -o actions-runner-linux-x64-2.321.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.321.0/actions-runner-linux-x64-2.321.0.tar.gz
-              echo "ba46ba7ce3a4d7236b16fbe44419fb453bc08f866b24f04d549ec89f1722a29e  actions-runner-linux-x64-2.321.0.tar.gz" | shasum -a 256 -c
+              echo "ba46ba7ce3a4d7236b16fbe44419fb453bc08f866b24f04d549ec89f1722a29e  actions-runner-linux-x64-2.321.0.tar.gz" | sha256sum -c
               tar xzf ./actions-runner-linux-x64-2.321.0.tar.gz
 
               # Configure the GitHub Actions Runner use both commands with Terraform OR AWS Fetch to be sure 
@@ -130,4 +131,26 @@ resource "aws_iam_role_policy_attachment" "eks_policies" {
 resource "aws_iam_instance_profile" "ec2_eks_profile" {
   name = "ec2-eks-instance-profile"
   role = aws_iam_role.ec2_eks_role.name
+}
+
+resource "aws_iam_policy" "secrets_manager_read_policy" {
+  name        = "secrets-manager-read-policy"
+  description = "Policy to allow read access to GitHub runner token in Secrets Manager"
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "secretsmanager:*"
+        ],
+        Resource = "arn:aws:secretsmanager:${var.aws_region}:${var.aws_account_id}:secret:github_runner-*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "secrets_manager_read_policy_attach" {
+  role       = aws_iam_role.ec2_eks_role.name
+  policy_arn = aws_iam_policy.secrets_manager_read_policy.arn
 }
