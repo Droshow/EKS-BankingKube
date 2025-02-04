@@ -21,6 +21,11 @@ variable "aws_account_id" {
   default     = "961477247679"
 }
 
+variable "aws_region" {
+  type    = string
+  default = "eu-central-1"
+}
+
 ########################################################################
 #Use when you set OIDC reference in IAM Role for specific head or branch
 ########################################################################
