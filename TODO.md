@@ -15,6 +15,9 @@ Watch for certificate if exists in AWS or not -->
 
 ### Tasks to be Done
 
+0. **Fix self-hosted runner infra workflow**
+ 
+
 1. **Update Kubeconfig:**
    - Run the `aws eks update-kubeconfig` command to generate the kubeconfig file that allows `kubectl` to interact with your EKS cluster.
 

@@ -5,7 +5,7 @@ resource "aws_acm_certificate" "cert" {
   tags              = lookup(var.tags, each.key, {})
 
   lifecycle {
-    prevent_destroy = false
+    prevent_destroy = true
   }
 }
 
