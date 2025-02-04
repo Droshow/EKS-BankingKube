@@ -5,7 +5,7 @@ on:
 
 jobs:
   deploy-infra:
-    runs-on: [self-hosted, bankingKuber]
+    runs-on: [self-hosted]
     # runs-on: ubuntu-latest #change to self-hosted when using runner runs-on: [self-hosted, bankingKuber]
     permissions:
       id-token: write
