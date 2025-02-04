@@ -51,4 +51,5 @@ jobs:
           --target=module.eks \
           --target=module.networking \
           --target=module.node_groups \
-          --target=module.storage
+          --target=module.storage \
+          --target=module.security
