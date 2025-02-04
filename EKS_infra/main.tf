@@ -79,10 +79,10 @@ module "ecr" {
   ecr_repo_name = "banking-kube-repo"
 }
 
-# data "aws_eks_cluster_auth" "auth" {
-#   name       = module.eks.cluster_name
-#   depends_on = [module.eks]
-# }
+data "aws_eks_cluster_auth" "auth" {
+  name       = module.eks.cluster_name
+  depends_on = [module.eks]
+}
 # ### if cert already exists, then use this
 # data "aws_acm_certificate" "existing_cert" {
 #   domain      = "devsbridge.com"
