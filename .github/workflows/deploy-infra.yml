@@ -56,15 +56,15 @@ jobs:
         working-directory: EKS_infra
         run: terraform plan -var-file="envs/terraform_dev.tfvars"
 #temp off
-      # - name: Apply Terraform
-      #   working-directory: EKS_infra
-      #   run: terraform apply -auto-approve -var-file="envs/terraform_dev.tfvars"
+      - name: Apply Terraform
+        working-directory: EKS_infra
+        run: terraform apply -auto-approve -var-file="envs/terraform_dev.tfvars"
       
-      # - name: Update Kubeconfig
-      #   run: |
-      #     mkdir -p ~/.kube
-      #     aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
-      # - name: Verify kubectl Access
-      #   run: |
-      #     kubectl get nodes
+      - name: Update Kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
+      - name: Verify kubectl Access
+        run: |
+          kubectl get nodes
       
