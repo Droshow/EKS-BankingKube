@@ -46,12 +46,12 @@ jobs:
         working-directory: EKS_infra
         run: terraform init
       
-      - name: state import
-        working-directory: EKS_infra
-        run: |
-          terraform import -var-file="envs/terraform_dev.tfvars" aws_iam_role.ci_cd_role ci-cd-role
-          terraform import -var-file="envs/terraform_dev.tfvars" aws_iam_policy.ci_cd_custom_policy arn:aws:iam::961477247679:policy/ci-cd-custom-policy
-          terraform import -var-file="envs/terraform_dev.tfvars" aws_iam_openid_connect_provider.github arn:aws:iam::961477247679:oidc-provider/token.actions.githubusercontent.com
+      # - name: state import
+      #   working-directory: EKS_infra
+      #   run: |
+      #     terraform import -var-file="envs/terraform_dev.tfvars" aws_iam_role.ci_cd_role ci-cd-role
+      #     terraform import -var-file="envs/terraform_dev.tfvars" aws_iam_policy.ci_cd_custom_policy arn:aws:iam::961477247679:policy/ci-cd-custom-policy
+      #     terraform import -var-file="envs/terraform_dev.tfvars" aws_iam_openid_connect_provider.github arn:aws:iam::961477247679:oidc-provider/token.actions.githubusercontent.com
       - name: Plan Terraform
         working-directory: EKS_infra
         run: terraform plan -var-file="envs/terraform_dev.tfvars"
