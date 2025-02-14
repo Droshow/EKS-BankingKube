@@ -3,7 +3,7 @@ module "networking" {
   alb_security_group            = [module.security.alb_sg_id]
   acm_domain_validation_options = module.security.domain_validation_options
   acm_certificate_arn           = module.security.acm_certificate_arn_existing
-  ec2_security_group_id         = 
+  ec2_security_group_id         = module.security.ec2_access_aws_security_group
 }
 
 module "security" {
