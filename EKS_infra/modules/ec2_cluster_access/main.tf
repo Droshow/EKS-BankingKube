@@ -157,16 +157,32 @@ resource "aws_iam_role" "ec2_eks_role" {
     Version = "2012-10-17"
     Statement = [
       {
-        Action = "sts:AssumeRole"
         Effect = "Allow"
         Principal = {
-          Service = [
-            "ec2.amazonaws.com",
-            "ssm.amazonaws.com",
-            "ssmmessages.amazonaws.com",
-            "ec2messages.amazonaws.com"
-          ]
+          Service = "ec2.amazonaws.com"
         }
+        Action = "sts:AssumeRole"
+      },
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "ssm.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+      },
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "ssmmessages.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+      },
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "ec2messages.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
       }
     ]
   })
