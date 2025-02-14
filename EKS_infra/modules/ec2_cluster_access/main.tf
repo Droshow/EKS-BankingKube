@@ -41,7 +41,7 @@ resource "aws_instance" "ec2_cluster_access" {
   ami                         = data.aws_ami.latest_amazon_linux.id
   instance_type               = var.instance_type
   subnet_id                   = var.subnet_id
-  associate_public_ip_address = false # this true only for public subnet
+  associate_public_ip_address = true # this true only for public subnet
   vpc_security_group_ids      = [var.security_group_id]
 
   tags = var.tags
@@ -136,7 +136,7 @@ echo "GitHub Runner Token successfully retrieved."
               
                Start the GitHub Actions Runner as a service
               nohup ./run.sh > /home/ssm-user/actions-runner/runner.log 2>&1 & disown
-              
+              # ./run.sh
 
               EOF
 }
