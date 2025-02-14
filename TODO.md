@@ -10,7 +10,9 @@ sasafa## CICD Runner or different access for EKS in private subnet to be able to
 <!-- Run the EKS AWS Provider Terraform 
 Uncomment Kubernetes Provider Terraform
 hanle the DB secret in EKS_infra/secrets.tf
-Watch for certificate if exists in AWS or not -->
+Watch for certificate if exists in AWS or not
+Setting up own runner don't forget to change the token in 
+https://github.com/Droshow/EKS-BankingKube/settings/actions/runners/new?arch=x64&os=linux -->
 
 
 ### Tasks to be Done
