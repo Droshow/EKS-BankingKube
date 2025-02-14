@@ -41,3 +41,8 @@ variable "acm_certificate_arn" {
   description = "The ARN of the server ACM certificate"
   type        = string
 }
+
+variable "ec2_security_group_id" {
+  description = "security group of EC2 cluster access"
+  type        = string
+}

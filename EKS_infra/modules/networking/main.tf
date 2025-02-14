@@ -1,6 +1,11 @@
 locals {
   private_subnets = { for k, v in var.subnets : k => v if !v.public }
   public_subnets  = { for k, v in var.subnets : k => v if v.public }
+  vpc_endpoints = {
+    ssm          = "com.amazonaws.eu-central-1.ssm"
+    ssm_messages = "com.amazonaws.eu-central-1.ssmmessages"
+    ec2_messages = "com.amazonaws.eu-central-1.ec2messages"
+  }
 
 }
 #Hello VPC
@@ -76,4 +81,18 @@ resource "aws_nat_gateway" "ipam" {
 
   allocation_id = aws_eip.ipam[each.key].id
   subnet_id     = aws_subnet.subnet[each.key].id
+}
+
+resource "aws_vpc_endpoint" "endpoints" {
+  for_each            = local.vpc_endpoints
+  vpc_id              = aws_vpc.eks_vpc.id
+  service_name        = each.value
+  vpc_endpoint_type   = "Interface"
+  security_group_ids  = [var.ec2_security_group_id] # Ensure this allows HTTPS (443)
+  subnet_ids          = local.private_subnets
+  private_dns_enabled = true
+
+  tags = {
+    Name = "vpc-endpoint-${each.key}"
+  }
 }
