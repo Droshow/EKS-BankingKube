@@ -64,7 +64,7 @@ resource "aws_instance" "ec2_cluster_access" {
               sudo yum install unzip -y
               
               #Install Node.js
-              sudo dnf install -y node¯s
+              sudo dnf install -y nodejs
 
               # Install kubectl
               curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.30.2/2024-07-12/bin/linux/amd64/kubectl
@@ -112,9 +112,9 @@ resource "aws_instance" "ec2_cluster_access" {
               
               
               # Configure the GitHub Actions Runner use both commands with Terraform OR AWS Fetch to be sure 
-              ./config.sh --url https://github.com/Droshow/EKS-BankingKube --token ${data.aws_secretsmanager_secret_version.github_runner.secret_string} || ./config.sh --url https://github.com/Droshow/EKS-BankingKube --token $GITHUB_RUNNER_TOKEN --unattended --replace
+              sudo -u ssm-user ./config.sh --url https://github.com/Droshow/EKS-BankingKube --token ${data.aws_secretsmanager_secret_version.github_runner.secret_string} || ./config.sh --url https://github.com/Droshow/EKS-BankingKube --token $GITHUB_RUNNER_TOKEN --unattended --replace
               # Start the GitHub Actions Runner as a service
-              nohup ./run.sh > /home/ssm-user/actions-runner/runner.log 2>&1 &
+              nohup ./run.sh > /home/ssm-user/actions-runner/runner.log 2>&1 & disown
             
 
               
