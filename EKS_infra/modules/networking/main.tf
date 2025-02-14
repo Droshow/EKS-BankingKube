@@ -89,7 +89,7 @@ resource "aws_vpc_endpoint" "endpoints" {
   service_name        = each.value
   vpc_endpoint_type   = "Interface"
   security_group_ids  = [var.ec2_security_group_id] # Ensure this allows HTTPS (443)
-  subnet_ids          = local.private_subnets
+  subnet_ids          = [for s in keys(local.private_subnets) : aws_subnet.subnet[s].id]
   private_dns_enabled = true
 
   tags = {
