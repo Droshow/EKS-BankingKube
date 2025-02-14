@@ -41,7 +41,7 @@ resource "aws_instance" "ec2_cluster_access" {
   ami                         = data.aws_ami.latest_amazon_linux.id
   instance_type               = var.instance_type
   subnet_id                   = var.subnet_id
-  associate_public_ip_address = false # this true only for public subnet
+  associate_public_ip_address = true # this true only for public subnet
   vpc_security_group_ids      = [var.security_group_id]
 
   tags = var.tags
@@ -59,7 +59,7 @@ resource "aws_instance" "ec2_cluster_access" {
               sudo yum install unzip -y
               
               #Install Node.js
-              sudo dnf install -y nodejs
+              sudo dnf install -y node¯s
 
               # Install kubectl
               curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.30.2/2024-07-12/bin/linux/amd64/kubectl
