@@ -38,7 +38,7 @@ data "aws_ami" "latest_amazon_linux" {
 }
 
 resource "aws_instance" "ec2_cluster_access" {
-  ami                         = data.aws_ami.latest_amazon_linux.id
+  ami = data.aws_ami.latest_amazon_linux.id
   # key_name                    = "ssh-key-bankingKube"
   instance_type               = var.instance_type
   subnet_id                   = var.subnet_id
@@ -49,7 +49,7 @@ resource "aws_instance" "ec2_cluster_access" {
 
   iam_instance_profile = aws_iam_instance_profile.ec2_eks_profile.name
 
-   root_block_device {
+  root_block_device {
     volume_size = 20
     volume_type = "gp2"
   }
@@ -160,7 +160,10 @@ resource "aws_iam_role" "ec2_eks_role" {
         Action = "sts:AssumeRole"
         Effect = "Allow"
         Principal = {
-          Service = "ec2.amazonaws.com"
+          Service = ["ec2.amazonaws.com",
+            "ssm.amazonaws.com",
+            "ssmmessages.amazonaws.com"
+          ]
         }
       }
     ]
