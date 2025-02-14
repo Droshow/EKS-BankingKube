@@ -62,7 +62,8 @@ jobs:
 
         #commenting out general terraform apply to test just SSM functionality 
         # run: terraform apply -auto-approve -var-file="envs/terraform_dev.tfvars"
-        run: terraform apply -auto-approve -var-file="envs/terraform_dev.tfvars" \
+        run: | 
+          terraform apply -auto-approve -var-file="envs/terraform_dev.tfvars" \
               --target=module.networking \
               --target=module.security \
               --target=module.ec2_cluster_access
