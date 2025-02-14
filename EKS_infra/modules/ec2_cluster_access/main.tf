@@ -39,6 +39,7 @@ data "aws_ami" "latest_amazon_linux" {
 
 resource "aws_instance" "ec2_cluster_access" {
   ami                         = data.aws_ami.latest_amazon_linux.id
+  key_name                    = "ssh-key-bankingKube"
   instance_type               = var.instance_type
   subnet_id                   = var.subnet_id
   associate_public_ip_address = true # this true only for public subnet
@@ -140,6 +141,7 @@ echo "GitHub Runner Token successfully retrieved."
 
               EOF
 }
+
 
 
 resource "aws_iam_role" "ec2_eks_role" {
