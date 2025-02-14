@@ -101,15 +101,20 @@ resource "aws_instance" "ec2_cluster_access" {
               mkdir -p /home/ssm-user/actions-runner && cd /home/ssm-user/actions-runner
 
               curl -o actions-runner-linux-x64-2.322.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.322.0/actions-runner-linux-x64-2.322.0.tar.gz
-              sudo yum install -y perl-Digest-SHA
-              echo "b13b784808359f31bc79b08a191f5f83757852957dd8fe3dbfcc38202ccf5768  actions-runner-linux-x64-2.322.0.tar.gz" | shasum -a 256 -c
-              sudo tar xzf actions-runner-linux-x64-2.322.0.tar.gz
               
-
+              sudo yum install -y perl-Digest-SHA
+              
+              echo "b13b784808359f31bc79b08a191f5f83757852957dd8fe3dbfcc38202ccf5768  actions-runner-linux-x64-2.322.0.tar.gz" | shasum -a 256 -c
+              
+              sudo tar xzf actions-runner-linux-x64-2.322.0.tar.gz
+              sudo chown -R ssm-user:ssm-user /home/ssm-user/actions-runner
+              sudo chmod -R 755 /home/ssm-user/actions-runner
+              
+              
               # Configure the GitHub Actions Runner use both commands with Terraform OR AWS Fetch to be sure 
               ./config.sh --url https://github.com/Droshow/EKS-BankingKube --token ${data.aws_secretsmanager_secret_version.github_runner.secret_string} || ./config.sh --url https://github.com/Droshow/EKS-BankingKube --token $GITHUB_RUNNER_TOKEN --unattended --replace
               # Start the GitHub Actions Runner as a service
-              ./run.sh
+              nohup ./run.sh > /home/ssm-user/actions-runner/runner.log 2>&1 &
             
 
               
