@@ -48,6 +48,11 @@ resource "aws_instance" "ec2_cluster_access" {
 
   iam_instance_profile = aws_iam_instance_profile.ec2_eks_profile.name
 
+   root_block_device {
+    volume_size = 20
+    volume_type = "gp2"
+  }
+
   user_data = <<-EOF
               #!/bin/bash
               yum install -y amazon-ssm-agent
@@ -95,8 +100,8 @@ resource "aws_instance" "ec2_cluster_access" {
               # Install GitHub Actions Runner
               mkdir -p /home/ssm-user/actions-runner && cd /home/ssm-user/actions-runner
 
-              curl -o actions-runner-linux-x64-2.322.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.322.0/actions-runner-linux-x64-2.322.0.tar.gz
-              echo "b13b784808359f31bc79b08a191f5f83757852957dd8fe3dbfcc38202ccf5768  actions-runner-linux-x64-2.322.0.tar.gz" | shasum -a 256 -c
+              curl -o actions-runner-osx-x64-2.322.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.322.0/actions-runner-osx-x64-2.322.0.tar.gz
+              echo "aa0fc262363912167dcdbc746ffcdf7b8996bc587f51cf1bab38ad86cf70b6ea  actions-runner-osx-x64-2.322.0.tar.gz" | shasum -a 256 -c
               tar xzf ./actions-runner-linux-x64-2.322.0.tar.gz
               
 
