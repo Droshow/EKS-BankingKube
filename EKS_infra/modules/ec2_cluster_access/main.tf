@@ -93,9 +93,23 @@ resource "aws_instance" "ec2_cluster_access" {
               kubectl version --client
               aws-iam-authenticator version
 
-               # Fetch GitHub runner token from Secrets Manager just in case Terraform fails
-              GITHUB_RUNNER_TOKEN=$(aws secretsmanager get-secret-value --secret-id github_runner --query SecretString --output text)
-              echo "GitHub Runner Token: $GITHUB_RUNNER_TOKEN"
+              echo "Waiting 10 seconds to ensure IAM and network are available..."
+              sleep 10
+
+              # Fetch GitHub runner token with proper JSON parsing
+              GITHUB_RUNNER_TOKEN=""
+              for i in {1..5}; do
+              GITHUB_RUNNER_TOKEN=$(aws secretsmanager get-secret-value --secret-id github_runner --query SecretString --output text | jq -r '.github_runner_token') && break
+              echo "Retrying AWS Secrets fetch... ($i/5)"
+              sleep 5
+              done
+
+              if [ -z "$GITHUB_RUNNER_TOKEN" ]; then
+              echo "Failed to fetch GitHub Runner token!"
+              exit 1
+              fi
+
+echo "GitHub Runner Token successfully retrieved."
 
               # Install GitHub Actions Runner
               mkdir -p /home/ssm-user/actions-runner && cd /home/ssm-user/actions-runner
