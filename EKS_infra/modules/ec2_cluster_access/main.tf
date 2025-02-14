@@ -101,8 +101,9 @@ resource "aws_instance" "ec2_cluster_access" {
               mkdir -p /home/ssm-user/actions-runner && cd /home/ssm-user/actions-runner
 
               curl -o actions-runner-osx-x64-2.322.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.322.0/actions-runner-osx-x64-2.322.0.tar.gz
+              sudo yum install -y perl-Digest-SHA
               echo "aa0fc262363912167dcdbc746ffcdf7b8996bc587f51cf1bab38ad86cf70b6ea  actions-runner-osx-x64-2.322.0.tar.gz" | shasum -a 256 -c
-              tar xzf ./actions-runner-linux-x64-2.322.0.tar.gz
+              sudo tar xzf actions-runner-linux-x64-2.322.0.tar.gz
               
 
               # Configure the GitHub Actions Runner use both commands with Terraform OR AWS Fetch to be sure 
