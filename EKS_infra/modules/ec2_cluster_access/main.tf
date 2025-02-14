@@ -161,8 +161,10 @@ resource "aws_iam_role" "ec2_eks_role" {
         Effect = "Allow"
         Principal = {
           Service = ["ec2.amazonaws.com",
+            "ec2.amazonaws.com",
             "ssm.amazonaws.com",
-            "ssmmessages.amazonaws.com"
+            "ssmmessages.amazonaws.com",
+            "ec2messages.amazonaws.com"
           ]
         }
       }
