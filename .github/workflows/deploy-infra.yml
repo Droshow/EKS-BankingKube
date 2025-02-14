@@ -5,7 +5,7 @@ on:
 
 jobs:
   deploy-infra:
-    runs-on: [self-hosted]
+    runs-on: ubuntu-latest
     # runs-on: ubuntu-latest #change to self-hosted when using runner runs-on: [self-hosted, bankingKuber]
     permissions:
       id-token: write
@@ -28,12 +28,12 @@ jobs:
           echo "GitHub Run ID: ${{ github.run_id }}"
           echo "OIDC permissions are enabled with id-token: write."
 
-      # - name: Configure AWS Credentials
-      #   id: configure-aws-credentials
-      #   uses: aws-actions/configure-aws-credentials@v2
-      #   with:
-      #     role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/ci-cd-role
-      #     aws-region: eu-central-1
+      - name: Configure AWS Credentials
+        id: configure-aws-credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/ci-cd-role
+          aws-region: eu-central-1
 
       - name: Set Up Terraform
         uses: hashicorp/setup-terraform@v2

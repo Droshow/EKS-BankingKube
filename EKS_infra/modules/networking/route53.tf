@@ -18,5 +18,8 @@ resource "aws_route53_zone" "banking-kube" {
   tags = {
     Environment = "DevsBridge"
   }
+  lifecycle {
+    prevent_destroy = true
+  }
 
 }
