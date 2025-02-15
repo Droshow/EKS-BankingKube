@@ -57,6 +57,8 @@ resource "aws_instance" "ec2_cluster_access" {
   user_data = <<-EOF
               #!/bin/bash
               sudo dnf install -y amazon-ssm-agent jq unzip perl-Digest-SHA
+              systemctl enable amazon-ssm-agent
+              systemctl start amazon-ssm-agent
               sudo amazon-ssm-agent &
               sleep 5  # Allow SSM agent to start
                             pgrep amazon-ssm-agent || echo "WARNING: SSM Agent not running"
