@@ -153,20 +153,17 @@ echo "GitHub Runner Token successfully retrieved."
 data "aws_iam_policy_document" "ec2_eks_role" {
   statement {
     effect = "Allow"
-
     principals {
       type = "Service"
       identifiers = [
         "ec2.amazonaws.com",
-        # "ssm.amazonaws.com",
-        # "ssmmessages.eu-central-1.amazonaws.com",
-        # "ec2messages.eu-central-1.amazonaws.com"
+        # required for SSM to assume role via VPC endpoints:
+        "ssm.amazonaws.com",
+        "ssmmessages.eu-central-1.amazonaws.com",
+        "ec2messages.eu-central-1.amazonaws.com"
       ]
     }
-
-    actions = [
-      "sts:AssumeRole"
-    ]
+    actions = ["sts:AssumeRole"]
   }
 }
 
