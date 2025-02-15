@@ -38,7 +38,7 @@ data "aws_ami" "latest_amazon_linux" {
 }
 
 resource "aws_instance" "ec2_cluster_access" {
-  ami                         = data.aws_ami.latest_amazon_linux.id
+  ami = data.aws_ami.latest_amazon_linux.id
   # key_name                    = "ssh-key-bankingKube"
   instance_type               = var.instance_type
   subnet_id                   = var.subnet_id
@@ -49,7 +49,7 @@ resource "aws_instance" "ec2_cluster_access" {
 
   iam_instance_profile = aws_iam_instance_profile.ec2_eks_profile.name
 
-   root_block_device {
+  root_block_device {
     volume_size = 20
     volume_type = "gp2"
   }
@@ -153,18 +153,33 @@ echo "GitHub Runner Token successfully retrieved."
 resource "aws_iam_role" "ec2_eks_role" {
   name = "ec2-eks-role"
 
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
+  assume_role_policy = <<EOF
+  {
+    "Version": "2012-10-17",
+    "Statement": [
       {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        }
+        "Effect": "Allow",
+        "Principal": { "Service": "ec2.amazonaws.com" },
+        "Action": "sts:AssumeRole"
+      },
+      {
+        "Effect": "Allow",
+        "Principal": { "Service": "ssm.amazonaws.com" },
+        "Action": "sts:AssumeRole"
+      },
+      {
+        "Effect": "Allow",
+        "Principal": { "Service": "ssmmessages.amazonaws.com" },
+        "Action": "sts:AssumeRole"
+      },
+      {
+        "Effect": "Allow",
+        "Principal": { "Service": "ec2messages.amazonaws.com" },
+        "Action": "sts:AssumeRole"
       }
     ]
-  })
+  }
+  EOF
 }
 
 # Attach all required policies in a loop
