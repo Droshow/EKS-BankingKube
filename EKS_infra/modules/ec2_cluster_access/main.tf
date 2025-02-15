@@ -157,8 +157,8 @@ data "aws_iam_policy_document" "ec2_eks_role" {
       identifiers = [
         "ec2.amazonaws.com",
         "ssm.amazonaws.com",
-        "ssmmessages.amazonaws.com",
-        "ec2messages.amazonaws.com"
+        "ssmmessages.eu-central-1.amazonaws.com",
+        "ec2messages.eu-central-1.amazonaws.com"
       ]
     }
 
