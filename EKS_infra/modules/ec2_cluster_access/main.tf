@@ -148,39 +148,31 @@ echo "GitHub Runner Token successfully retrieved."
               EOF
 }
 
+data "aws_iam_policy_document" "ec2_eks_role" {
+  statement {
+    effect = "Allow"
 
+    principals {
+      type = "Service"
+      identifiers = [
+        "ec2.amazonaws.com",
+        "ssm.amazonaws.com",
+        "ssmmessages.amazonaws.com",
+        "ec2messages.amazonaws.com"
+      ]
+    }
 
-resource "aws_iam_role" "ec2_eks_role" {
-  name = "ec2-eks-role"
-
-  assume_role_policy = <<EOF
-  {
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Effect": "Allow",
-        "Principal": { "Service": "ec2.amazonaws.com" },
-        "Action": "sts:AssumeRole"
-      },
-      {
-        "Effect": "Allow",
-        "Principal": { "Service": "ssm.amazonaws.com" },
-        "Action": "sts:AssumeRole"
-      },
-      {
-        "Effect": "Allow",
-        "Principal": { "Service": "ssmmessages.amazonaws.com" },
-        "Action": "sts:AssumeRole"
-      },
-      {
-        "Effect": "Allow",
-        "Principal": { "Service": "ec2messages.amazonaws.com" },
-        "Action": "sts:AssumeRole"
-      }
+    actions = [
+      "sts:AssumeRole"
     ]
   }
-  EOF
 }
+
+resource "aws_iam_role" "ec2_eks_role" {
+  name               = "ec2-eks-role"
+  assume_role_policy = data.aws_iam_policy_document.ec2_eks_role.json
+}
+
 
 # Attach all required policies in a loop
 resource "aws_iam_role_policy_attachment" "eks_policies" {
