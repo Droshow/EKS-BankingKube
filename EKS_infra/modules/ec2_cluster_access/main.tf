@@ -138,10 +138,31 @@ echo "GitHub Runner Token successfully retrieved."
                 --name "eks-runner-$(hostname)" \
                 --labels "eks,self-hosted"
               
-               Start the GitHub Actions Runner as a service
-              nohup ./run.sh > /home/ssm-user/actions-runner/runner.log 2>&1 & disown
-              ./run.sh
+              echo "==== Creating systemd service for GitHub Actions Runner ===="
+              cat <<EOF2 | sudo tee /etc/systemd/system/github-runner.service
+              [Unit]
+              Description=GitHub Actions Runner
+              After=network.target
 
+              [Service]
+              User=ssm-user
+              WorkingDirectory=/home/ssm-user/
+              ExecStart=/home/ssm-user/run.sh
+              Restart=always
+              RestartSec=10
+
+              [Install]
+              WantedBy=multi-user.target
+              EOF2
+
+              echo "==== Enabling & starting GitHub Actions Runner service ===="
+              sudo systemctl daemon-reload
+              sudo systemctl enable github-runner
+              sudo systemctl start github-runner
+
+              echo "==== GitHub Actions Runner successfully installed & started ===="
+                
+  
               EOF
 }
 
