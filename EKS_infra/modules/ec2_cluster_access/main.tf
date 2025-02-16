@@ -140,7 +140,7 @@ echo "GitHub Runner Token successfully retrieved."
               
                Start the GitHub Actions Runner as a service
               nohup ./run.sh > /home/ssm-user/actions-runner/runner.log 2>&1 & disown
-              # ./run.sh
+              ./run.sh
 
               EOF
 }
