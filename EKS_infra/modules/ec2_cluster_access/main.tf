@@ -57,14 +57,14 @@ resource "aws_instance" "ec2_cluster_access" {
   user_data = <<-EOF
               #!/bin/bash
 
+              sudo yum update -y
+              sudo yum install -y amazon-ssm-agent jq unzip perl-Digest-SHA
+              sudo yum install -y icu
+              sudo yum install unzip -y
+
               sudo yum install -y amazon-ssm-agent
               systemctl enable amazon-ssm-agent
               systemctl start amazon-ssm-agent
-
-              #install necessary library & helpers
-              sudo yum install -y icu
-              sudo yum install unzip -y
-              
               
               #Install Node.js
               # sudo amazon-linux-extras enable nodejs18
