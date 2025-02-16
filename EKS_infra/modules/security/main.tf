@@ -124,7 +124,7 @@ resource "aws_security_group" "ec2_cluster_access_sg" {
 
 resource "aws_security_group" "vpc_endpoint_sg" {
   name   = "vpc-endpoint-sg"
-  vpc_id = aws_vpc.eks_vpc.id
+  vpc_id = var.vpc_id
 
   ingress {
     description     = "Allow HTTPS from EC2 SG"
