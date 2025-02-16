@@ -62,11 +62,13 @@ resource "aws_instance" "ec2_cluster_access" {
               systemctl start amazon-ssm-agent
 
               #install necessary library & helpers
-              sudo dnf install -y icu
+              sudo yum install -y icu
               sudo yum install unzip -y
               
+              
               #Install Node.js
-              sudo dnf install -y nodejs
+              # sudo amazon-linux-extras enable nodejs18
+              # sudo yum install -y nodejs
 
               # Install kubectl
               curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.30.2/2024-07-12/bin/linux/amd64/kubectl
