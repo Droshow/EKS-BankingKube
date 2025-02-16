@@ -121,3 +121,24 @@ resource "aws_security_group" "ec2_cluster_access_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
+resource "aws_security_group" "vpc_endpoint_sg" {
+  name   = "vpc-endpoint-sg"
+  vpc_id = aws_vpc.eks_vpc.id
+
+  ingress {
+    description     = "Allow HTTPS from EC2 SG"
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    security_groups = [aws_security_group.ec2_cluster_access_sg.id]
+  }
+
+  egress {
+    # Usually allow all outbound or at least ephemeral ports
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}

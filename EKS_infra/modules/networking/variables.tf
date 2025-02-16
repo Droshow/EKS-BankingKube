@@ -42,7 +42,7 @@ variable "acm_certificate_arn" {
   type        = string
 }
 
-variable "ec2_security_group_id" {
+variable "vpc_endpoints_security_group_id" {
   description = "security group of EC2 cluster access"
   type        = string
 }

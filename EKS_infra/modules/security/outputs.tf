@@ -67,3 +67,8 @@ output "ec2_access_aws_security_group" {
   description = "The ID of the security group for the EC2 instances"
   value       = aws_security_group.ec2_cluster_access_sg.id
 }
+
+output "vpc_endpoint_sg" {
+  description = "vpc_endpoint_sg "
+  value       = aws_security_group.vpc_endpoint_sg.id
+}
