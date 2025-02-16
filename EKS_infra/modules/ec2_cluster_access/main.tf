@@ -57,7 +57,7 @@ resource "aws_instance" "ec2_cluster_access" {
   user_data = <<-EOF
               #!/bin/bash
 
-              yum install -y amazon-ssm-agent
+              sudo yum install -y amazon-ssm-agent
               systemctl enable amazon-ssm-agent
               systemctl start amazon-ssm-agent
 
