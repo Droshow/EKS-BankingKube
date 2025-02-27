@@ -112,7 +112,7 @@ resource "aws_instance" "ec2_cluster_access" {
               done
 
               if [ -z "$GITHUB_RUNNER_TOKEN" ]; then
-              echo "Failed to fetch GitHub Runner token!"
+              echo "Failed to fetch GitHub Runner token\!"
               exit 1
               fi
 
