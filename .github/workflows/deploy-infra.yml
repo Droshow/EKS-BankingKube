@@ -17,22 +17,19 @@ jobs:
     steps:
       # - name: Checkout Repository
       #   uses: actions/checkout@v3 for public runner
-      - name: Install Dependencies (Docker, Git, Terraform)
+      - name: Install Docker
         run: |
-          sudo yum install -y docker git unzip
+          sudo yum install -y docker
           sudo systemctl start docker
           sudo systemctl enable docker
           sudo usermod -aG docker $USER
-          sudo chmod 666 /var/run/docker.sock
           docker --version
-          git --version
+          sudo chmod 666 /var/run/docker.sock
 
-          # Install Terraform
-          TERRAFORM_VERSION="1.5.7"
-          curl -O https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-          unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-          sudo mv terraform /usr/local/bin/
-          terraform -version
+      - name: Install Git
+        run: |
+          sudo yum install -y git
+          git --version
 
       - name: Manual Git Checkout
         run: |
