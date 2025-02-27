@@ -4,7 +4,7 @@ resource "random_password" "db_password" {
 }
 
 resource "aws_secretsmanager_secret" "db_credentials" {
-  name = "bk/db_credentials-deploy-01"
+  name = "bk/db_credentials-deploy-02"
 }
 
 resource "aws_secretsmanager_secret_version" "db_credentials" {
