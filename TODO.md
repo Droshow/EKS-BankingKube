@@ -17,6 +17,7 @@ Setting up own runner don't forget to change the token in
 https://github.com/Droshow/EKS-BankingKube/settings/actions/runners/new?arch=x64&os=linux 
 and consecutively in secrets
 
+
 Key-Pair aws command
 martin.drotar@CVX-1065 modules % aws ec2 create-key-pair --key-name ssh-key-bankingKube \
     --region eu-central-1 \
