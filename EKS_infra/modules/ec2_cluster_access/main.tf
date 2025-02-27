@@ -100,6 +100,19 @@ resource "aws_instance" "ec2_cluster_access" {
               echo "Waiting 10 seconds to ensure IAM and network are available..."
               sleep 10
 
+              # Install GitHub Actions Runner
+              mkdir -p /home/ssm-user/actions-runner && cd /home/ssm-user/actions-runner
+
+              curl -o actions-runner-linux-x64-2.322.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.322.0/actions-runner-linux-x64-2.322.0.tar.gz
+              
+              sudo yum install -y perl-Digest-SHA
+              
+              echo "b13b784808359f31bc79b08a191f5f83757852957dd8fe3dbfcc38202ccf5768  actions-runner-linux-x64-2.322.0.tar.gz" | shasum -a 256 -c
+              
+              sudo tar xzf actions-runner-linux-x64-2.322.0.tar.gz
+              sudo chown -R ssm-user:ssm-user /home/ssm-user/actions-runner
+              sudo chmod -R 755 /home/ssm-user/actions-runner
+
               # install jq
               sudo yum install -y jq
 
@@ -117,20 +130,6 @@ resource "aws_instance" "ec2_cluster_access" {
               fi
 
               echo "GitHub Runner Token successfully retrieved."
-
-              # Install GitHub Actions Runner
-              mkdir -p /home/ssm-user/actions-runner && cd /home/ssm-user/actions-runner
-
-              curl -o actions-runner-linux-x64-2.322.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.322.0/actions-runner-linux-x64-2.322.0.tar.gz
-              
-              sudo yum install -y perl-Digest-SHA
-              
-              echo "b13b784808359f31bc79b08a191f5f83757852957dd8fe3dbfcc38202ccf5768  actions-runner-linux-x64-2.322.0.tar.gz" | shasum -a 256 -c
-              
-              sudo tar xzf actions-runner-linux-x64-2.322.0.tar.gz
-              sudo chown -R ssm-user:ssm-user /home/ssm-user/actions-runner
-              sudo chmod -R 755 /home/ssm-user/actions-runner
-              
               
               # Configure the GitHub Actions Runner use both commands with Terraform OR AWS Fetch to be sure 
               sudo -u ssm-user ./config.sh \
@@ -142,7 +141,7 @@ resource "aws_instance" "ec2_cluster_access" {
                 --labels "eks,self-hosted"
               
               echo "==== Creating systemd service for GitHub Actions Runner ===="
-              sudo tee /etc/systemd/system/github-runner.service > /dev/null << EOF2
+              sudo bash -c 'cat <<EOF2 > /etc/systemd/system/github-runner.service
               [Unit]
               Description=GitHub Actions Runner
               After=network.target
@@ -156,7 +155,7 @@ resource "aws_instance" "ec2_cluster_access" {
 
               [Install]
               WantedBy=multi-user.target
-              EOF2
+              EOF2'
 
               echo "==== Enabling & starting GitHub Actions Runner service ===="
               sudo systemctl daemon-reload
