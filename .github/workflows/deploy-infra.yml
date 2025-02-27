@@ -7,8 +7,6 @@ jobs:
   deploy-infra:
     runs-on: [self-hosted, eks]
     # runs-on: ubuntu-latest #change to self-hosted when using runner runs-on: [self-hosted, bankingKuber]
-    container:
-      image: node:18-alpine
     permissions:
       id-token: write
       contents: read
@@ -19,6 +17,15 @@ jobs:
     steps:
       # - name: Checkout Repository
       #   uses: actions/checkout@v3 for public runner
+      - name: Install Docker
+        run: |
+          sudo yum install -y docker
+          sudo systemctl start docker
+          sudo systemctl enable docker
+          sudo usermod -aG docker $USER
+          docker --version
+          sudo chmod 666 /var/run/docker.sock
+
       - name: Install Compatible Node.js
         run: |
           sudo yum remove -y nodejs
@@ -26,6 +33,7 @@ jobs:
           sudo yum install -y nodejs
           node -v
           npm -v
+
       - name: Manual Git Checkout
         run: |
           cd /home/ssm-user/
