@@ -67,6 +67,10 @@ jobs:
               --target=module.networking \
               --target=module.security \
               --target=module.ec2_cluster_access
+              --target=module.eks
+              --target=module.ecr
+              --target=module.node_groups
+              --target=module.storage
 
       
       # - name: Update Kubeconfig
