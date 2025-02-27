@@ -148,8 +148,8 @@ resource "aws_instance" "ec2_cluster_access" {
 
               [Service]
               User=ssm-user
-              WorkingDirectory=/home/ssm-user/
-              ExecStart=/home/ssm-user/run.sh
+              WorkingDirectory=/home/ssm-user/actions-runner
+              ExecStart=/home/ssm-user/actions-runner/run.sh
               Restart=always
               RestartSec=10
 
