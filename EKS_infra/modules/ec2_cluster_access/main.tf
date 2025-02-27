@@ -131,6 +131,8 @@ resource "aws_instance" "ec2_cluster_access" {
               fi
 
               echo "GitHub Runner Token successfully retrieved."
+
+              GITHUB_RUNNER_TOKEN=$(aws secretsmanager get-secret-value --secret-id github_runner --query SecretString --output text | jq -r '.github_runner_token'
               
               # Configure the GitHub Actions Runner use both commands with Terraform OR AWS Fetch to be sure 
               sudo -u ssm-user ./config.sh \
