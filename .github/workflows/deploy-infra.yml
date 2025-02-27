@@ -87,11 +87,18 @@ jobs:
           # Confirm the credentials are set
           echo "Assumed role and set temporary credentials."
           aws sts get-caller-identity
-
-      - name: Set Up Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.5.7
+      # public runner
+      # - name: Set Up Terraform
+      #   uses: hashicorp/setup-terraform@v2
+      #   with:
+      #     terraform_version: 1.5.7
+      - name: Install Terraform Manually
+        run: |
+          TERRAFORM_VERSION="1.5.7"
+          curl -O https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+          unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+          sudo mv terraform /usr/local/bin/
+          terraform -version
 
       - name: Print working directory
         run: pwd
