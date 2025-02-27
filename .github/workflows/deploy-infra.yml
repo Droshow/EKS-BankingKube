@@ -17,19 +17,22 @@ jobs:
     steps:
       # - name: Checkout Repository
       #   uses: actions/checkout@v3 for public runner
-      - name: Install Docker
+      - name: Install Dependencies (Docker, Git, Terraform)
         run: |
-          sudo yum install -y docker
+          sudo yum install -y docker git unzip
           sudo systemctl start docker
           sudo systemctl enable docker
           sudo usermod -aG docker $USER
-          docker --version
           sudo chmod 666 /var/run/docker.sock
-          
-      - name: Install Git
-        run: |
-          sudo yum install -y git
+          docker --version
           git --version
+
+          # Install Terraform
+          TERRAFORM_VERSION="1.5.7"
+          curl -O https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+          unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+          sudo mv terraform /usr/local/bin/
+          terraform -version
 
       - name: Manual Git Checkout
         run: |
@@ -42,6 +45,7 @@ jobs:
           ls -la
       
       - name: Run Node.js in Docker
+        working-directory: /home/ssm-user/EKS-BankingKube
         run: |
           docker run --rm -v $(pwd):/workspace -w /workspace node:18-alpine node -v
           docker run --rm -v $(pwd):/workspace -w /workspace node:18-alpine npm install
