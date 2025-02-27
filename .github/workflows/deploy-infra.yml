@@ -92,6 +92,22 @@ jobs:
       #   uses: hashicorp/setup-terraform@v2
       #   with:
       #     terraform_version: 1.5.7
+
+      # Update Kubeconfig
+      - name: Update Kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          aws eks update-kubeconfig \
+            --name ${{ env.EKS_CLUSTER_NAME }} \
+            --region ${{ env.AWS_REGION }} \
+            --role-arn arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/ci-cd-role
+
+      # Verify kubectl Access
+      - name: Verify kubectl Access
+        run: |
+          kubectl get nodes
+          kubectl get configmap aws-auth -n kube-system -o yaml
+          
       - name: Install Terraform Manually
         run: |
           TERRAFORM_VERSION="1.5.7"
@@ -131,13 +147,3 @@ jobs:
               --target=module.ecr \
               --target=module.node_groups \
               --target=module.storage
-
-      
-      # - name: Update Kubeconfig
-      #   run: |
-      #     mkdir -p ~/.kube
-      #     aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
-      # - name: Verify kubectl Access
-      #   run: |
-      #     kubectl get nodes
-      

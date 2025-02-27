@@ -7,6 +7,9 @@ sasafa## CICD Runner or different access for EKS in private subnet to be able to
 
 ## Deployment knowledge
 
+<!-- Separate deployment one using public runner that builds just EC2 instance and Networking module perhaps
+And the other that uses self-hosted runner on that instance building everything else -->
+
 <!-- Run the EKS AWS Provider Terraform 
 Uncomment Kubernetes Provider Terraform
 hanle the DB secret in EKS_infra/secrets.tf
