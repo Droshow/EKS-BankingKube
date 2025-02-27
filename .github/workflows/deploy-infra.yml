@@ -104,7 +104,7 @@ jobs:
         run: pwd
 
       - name: Initialize Terraform
-        working-directory: EKS_infra
+        working-directory: /home/ssm-user/EKS-BankingKube/EKS_infra #EKS_infra for public runner
         run: terraform init
       
       # - name: state import
@@ -114,11 +114,11 @@ jobs:
       #     terraform import -var-file="envs/terraform_dev.tfvars" aws_iam_policy.ci_cd_custom_policy arn:aws:iam::961477247679:policy/ci-cd-custom-policy
       #     terraform import -var-file="envs/terraform_dev.tfvars" aws_iam_openid_connect_provider.github arn:aws:iam::961477247679:oidc-provider/token.actions.githubusercontent.com
       - name: Plan Terraform
-        working-directory: EKS_infra
+        working-directory: /home/ssm-user/EKS-BankingKube/EKS_infra 
         run: terraform plan -var-file="envs/terraform_dev.tfvars"
 #temp off
       - name: Apply Terraform
-        working-directory: EKS_infra
+        working-directory: /home/ssm-user/EKS-BankingKube/EKS_infra
 
         #commenting out general terraform apply to test just SSM functionality 
         # run: terraform apply -auto-approve -var-file="envs/terraform_dev.tfvars"
