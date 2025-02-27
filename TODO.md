@@ -11,6 +11,7 @@ sasafa## CICD Runner or different access for EKS in private subnet to be able to
 Uncomment Kubernetes Provider Terraform
 hanle the DB secret in EKS_infra/secrets.tf
 Watch for certificate if exists in AWS or not
+if not fetch_existing_cert in main.tf = false, then deploy will fail, change to true and deploy again
 first run if not existing that switch to fetch_certificate = true
 Setting up own runner don't forget to change the token in 
 https://github.com/Droshow/EKS-BankingKube/settings/actions/runners/new?arch=x64&os=linux 
