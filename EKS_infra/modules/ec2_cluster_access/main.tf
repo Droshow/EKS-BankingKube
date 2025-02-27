@@ -67,8 +67,8 @@ resource "aws_instance" "ec2_cluster_access" {
               systemctl start amazon-ssm-agent
               
               #Install Node.js
-              sudo amazon-linux-extras enable nodejs18
-              sudo yum install -y nodejs
+              # sudo amazon-linux-extras enable nodejs18
+              # sudo yum install -y nodejs
 
               # Install kubectl
               curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.30.2/2024-07-12/bin/linux/amd64/kubectl
@@ -99,6 +99,9 @@ resource "aws_instance" "ec2_cluster_access" {
 
               echo "Waiting 10 seconds to ensure IAM and network are available..."
               sleep 10
+
+              # install jq
+              sudo yum install -y jq
 
               # Fetch GitHub runner token with proper JSON parsing
               GITHUB_RUNNER_TOKEN=""
