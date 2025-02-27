@@ -29,7 +29,7 @@ jobs:
       - name: Install Compatible Node.js
         run: |
           sudo yum remove -y nodejs
-          curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
+          curl -fsSL https://rpm.nodesource.com/setup_16.x | sudo bash -
           sudo yum install -y nodejs
           node -v
           npm -v
