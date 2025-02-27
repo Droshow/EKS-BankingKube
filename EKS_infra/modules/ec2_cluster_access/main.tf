@@ -116,7 +116,7 @@ resource "aws_instance" "ec2_cluster_access" {
               exit 1
               fi
 
-echo "GitHub Runner Token successfully retrieved."
+              echo "GitHub Runner Token successfully retrieved."
 
               # Install GitHub Actions Runner
               mkdir -p /home/ssm-user/actions-runner && cd /home/ssm-user/actions-runner
@@ -142,7 +142,7 @@ echo "GitHub Runner Token successfully retrieved."
                 --labels "eks,self-hosted"
               
               echo "==== Creating systemd service for GitHub Actions Runner ===="
-              cat <<EOF2 | sudo tee /etc/systemd/system/github-runner.service
+              sudo tee /etc/systemd/system/github-runner.service > /dev/null << EOF2
               [Unit]
               Description=GitHub Actions Runner
               After=network.target
@@ -165,7 +165,6 @@ echo "GitHub Runner Token successfully retrieved."
 
               echo "==== GitHub Actions Runner successfully installed & started ===="
                 
-  
               EOF
 }
 
