@@ -41,12 +41,12 @@ jobs:
           git checkout ${{ github.sha }}
           ls -la
       
-      - name: Run Node.js in Docker
-        working-directory: /home/ssm-user/EKS-BankingKube
-        run: |
-          docker run --rm -v $(pwd):/workspace -w /workspace node:18-alpine node -v
-          docker run --rm -v $(pwd):/workspace -w /workspace node:18-alpine npm install
-          docker run --rm -v $(pwd):/workspace -w /workspace node:18-alpine npm run build
+      # - name: Run Node.js in Docker
+      #   working-directory: /home/ssm-user/EKS-BankingKube
+      #   run: |
+      #     docker run --rm -v $(pwd):/workspace -w /workspace node:18-alpine node -v
+      #     docker run --rm -v $(pwd):/workspace -w /workspace node:18-alpine npm install
+      #     docker run --rm -v $(pwd):/workspace -w /workspace node:18-alpine npm run build
 
            # Step 2: Debug OIDC Setup
       - name: Debug OIDC Setup
