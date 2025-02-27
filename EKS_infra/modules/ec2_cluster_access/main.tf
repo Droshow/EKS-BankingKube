@@ -112,6 +112,7 @@ resource "aws_instance" "ec2_cluster_access" {
               sudo tar xzf actions-runner-linux-x64-2.322.0.tar.gz
               sudo chown -R ssm-user:ssm-user /home/ssm-user/actions-runner
               sudo chmod -R 755 /home/ssm-user/actions-runner
+              sudo cd /home/ssm-user/actions-runner
 
               # install jq
               sudo yum install -y jq
