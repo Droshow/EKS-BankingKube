@@ -25,20 +25,6 @@ jobs:
           sudo usermod -aG docker $USER
           docker --version
           sudo chmod 666 /var/run/docker.sock
-      
-      - name: Run Node.js in Docker
-        run: |
-          docker run --rm -v $(pwd):/workspace -w /workspace node:18-alpine node -v
-          docker run --rm -v $(pwd):/workspace -w /workspace node:18-alpine npm install
-          docker run --rm -v $(pwd):/workspace -w /workspace node:18-alpine npm run build
-
-      # - name: Install Compatible Node.js
-      #   run: |
-      #     sudo yum remove -y nodejs
-      #     curl -fsSL https://rpm.nodesource.com/setup_16.x | sudo bash -
-      #     sudo yum install -y nodejs
-      #     node -v
-      #     npm -v
 
       - name: Manual Git Checkout
         run: |
@@ -49,6 +35,12 @@ jobs:
           git fetch --tags
           git checkout ${{ github.sha }}
           ls -la
+      
+      - name: Run Node.js in Docker
+        run: |
+          docker run --rm -v $(pwd):/workspace -w /workspace node:18-alpine node -v
+          docker run --rm -v $(pwd):/workspace -w /workspace node:18-alpine npm install
+          docker run --rm -v $(pwd):/workspace -w /workspace node:18-alpine npm run build
 
            # Step 2: Debug OIDC Setup
       - name: Debug OIDC Setup
