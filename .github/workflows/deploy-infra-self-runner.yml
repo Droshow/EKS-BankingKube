@@ -1,0 +1,86 @@
+name: Deploy Infrastructure (Self-Hosted Runner)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-infra-self:
+    runs-on: [self-hosted, eks]
+    permissions:
+      id-token: write
+      contents: read
+    env:
+      AWS_ACCOUNT_ID: 961477247679
+      AWS_REGION: eu-central-1
+      EKS_CLUSTER_NAME: Banking-Kube-Sloth
+    steps:
+      - name: Install Docker
+        run: |
+          sudo yum install -y docker
+          sudo systemctl start docker
+          sudo systemctl enable docker
+          sudo usermod -aG docker $USER
+          docker --version
+          sudo chmod 666 /var/run/docker.sock
+
+      - name: Install Git
+        run: |
+          sudo yum install -y git
+          git --version
+
+      - name: Manual Git Checkout
+        run: |
+          cd /home/ssm-user/
+          sudo rm -rf EKS-BankingKube
+          git clone https://github.com/Droshow/EKS-BankingKube.git
+          cd EKS-BankingKube
+          git fetch --tags
+          git checkout ${{ github.sha }}
+          ls -la
+
+      - name: Assume Role Manually
+        run: |
+          ROLE_ARN="arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/ci-cd-role"
+          SESSION_NAME="ci-cd-session"
+
+          CREDS=$(aws sts assume-role --role-arn "$ROLE_ARN" --role-session-name "$SESSION_NAME" --output json)
+          export AWS_ACCESS_KEY_ID=$(echo $CREDS | jq -r '.Credentials.AccessKeyId')
+          export AWS_SECRET_ACCESS_KEY=$(echo $CREDS | jq -r '.Credentials.SecretAccessKey')
+          export AWS_SESSION_TOKEN=$(echo $CREDS | jq -r '.Credentials.SessionToken')
+
+          echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> $GITHUB_ENV
+          echo "AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN" >> $GITHUB_ENV
+
+      - name: Update Kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          aws eks update-kubeconfig \
+            --name ${{ env.EKS_CLUSTER_NAME }} \
+            --region ${{ env.AWS_REGION }} \
+            --role-arn arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/ci-cd-role
+
+      - name: Install Terraform Manually
+        run: |
+          TERRAFORM_VERSION="1.5.7"
+          curl -O https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+          unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+          sudo mv terraform /usr/local/bin/
+          terraform -version
+
+      - name: Initialize Terraform
+        working-directory: /home/ssm-user/EKS-BankingKube/EKS_infra
+        run: terraform init
+
+      - name: Plan Terraform
+        working-directory: /home/ssm-user/EKS-BankingKube/EKS_infra
+        run: terraform plan -var-file="envs/terraform_dev.tfvars"
+
+      - name: Apply Terraform
+        working-directory: /home/ssm-user/EKS-BankingKube/EKS_infra
+        run: |
+          terraform apply -auto-approve -var-file="envs/terraform_dev.tfvars" \
+              --target=module.eks \
+              --target=module.ecr \
+              --target=module.node_groups \
+              --target=module.storage

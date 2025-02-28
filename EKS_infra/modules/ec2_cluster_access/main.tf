@@ -226,6 +226,11 @@ resource "aws_iam_policy" "secrets_manager_read_policy" {
           "iam:*"
         ],
         Resource = "*"
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : "sts:AssumeRole",
+        "Resource" : "arn:aws:iam::961477247679:role/ci-cd-role"
       }
     ]
   })

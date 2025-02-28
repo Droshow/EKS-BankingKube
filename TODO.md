@@ -8,7 +8,7 @@ sasafa## CICD Runner or different access for EKS in private subnet to be able to
 ## Deployment knowledge
 
 <!-- Separate deployment one using public runner that builds just EC2 instance and Networking module perhaps
-And the other that uses self-hosted runner on that instance building everything else -->
+And the other that uses self-hosted runner on that instance building everything else --> Done
 
 <!-- Run the EKS AWS Provider Terraform 
 Uncomment Kubernetes Provider Terraform
@@ -29,7 +29,7 @@ martin.drotar@CVX-1065 modules % aws ec2 create-key-pair --key-name ssh-key-bank
 
 ### Tasks to be Done
 
-0. **Fix self-hosted runner infra workflow**
+0. **Fix self-hosted runner infra workflow** DONE
  
 
 1. **Update Kubeconfig:**
@@ -43,12 +43,14 @@ martin.drotar@CVX-1065 modules % aws ec2 create-key-pair --key-name ssh-key-bank
 
 5. **Test kubectl Access:**
    - Verify that the EC2 instance can successfully run `kubectl` commands against the EKS cluster.
+DONE
 
-6. **Generate TLS Certificates:**
+6. **Modify deployment workflow - deyploy-dynamic-pod-sec for self runner thing:**
+7. **Generate TLS Certificates:**
    - Run the `generate-certs.sh` script to generate TLS certificates and create the Kubernetes secret.
 
-7. **Deploy Webhook Manifests:**
+8. **Deploy Webhook Manifests:**
    - Run the `deploy-webhook.sh` script to deploy the webhook manifests to the EKS cluster.
 
-8. **Document the Process:**
+9. **Document the Process:**
    - Document the steps and configurations required to set up and maintain access for future reference and development iterations.

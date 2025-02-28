@@ -10,7 +10,7 @@ resource "aws_eks_cluster" "banking_kube_cluster" {
   }
   access_config {
     authentication_mode                         = "API"
-    bootstrap_cluster_creator_admin_permissions = true # false in later chapters
+    bootstrap_cluster_creator_admin_permissions = true # false in later chapters, true now means that cluster creator role can also access if assumend
   }
 
   enabled_cluster_log_types = var.enabled_cluster_log_types
@@ -45,11 +45,11 @@ resource "kubernetes_config_map" "aws_auth" {
           username = "fargate-pod-execution-role"
           groups   = ["system:node:{{SessionName}}", "system:nodes", "system:node-proxier"]
         },
-        {
-          rolearn  = "arn:aws:iam::${var.aws_account_id}:role/ec2-eks-role"
-          username = "ec2-eks-role"
-          groups   = ["system:masters"]
-        }    
+        # {
+        #   rolearn  = "arn:aws:iam::${var.aws_account_id}:role/ec2-eks-role"
+        #   username = "ec2-eks-role"
+        #   groups   = ["system:masters"]
+        # }    
     ])
 
   }

@@ -19,6 +19,14 @@ resource "aws_iam_role" "ci_cd_role" {
           }
         }
       },
+      {
+        Effect = "Allow",
+        Principal = {
+          AWS = "arn:aws:iam::${var.aws_account_id}:role/ec2-eks-role"
+        },
+        Action = "sts:AssumeRole"
+      }
+
     ]
   })
   lifecycle {

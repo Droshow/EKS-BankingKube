@@ -1,0 +1,39 @@
+name: Deploy Infrastructure (Public Runner)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-infra-public:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    env:
+      AWS_ACCOUNT_ID: 961477247679
+      AWS_REGION: eu-central-1
+      EKS_CLUSTER_NAME: Banking-Kube-Sloth
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set Up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.7
+
+      - name: Initialize Terraform
+        working-directory: ./EKS_infra
+        run: terraform init
+
+      - name: Plan Terraform
+        working-directory: ./EKS_infra
+        run: terraform plan -var-file="envs/terraform_dev.tfvars"
+
+      - name: Apply Terraform
+        working-directory: ./EKS_infra
+        run: |
+          terraform apply -auto-approve -var-file="envs/terraform_dev.tfvars" \
+              --target=module.networking \
+              --target=module.security \
+              --target=module.ec2_cluster_access
