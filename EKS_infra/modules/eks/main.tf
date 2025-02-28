@@ -10,7 +10,7 @@ resource "aws_eks_cluster" "banking_kube_cluster" {
   }
   access_config {
     authentication_mode                         = "API"
-    bootstrap_cluster_creator_admin_permissions = false # false in later chapters
+    bootstrap_cluster_creator_admin_permissions = true # false in later chapters
   }
 
   enabled_cluster_log_types = var.enabled_cluster_log_types
@@ -36,7 +36,7 @@ resource "kubernetes_config_map" "aws_auth" {
   data = {
     mapRoles = yamlencode([
         {
-          rolearn  = "arn:aws:iam::${var.aws_account_id}:role/Banking-Kube-Sloth-eks-role"
+          rolearn  = "arn:aws:iam::${var.aws_account_id}:role/ci-cd-role"
           username = "admin"
           groups   = ["system:masters"]
         },
