@@ -10,6 +10,9 @@ CONFIG_DIR="../k8s"
 # Generate the certificate
 openssl req -x509 -newkey rsa:4096 -keyout tls.key -out tls.crt -days 365 -nodes -subj "/CN=${SERVICE}.${NAMESPACE}.svc"
 
+if kubectl get secret "${SECRET}" -n "${NAMESPACE}" >/dev/null 2>&1; then
+  kubectl delete secret "${SECRET}" -n "${NAMESPACE}"
+fi
 # Create the Kubernetes secret
 kubectl create secret tls ${SECRET} --cert=tls.crt --key=tls.key -n ${NAMESPACE} || kubectl delete secret ${SECRET} -n ${NAMESPACE} && kubectl create secret tls ${SECRET} --cert=tls.crt --key=tls.key -n ${NAMESPACE}
 
