@@ -79,7 +79,4 @@ jobs:
         working-directory: /home/ssm-user/EKS-BankingKube/EKS_infra
         run: |
           terraform apply -auto-approve -var-file="envs/terraform_dev.tfvars" \
-              --target=module.eks \
-              --target=module.ecr \
-              --target=module.node_groups \
-              --target=module.storage
+              --target=module.eks

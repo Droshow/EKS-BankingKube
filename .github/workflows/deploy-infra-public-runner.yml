@@ -44,3 +44,12 @@ jobs:
               --target=module.networking \
               --target=module.security \
               --target=module.ec2_cluster_access
+              --target=module.eks \
+              --target=module.ecr \
+              --target=module.node_groups \
+              --target=module.storage
+        #used only by bootstrap      
+      # - name: Refresh CI/CD Role Trust Policy
+      #   working-directory: ./EKS_infra
+      #   run: |
+      #     terraform apply -auto-approve -target=aws_iam_role.ci_cd_role
