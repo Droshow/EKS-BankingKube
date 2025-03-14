@@ -65,5 +65,5 @@ jobs:
 
       # 6) Deploy Webhook Manifests
       - name: Deploy Webhook
-        working-directory: /home/ssm-user/EKS-BankingKcdube/BankingKube_app/Dynamic_Pod_Sec/scripts
+        working-directory: /home/ssm-user/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/scripts
         run: bash deploy-webhook.sh
