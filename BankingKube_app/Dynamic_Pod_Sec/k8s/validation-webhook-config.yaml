@@ -34,6 +34,7 @@ webhooks:
         path: "/validate/volumes"
       caBundle: <CA_BUNDLE>
     admissionReviewVersions: ["v1"]
+    sideEffects: None
     failurePolicy: Fail
     timeoutSeconds: 5
 
@@ -51,6 +52,7 @@ webhooks:
         path: "/validate/network"
       caBundle: <CA_BUNDLE>
     admissionReviewVersions: ["v1"]
+    sideEffects: None
     failurePolicy: Fail
     timeoutSeconds: 5
 
@@ -68,6 +70,7 @@ webhooks:
         path: "/validate/api"
       caBundle: <CA_BUNDLE>
     admissionReviewVersions: ["v1"]
+    sideEffects: None
     failurePolicy: Fail
     timeoutSeconds: 5
 
@@ -85,6 +88,7 @@ webhooks:
         path: "/validate/image"
       caBundle: <CA_BUNDLE>
     admissionReviewVersions: ["v1"]
+    sideEffects: None
     failurePolicy: Fail
     timeoutSeconds: 5
 
@@ -102,6 +106,7 @@ webhooks:
         path: "/validate/rbac"
       caBundle: <CA_BUNDLE>
     admissionReviewVersions: ["v1"]
+    sideEffects: None
     failurePolicy: Fail
     timeoutSeconds: 5
 
@@ -119,5 +124,6 @@ webhooks:
         path: "/validate/resources"
       caBundle: <CA_BUNDLE>
     admissionReviewVersions: ["v1"]
+    sideEffects: None
     failurePolicy: Fail
     timeoutSeconds: 5
