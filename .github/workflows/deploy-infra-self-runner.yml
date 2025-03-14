@@ -53,6 +53,8 @@ jobs:
 
       - name: Update Kubeconfig
         run: |
+          sudo mkdir -p /home/ssm-user/.kube
+          sudo chown -R ssm-user:ssm-user /home/ssm-user/.kube
           mkdir -p ~/.kube
           aws eks update-kubeconfig \
             --name ${{ env.EKS_CLUSTER_NAME }} \
