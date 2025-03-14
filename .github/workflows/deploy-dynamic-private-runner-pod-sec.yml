@@ -34,19 +34,19 @@ jobs:
                               git pull origin main && \
                               ls -la"  # List files to verify
       # 3) (Optional) Assume an IAM role if needed
-      - name: Assume Role (Optional)
-        run: |
-          ROLE_ARN="arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/ci-cd-role"
-          SESSION_NAME="ci-cd-session"
+      # - name: Assume Role (Optional)
+      #   run: |
+      #     ROLE_ARN="arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/ci-cd-role"
+      #     SESSION_NAME="ci-cd-session"
 
-          CREDS=$(aws sts assume-role --role-arn "$ROLE_ARN" --role-session-name "$SESSION_NAME" --output json)
-          export AWS_ACCESS_KEY_ID=$(echo $CREDS | jq -r '.Credentials.AccessKeyId')
-          export AWS_SECRET_ACCESS_KEY=$(echo $CREDS | jq -r '.Credentials.SecretAccessKey')
-          export AWS_SESSION_TOKEN=$(echo $CREDS | jq -r '.Credentials.SessionToken')
+      #     CREDS=$(aws sts assume-role --role-arn "$ROLE_ARN" --role-session-name "$SESSION_NAME" --output json)
+      #     export AWS_ACCESS_KEY_ID=$(echo $CREDS | jq -r '.Credentials.AccessKeyId')
+      #     export AWS_SECRET_ACCESS_KEY=$(echo $CREDS | jq -r '.Credentials.SecretAccessKey')
+      #     export AWS_SESSION_TOKEN=$(echo $CREDS | jq -r '.Credentials.SessionToken')
 
-          echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> $GITHUB_ENV
-          echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> $GITHUB_ENV
-          echo "AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN" >> $GITHUB_ENV
+      #     echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> $GITHUB_ENV
+      #     echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> $GITHUB_ENV
+      #     echo "AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN" >> $GITHUB_ENV
 
       # 4) Update Kubeconfig so that 'kubectl' can talk to your cluster
       - name: Update Kubeconfig
@@ -56,7 +56,7 @@ jobs:
           aws eks update-kubeconfig \
             --name ${{ env.EKS_CLUSTER_NAME }} \
             --region ${{ env.AWS_REGION }} \
-            # --role-arn "arn:aws:iam::${{env.AWS_ACCOUNT_ID}}:role/ci-cd-role"
+            --role-arn "arn:aws:iam::${{env.AWS_ACCOUNT_ID}}:role/ci-cd-role"
 
       # 5) Generate TLS Certificates in your Dynamic_Pod_Sec/scripts folder
       - name: Generate TLS Certificates
