@@ -14,7 +14,7 @@ if kubectl get secret "${SECRET}" -n "${NAMESPACE}" >/dev/null 2>&1; then
   kubectl delete secret "${SECRET}" -n "${NAMESPACE}"
 fi
 # Create the Kubernetes secret
-kubectl create secret tls ${SECRET} --cert=tls.crt --key=tls.key -n ${NAMESPACE} || kubectl delete secret ${SECRET} -n ${NAMESPACE} && kubectl create secret tls ${SECRET} --cert=tls.crt --key=tls.key -n ${NAMESPACE}
+kubectl create secret tls ${SECRET} --cert=tls.crt --key=tls.key -n ${NAMESPACE}
 
 # Extract the CA bundle
 CA_BUNDLE=$(cat tls.crt | base64 | tr -d '\n')
