@@ -56,7 +56,7 @@ jobs:
           aws eks update-kubeconfig \
             --name ${{ env.EKS_CLUSTER_NAME }} \
             --region ${{ env.AWS_REGION }} \
-            --role-arn "arn:aws:iam::${{env.AWS_ACCOUNT_ID}}:role/ci-cd-role"
+            # --role-arn "arn:aws:iam::${{env.AWS_ACCOUNT_ID}}:role/ci-cd-role"
 
       # 5) Generate TLS Certificates in your Dynamic_Pod_Sec/scripts folder
       - name: Generate TLS Certificates
@@ -65,5 +65,5 @@ jobs:
 
       # 6) Deploy Webhook Manifests
       - name: Deploy Webhook
-        working-directory: /home/ssm-user/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/scripts
+        working-directory: /home/ssm-user/EKS-BankingKcdube/BankingKube_app/Dynamic_Pod_Sec/scripts
         run: bash deploy-webhook.sh
