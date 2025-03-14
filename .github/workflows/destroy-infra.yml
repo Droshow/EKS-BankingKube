@@ -47,11 +47,12 @@ jobs:
         # run: terraform destroy -auto-approve -var-file="envs/terraform_dev.tfvars"
         
         #Destroy module.eks in aws console, first fargate profile then the eks cluster
-        run: | 
-         terraform destroy -auto-approve -var-file="envs/terraform_dev.tfvars" \
-          --target=module.ec2_cluster_access \
-          --target=module.ecr \
-          --target=module.networking \
-          --target=module.node_groups \
-          --target=module.storage \
-          --target=module.security
+        run: terraform destroy -auto-approve -var-file="envs/terraform_dev.tfvars"
+        # run: | 
+        #  terraform destroy -auto-approve -var-file="envs/terraform_dev.tfvars" \
+        #   --target=module.ec2_cluster_access \
+        #   --target=module.ecr \
+        #   --target=module.networking \
+        #   --target=module.node_groups \
+        #   --target=module.storage \
+        #   --target=module.security
