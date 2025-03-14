@@ -4,6 +4,7 @@ metadata:
   name: "dynamic-pod-sec-mutate-webhook"
 webhooks:
   - name: "mutate-pod-security.example.com"
+    sideEffects: None
     rules:
       - operations: ["CREATE", "UPDATE"]
         apiGroups: [""]
@@ -18,4 +19,3 @@ webhooks:
     admissionReviewVersions: ["v1"]
     failurePolicy: Fail
     timeoutSeconds: 5
-    sideEffects: None
