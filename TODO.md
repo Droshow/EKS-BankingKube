@@ -27,30 +27,33 @@ martin.drotar@CVX-1065 modules % aws ec2 create-key-pair --key-name ssh-key-bank
     --query 'KeyMaterial' --output text > ssh-key-bankingKube.pem  -->
 
 
+
 ### Tasks to be Done
 
 0. **Fix self-hosted runner infra workflow** DONE
  
 
-1. **Update Kubeconfig:**
+1. **Update Kubeconfig:** DONE
    - Run the `aws eks update-kubeconfig` command to generate the kubeconfig file that allows `kubectl` to interact with your EKS cluster.
 
-3. **Automate aws-auth ConfigMap Update:**
+3. **Automate aws-auth ConfigMap Update:** DONE
    - Automate the update of the `aws-auth` ConfigMap through the CI/CD workflow to ensure any new IAM roles or changes to existing roles are automatically reflected.
 
-4. **Verify Network Connectivity:**
+4. **Verify Network Connectivity:** DONE
    - Ensure that the EC2 instance has network access to the EKS API server, including proper security group rules and VPC endpoints if necessary.
 
-5. **Test kubectl Access:**
+5. **Test kubectl Access:** DONE
    - Verify that the EC2 instance can successfully run `kubectl` commands against the EKS cluster.
 DONE
 
 6. **Modify deployment workflow - deyploy-dynamic-pod-sec for self runner thing:**
-7. **Generate TLS Certificates:**
+7. **Generate TLS Certificates:** DONE but some remedies need to be done
    - Run the `generate-certs.sh` script to generate TLS certificates and create the Kubernetes secret.
 
-8. **Deploy Webhook Manifests:**
+8. **Deploy Webhook Manifests:** DONE
    - Run the `deploy-webhook.sh` script to deploy the webhook manifests to the EKS cluster.
 
-9. **Document the Process:**
+9. **Document the Process:** DONE
    - Document the steps and configurations required to set up and maintain access for future reference and development iterations.
+
+10. **Repaird destroy job that is totallly invalid:** 
