@@ -19,39 +19,39 @@ resource "aws_eks_cluster" "banking_kube_cluster" {
 # ###########
 # config map # use only if reading from K8s approach without it leaves all config to terraform
 # ###########
-data "kubernetes_config_map" "aws_auth" {
-  metadata {
-    name      = "aws-auth"
-    namespace = "kube-system"
-  }
-}
+# data "kubernetes_config_map" "aws_auth" {
+#   metadata {
+#     name      = "aws-auth"
+#     namespace = "kube-system"
+#   }
+# }
 
 #uncomment for self-hosted runners deployments
-resource "kubernetes_config_map" "aws_auth" {
-  depends_on = [aws_eks_cluster.banking_kube_cluster]
-  metadata {
-    name      = "aws-auth"
-    namespace = "kube-system"
-  }
+# resource "kubernetes_config_map" "aws_auth" {
+#   depends_on = [aws_eks_cluster.banking_kube_cluster]
+#   metadata {
+#     name      = "aws-auth"
+#     namespace = "kube-system"
+#   }
 
-  data = {
-    mapRoles = yamlencode([
-        {
-          rolearn  = "arn:aws:iam::${var.aws_account_id}:role/ci-cd-role"
-          username = "admin"
-          groups   = ["system:masters"]
-        },
-        {
-          rolearn  = "arn:aws:iam::${var.aws_account_id}:role/fargate-pod-execution-role"
-          username = "fargate-pod-execution-role"
-          groups   = ["system:node:{{SessionName}}", "system:nodes", "system:node-proxier"]
-        },
-        # {
-        #   rolearn  = "arn:aws:iam::${var.aws_account_id}:role/ec2-eks-role"
-        #   username = "ec2-eks-role"
-        #   groups   = ["system:masters"]
-        # }    
-    ])
+#   data = {
+#     mapRoles = yamlencode([
+#         {
+#           rolearn  = "arn:aws:iam::${var.aws_account_id}:role/ci-cd-role"
+#           username = "admin"
+#           groups   = ["system:masters"]
+#         },
+#         {
+#           rolearn  = "arn:aws:iam::${var.aws_account_id}:role/fargate-pod-execution-role"
+#           username = "fargate-pod-execution-role"
+#           groups   = ["system:node:{{SessionName}}", "system:nodes", "system:node-proxier"]
+#         },
+#         # {
+#         #   rolearn  = "arn:aws:iam::${var.aws_account_id}:role/ec2-eks-role"
+#         #   username = "ec2-eks-role"
+#         #   groups   = ["system:masters"]
+#         # }    
+#     ])
 
-  }
-}
+#   }
+# }
