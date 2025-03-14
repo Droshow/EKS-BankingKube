@@ -50,7 +50,7 @@ jobs:
          terraform destroy -auto-approve -var-file="envs/terraform_dev.tfvars" \
           --target=module.ec2_cluster_access \
           --target=module.ecr \
-          --target=module.eks \
+          # --target=module.eks \
           --target=module.networking \
           --target=module.node_groups \
           --target=module.storage \
