@@ -59,9 +59,9 @@ jobs:
             # --role-arn "arn:aws:iam::${{env.AWS_ACCOUNT_ID}}:role/ci-cd-role"
 
       # 5) Generate TLS Certificates in your Dynamic_Pod_Sec/scripts folder
-      # - name: Generate TLS Certificates
-      #   working-directory: /home/ssm-user/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/scripts
-      #   run: bash generate-certs.sh
+      - name: Generate TLS Certificates
+        working-directory: /home/ssm-user/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/scripts
+        run: bash generate-certs.sh
 
       # 6) Deploy Webhook Manifests
       - name: Deploy Webhook
