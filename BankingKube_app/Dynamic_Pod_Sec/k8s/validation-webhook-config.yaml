@@ -17,6 +17,7 @@ webhooks:
         path: "/validate/context"
       caBundle: <CA_BUNDLE>
     admissionReviewVersions: ["v1"]
+    sideEffects: None
     failurePolicy: Fail
     timeoutSeconds: 5
 
