@@ -107,7 +107,7 @@ resource "aws_instance" "ec2_cluster_access" {
               
               sudo yum install -y perl-Digest-SHA
               
-              echo "b13b784808359f31bc79b08a191f5f83757852957dd8fe3dbfcc38202ccf5768  actions-runner-linux-x64-2.322.0.tar.gz" | shasum -a 256 -c
+              echo "aa0fc262363912167dcdbc746ffcdf7b8996bc587f51cf1bab38ad86cf70b6ea  actions-runner-linux-x64-2.322.0.tar.gz" | shasum -a 256 -c
               
               sudo tar xzf actions-runner-linux-x64-2.322.0.tar.gz
               sudo chown -R ssm-user:ssm-user /home/ssm-user/actions-runner
