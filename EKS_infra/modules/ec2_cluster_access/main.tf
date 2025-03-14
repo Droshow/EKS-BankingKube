@@ -187,8 +187,10 @@ data "aws_iam_policy_document" "ec2_eks_role" {
   statement {
     effect = "Allow"
     principals {
-      type        = "Service"
-      identifiers = ["arn:aws:iam::${var.aws_account_id}:role/ci-cd-role"]
+      type        = "AWS"
+      identifiers = [
+        "arn:aws:iam::${var.aws_account_id}:role/ci-cd-role"
+        ]
     }
     actions = ["sts:AssumeRole"]
   }
