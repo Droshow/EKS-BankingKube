@@ -18,3 +18,4 @@ webhooks:
     admissionReviewVersions: ["v1"]
     failurePolicy: Fail
     timeoutSeconds: 5
+    sideEffects: None
