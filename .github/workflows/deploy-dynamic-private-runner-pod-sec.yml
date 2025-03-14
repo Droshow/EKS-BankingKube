@@ -15,20 +15,24 @@ jobs:
       EKS_CLUSTER_NAME: Banking-Kube-Sloth
 
     steps:
-      - name: Manual Git Checkout
+      - name: Manual Git Checkout (Always main)
         run: |
-            # 1. Remove any existing repo folder
-            sudo rm -rf /home/ssm-user/EKS-BankingKube
-        
-            # 2. Create a clean folder with the right ownership
-            sudo mkdir -p /home/ssm-user/EKS-BankingKube
-            sudo chown -R ssm-user:ssm-user /home/ssm-user/EKS-BankingKube
-        
-            # 3. Switch to ssm-user and clone the repo
-            sudo su ssm-user -c "cd /home/ssm-user && git clone https://github.com/Droshow/EKS-BankingKube.git"
-        
-            # 4. Fetch tags and checkout the commit/branch triggered by the GitHub Action
-            sudo su ssm-user -c "cd /home/ssm-user/EKS-BankingKube && git fetch --tags && git checkout ${{ github.sha }} && ls -la"  
+          # 1) Remove any existing repo folder
+          sudo rm -rf /home/ssm-user/EKS-BankingKube
+
+          # 2) Create a clean folder with the right ownership
+          sudo mkdir -p /home/ssm-user/EKS-BankingKube
+          sudo chown -R ssm-user:ssm-user /home/ssm-user/EKS-BankingKube
+
+          # 3) Switch to ssm-user and clone the repo
+          sudo su ssm-user -c "cd /home/ssm-user && git clone https://github.com/Droshow/EKS-BankingKube.git"
+
+          # 4) Fetch and checkout main branch, then pull the latest
+          sudo su ssm-user -c "cd /home/ssm-user/EKS-BankingKube && \
+                              git fetch origin main && \
+                              git checkout main && \
+                              git pull origin main && \
+                              ls -la"  # List files to verify
       # 3) (Optional) Assume an IAM role if needed
       - name: Assume Role (Optional)
         run: |
