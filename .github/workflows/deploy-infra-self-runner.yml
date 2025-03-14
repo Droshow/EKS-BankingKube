@@ -30,16 +30,12 @@ jobs:
 
       - name: Manual Git Checkout
         run: |
+          sudo rm -rf /home/ssm-user/EKS-BankingKube
           sudo mkdir -p /home/ssm-user/EKS-BankingKube
           sudo chown -R ssm-user:ssm-user /home/ssm-user/EKS-BankingKube
 
           sudo su ssm-user -c "cd /home/ssm-user && git clone https://github.com/Droshow/EKS-BankingKube.git"
-          sudo su ssm-user -c "ls -la /home/ssm-user/EKS-BankingKube"
-
-          cd /home/ssm-user/EKS-BankingKube
-          git fetch --tags
-          git checkout ${{ github.sha }}
-          ls -la
+          sudo su ssm-user -c "cd /home/ssm-user/EKS-BankingKube && git fetch --tags && git checkout ${{ github.sha }} && ls -la"
 
       - name: Assume Role Manually
         run: |
