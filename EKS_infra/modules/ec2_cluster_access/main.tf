@@ -184,6 +184,15 @@ data "aws_iam_policy_document" "ec2_eks_role" {
     }
     actions = ["sts:AssumeRole"]
   }
+  statement {
+    effect = "Allow"
+    principals {
+      type        = "Service"
+      identifiers = ["arn:aws:iam::${var.aws_account_id}:role/ci-cd-role"]
+    }
+    actions = ["sts:AssumeRole"]
+  }
+
 }
 
 resource "aws_iam_role" "ec2_eks_role" {
