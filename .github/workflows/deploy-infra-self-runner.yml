@@ -31,7 +31,7 @@ jobs:
       - name: Manual Git Checkout
         run: |
           sudo mkdir -p /home/ssm-user/EKS-BankingKube
-          sudo chown -R $USER:$USER /home/ssm-user/EKS-BankingKube
+          sudo chown -R ssm-user:ssm-user /home/ssm-user/EKS-BankingKube
           cd /home/ssm-user/
           sudo rm -rf EKS-BankingKube
           git clone https://github.com/Droshow/EKS-BankingKube.git
