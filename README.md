@@ -18,4 +18,4 @@ This boilerplate solution is ideal for Fintech organizations looking to deploy a
 4. The job will fail. Run it again with `fetch_cert = true`.
 5. Set the configs for the runner. You need to create a new one [here](https://github.com/Droshow/EKS-BankingKube/settings/actions/runners/new) and put it into AWS secrets for the runner.
 6. The runner may not succeed. You might need to fiddle around with EC2 and run commands manually.
-7. Run the private runner workflow and uncomment the K8s stuff in `EKS_infra/modules/eks/main.tf`.
+7. Run the private runner workflow and uncomment the K8s stuff in `EKS_infra/modules/eks/main.tf`. and provider.tf: EKS_infra/provider.tf
