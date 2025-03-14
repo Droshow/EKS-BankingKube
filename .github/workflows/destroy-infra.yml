@@ -45,7 +45,8 @@ jobs:
       - name: Destroy Terraform
         working-directory: EKS_infra
         # run: terraform destroy -auto-approve -var-file="envs/terraform_dev.tfvars"
-        #partial destroy
+        
+        #Destroy module.eks in aws console, first fargate profile then the eks cluster
         run: | 
          terraform destroy -auto-approve -var-file="envs/terraform_dev.tfvars" \
           --target=module.ec2_cluster_access \
