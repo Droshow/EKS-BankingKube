@@ -1,8 +1,45 @@
+/*
+=====================
+🛠️ Telemetry TODOs
+=====================
+
+1. REGEX MATCHING FOR RESTRICTED PATHS:
+   Current matching uses strings.Contains() with wildcard substitution.
+   For future accuracy, switch to real regex:
+     import "regexp"
+     pattern := strings.ReplaceAll(restrictedPath, "*", ".*")
+     matched, _ := regexp.MatchString(pattern, requestPath)
+     if matched { ... }
+
+2. METRIC NAMING CONSISTENCY:
+   Metrics are currently:
+     - pod_api_access.allowed
+     - pod_api_access.denied
+   Consider renaming to:
+     - bankingkube.dynamicpodsec.api_access.allowed
+     - bankingkube.dynamicpodsec.api_access.denied
+   This improves namespace clarity across observability tools.
+
+3. SPAN ATTRIBUTE GUARDING:
+   Ensure no empty strings for "pod" or "namespace":
+     - consider pod.GenerateName or fallback to "unknown"
+   Helps avoid cluttered traces in systems like Jaeger or Datadog APM.
+
+4. FUTURE EXPORTER ENDPOINT:
+   (Optional enhancement)
+   Expose a /metrics or /healthz endpoint to export telemetry:
+     - OpenTelemetry HTTP/Prometheus exporter for integration
+     - Enables scraping or visualization pipelines later
+
+*/
+
+
 package admission
 
 import (
 	"encoding/json"
 	"net/http"
+	"context"
 
 	"github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/pkg/admission/api_restrictions"
 	"github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/pkg/admission/context_capabilities"
@@ -128,7 +165,7 @@ func validateAPI(request *admissionv1.AdmissionRequest) *admissionv1.AdmissionRe
 	allowed := true
 	result := &metav1.Status{Message: "Pod API access validation passed"}
 
-	if !api_restrictions.CheckAPIAccess(request) {
+	if !api_restrictions.CheckAPIAccess(context.Background(), request) {
 		allowed = false
 		result = &metav1.Status{Message: "Pod is attempting to access restricted API paths."}
 	}
