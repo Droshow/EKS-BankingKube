@@ -1,5 +1,5 @@
-sasafa## CICD Runner or different access for EKS in private subnet to be able to run kubectl
-## CICD Runner or Different Access for EKS in Private Subnet to be Able to Run kubectl
+## CICD Runner or different access for EKS in private subnet to be able to run kubectl
+
 <!-- K8s resources in path: /Users/martin.drotar/Devsbridge/EKS-BankingKube/EKS_infra/modules/eks/main.tf -->
 <!-- uncomment provider kubernetes in providers.tf -->
 <!-- !!! You need a runner in K8 cluster private subnet-->
@@ -11,17 +11,18 @@ sasafa## CICD Runner or different access for EKS in private subnet to be able to
 And the other that uses self-hosted runner on that instance building everything else --> Done
 
 <!-- Run the EKS AWS Provider Terraform 
-Uncomment Kubernetes Provider Terraform
-hanle the DB secret in EKS_infra/secrets.tf
-Watch for certificate if exists in AWS or not
-if not fetch_existing_cert in main.tf = false, then deploy will fail, change to true and deploy again
-first run if not existing that switch to fetch_certificate = true
-Setting up own runner don't forget to change the token in 
-https://github.com/Droshow/EKS-BankingKube/settings/actions/runners/new?arch=x64&os=linux 
+-Uncomment Kubernetes Provider Terraform
+-handle the DB secret in EKS_infra/secrets.tf
+-Watch for certificate if exists in AWS or not
+-if not fetch_existing_cert in main.tf = false, then deploy will fail, change to true and -deploy again
+-first run if not existing that switch to fetch_certificate = true
+-Setting up own runner don't forget to change the token in 
+-https://github.com/Droshow/EKS-BankingKube/settings/actions/runners/new?arch=x64&os=linux 
 and consecutively in secrets
 
 
-Key-Pair aws command
+
+Key-Pair aws command just in case
 martin.drotar@CVX-1065 modules % aws ec2 create-key-pair --key-name ssh-key-bankingKube \
     --region eu-central-1 \
     --query 'KeyMaterial' --output text > ssh-key-bankingKube.pem  -->
@@ -57,3 +58,7 @@ DONE
    - Document the steps and configurations required to set up and maintain access for future reference and development iterations.
 
 10. **Repaird destroy job that is totallly invalid:** 
+
+11. **Work on OTel for rest of controls in the meantime:** 
+
+12. **When more time work on deployment and running this**
