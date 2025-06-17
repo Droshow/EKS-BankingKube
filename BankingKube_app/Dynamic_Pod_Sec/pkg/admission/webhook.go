@@ -33,13 +33,12 @@
 
 */
 
-
 package admission
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
-	"context"
 
 	"github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/pkg/admission/api_restrictions"
 	"github.com/Droshow/EKS-BankingKube/BankingKube_app/Dynamic_Pod_Sec/pkg/admission/context_capabilities"
@@ -106,11 +105,11 @@ func validateContext(request *admissionv1.AdmissionRequest) *admissionv1.Admissi
 	allowed := true
 	result := &metav1.Status{Message: "Pod context validation passed"}
 
-	if !context_capabilities.CheckPodSecurityContext(request) {
+	if !context_capabilities.CheckPodSecurityContext(context.Background(), request) {
 		allowed = false
 		result = &metav1.Status{Message: "Pod contains privileged containers, which is not allowed."}
 	}
-	if !context_capabilities.CheckCapabilities(request) {
+	if !context_capabilities.CheckCapabilities(context.Background(), request) {
 		allowed = false
 		result = &metav1.Status{Message: "Pod contains containers with disallowed capabilities."}
 	}
@@ -148,7 +147,7 @@ func validateNetwork(request *admissionv1.AdmissionRequest) *admissionv1.Admissi
 		allowed = false
 		result = &metav1.Status{Message: "Pod is using the host network, which is disallowed."}
 	}
-	if !network_security.CheckEgress(request) {
+	if !network_security.CheckEgress(context.Background(),request) {
 		allowed = false
 		result = &metav1.Status{Message: "Pod has an egress route that violates policy."}
 	}
@@ -169,7 +168,7 @@ func validateAPI(request *admissionv1.AdmissionRequest) *admissionv1.AdmissionRe
 		allowed = false
 		result = &metav1.Status{Message: "Pod is attempting to access restricted API paths."}
 	}
-	if !api_restrictions.CheckServiceAccount(request) {
+	if !api_restrictions.CheckServiceAccount(context.Background(), request) {
 		allowed = false
 		result = &metav1.Status{Message: "Pod is using a restricted service account."}
 	}
@@ -182,15 +181,15 @@ func validateImage(request *admissionv1.AdmissionRequest) *admissionv1.Admission
 	allowed := true
 	result := &metav1.Status{Message: "Pod image validation passed"}
 
-	if !image_security.CheckImageRegistry(request) {
+	if !image_security.CheckImageRegistry(context.Background(),request) {
 		allowed = false
 		result = &metav1.Status{Message: "Pod is using an image from a disallowed registry."}
 	}
-	if !image_security.CheckImageSigning(request) {
+	if !image_security.CheckImageSigning(context.Background(),request) {
 		allowed = false
 		result = &metav1.Status{Message: "Pod is using an unsigned image."}
 	}
-	if !image_security.CheckImageTags(request) {
+	if !image_security.CheckImageTags(context.Background(),request) {
 		allowed = false
 		result = &metav1.Status{Message: "Pod is using an image with a disallowed tag."}
 	}

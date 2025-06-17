@@ -29,45 +29,46 @@ policies:
     allowedRegistries:
       - "myregistry.com"
       - "trustedregistry.com"
-  requireImageSigning: true
-  disallowedTags:
-    - "latest"
-    - "unstable"
-    - "dev"
+    requireImageSigning: true
+    disallowedTags:
+      - "latest"
+      - "unstable"
+      - "dev"
 
   # Network Security Policies
-  hostNetworkPolicy:
-    allowHostNetwork: false
-  networkPolicy:
-    requiredNetworkPolicies:
-      - "default-deny-all"
-      - "internal-communication-only"
-  egressPolicy:
-    allowedEgressCIDRs:
-      - "10.0.0.0/24"
-      - "192.168.1.0/24"
-  ingressPolicy:
-    allowedIngressCIDRs:
-      - "10.0.0.0/24"         # Internal network
-      - "192.168.1.0/24"      # Internal network
-      - "203.0.113.0/24"
-  consistencyPolicy:
-    accessEgressPolicy:
+  NetworkSecurity:
+    hostNetworkPolicy:
+      allowHostNetwork: false
+    networkPolicy:
+      requiredNetworkPolicies:
+        - "default-deny-all"
+        - "internal-communication-only"
+    egressPolicy:
       allowedEgressCIDRs:
         - "10.0.0.0/24"
         - "192.168.1.0/24"
-    accessIngressPolicy:
+    ingressPolicy:
       allowedIngressCIDRs:
         - "10.0.0.0/24"         # Internal network
         - "192.168.1.0/24"      # Internal network
         - "203.0.113.0/24"
-      # Allowed Overlapping CIDRs
-    allowedOverlappingEgressCIDRs:
-    - "10.0.0.0/24"
-    - "192.168.1.0/24"
-    allowedOverlappingIngressCIDRs:
+    consistencyPolicy:
+      accessEgressPolicy:
+        allowedEgressCIDRs:
+          - "10.0.0.0/24"
+          - "192.168.1.0/24"
+      accessIngressPolicy:
+        allowedIngressCIDRs:
+          - "10.0.0.0/24"         # Internal network
+          - "192.168.1.0/24"      # Internal network
+          - "203.0.113.0/24"
+        # Allowed Overlapping CIDRs
+      allowedOverlappingEgressCIDRs:
       - "10.0.0.0/24"
       - "192.168.1.0/24"
+      allowedOverlappingIngressCIDRs:
+        - "10.0.0.0/24"
+        - "192.168.1.0/24"
 
   # RBAC Policies
   checkRoleBindingsPolicy:
